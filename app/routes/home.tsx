@@ -10,6 +10,6 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  // return <Welcome />;
-  return <Button className="to-blue-400">Test</Button>;
+  return <Welcome />;
+  // return <Button className="to-blue-400">Test</Button>;
 }
