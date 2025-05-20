@@ -22,6 +22,7 @@ export default function QRScanner({
   const handleScan = React.useCallback((detectedCodes: IDetectedBarcode[]) => {
     if (detectedCodes.length > 0 && detectedCodes[0].rawValue) {
       onScanSuccess(detectedCodes[0].rawValue);
+      console.log("send api request")
     }
   }, [onScanSuccess]);
 

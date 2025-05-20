@@ -1,15 +1,17 @@
 import { ChevronRight } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
-import { redirect } from "react-router";
+import { useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 
-function ButtonEvent() {
+function ButtonEvent(navigate: ReturnType<typeof useNavigate>) {
     console.log("testing")
-    return redirect("/")
+    navigate("/guru/scan");
 }
 
 export default function GuruHomePage() {
+    const navigate = useNavigate();
+
     // Sample data
     const today = new Date();
     const dateFormatted = today.toLocaleDateString('en-US', {
@@ -49,7 +51,7 @@ export default function GuruHomePage() {
     return (
         <>
             <CardHeader className="flex flex-row items-center space-x-4 space-y-0 justify-end">
-                <h1 className="text-2xl font-semibold" >{dateFormatted}</h1>
+                <h1 className="text-2xl font-semibold">{dateFormatted}</h1>
             </CardHeader>
             <CardContent className="space-y-4">
                 {scheduleItems.map((item) => (
@@ -65,7 +67,7 @@ export default function GuruHomePage() {
                                         {item.time}
                                     </p>
                                 </div>
-                                <Button onClick={ButtonEvent} variant="link">
+                                <Button onClick={() => ButtonEvent(navigate)} variant="link">
                                     <ChevronRight className="h-5 w-5 text-muted-foreground" />
                                 </Button>
                             </div>
@@ -74,6 +76,7 @@ export default function GuruHomePage() {
                         {/* <QRCodeSVG value={`https://youtube.com`} /> */}
                     </Card>
                 ))}
-            </CardContent></>
+            </CardContent>
+        </>
     )
 }
