@@ -1,5 +1,5 @@
-import GuruHomePage from "~/guru/home"
-import type { Route } from "./+types/guru"
+import GuruHomePage from "~/guru/layout"
+import type { Route } from "./+types/guruHome"
 
 export function meta({ }: Route.MetaArgs) {
     return [
@@ -8,7 +8,7 @@ export function meta({ }: Route.MetaArgs) {
     ]
 
 }
-export default function Guru() {
+export default function GuruLayout() {
     return (
         <GuruHomePage></GuruHomePage>
     )
