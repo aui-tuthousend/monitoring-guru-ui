@@ -1,8 +1,8 @@
-import GuruScanPage from "~/guru/scan";
+import GuruScanPage, { loader } from "~/guru/scan";
 
 export default function GuruScan() {
-    return (
-        // <h1>New Page OG</h1>
-        <GuruScanPage></GuruScanPage>
-    )
+  return <GuruScanPage />;
 }
+
+// Export the loader from this route file
+export { loader };
