@@ -1,5 +1,5 @@
 import GuruHomePage from "~/guru/layout"
-import type { Route } from "./+types/guruHome"
+import type { Route } from "../+types/guruHome"
 
 export function meta({ }: Route.MetaArgs) {
     return [

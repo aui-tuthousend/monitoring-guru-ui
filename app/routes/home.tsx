@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
 import { Welcome } from "../welcome/welcome";
+import NewWelcome from "~/welcome/newWelcome";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,6 +10,6 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <Welcome />;
+  return <NewWelcome />;
   // return <Button className="to-blue-400">Test</Button>;
 }

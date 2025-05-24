@@ -5,6 +5,8 @@ import { Label } from "~/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "sonner";
+import { useCookies } from 'react-cookie';
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -13,31 +15,52 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Inisialisasi cookie hooks
+  const [cookies, setCookie, removeCookie] = useCookies(['authToken', 'userData']);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
-      // Using Axios for the API call
-      const response = await axios.post("/api/login", {
-        username,
-        password
+      // Contoh response API (ganti dengan API real)
+      const response = {
+        data: {
+          token: "abc123",
+          user: {
+            type: "guru",
+            guru: {
+              nama: "Dr. Ahmad Surya, M.Pd",
+              jabatan: "Guru Matematika", 
+              npsn: "20230001"
+            }
+          }
+        }
+      };
+
+      toast.success("Login successful");
+
+      // Set cookie dengan react-cookie
+      setCookie('authToken', response.data.token, { 
+        path: '/',
+        maxAge: 86400, // 1 hari dalam detik
+        secure: true,
+        sameSite: 'strict'
       });
 
-      // Handle successful login
-      console.log("Login successful:", response.data);
-      
-      // Store token if available (using localStorage as simple example)
-      if (response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
-      }
-      
-      navigate("/dashboard"); // Redirect to dashboard after login
+      setCookie('userData', response.data.user, {
+        path: '/',
+        maxAge: 86400,
+        secure: true,
+        sameSite: 'strict'
+      });
+
+      navigate("/dashboard");
     } catch (err) {
-      // Axios error handling
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.message || "Login failed");
+        toast.error("Login failed");
       } else {
         setError("An unexpected error occurred");
       }
@@ -52,10 +75,10 @@ export default function LoginPage() {
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
             {/* Replace with your actual university logo */}
-            <img 
-              src="app/login/IMG_9570.jpeg" 
-              alt="University Logo" 
-              className="h-20 w-auto rounded-2xl" 
+            <img
+              src="app/login/IMG_9570.jpeg"
+              alt="University Logo"
+              className="h-20 w-auto rounded-2xl"
               onError={(e) => {
                 // Fallback if logo fails to load
                 const target = e.target as HTMLImageElement;
