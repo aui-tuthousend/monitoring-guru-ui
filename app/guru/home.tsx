@@ -3,7 +3,7 @@ import { useLoaderData, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
-import type { clientLoader } from "~/routes/guru/guruHome";
+import type { clientLoader } from "~/routes/guru/home";
 
 export default async function GuruHomePage() {
     const navigate = useNavigate();

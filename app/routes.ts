@@ -4,11 +4,15 @@ export default [
     index("routes/home.tsx"),
     route("about", "routes/about.tsx"),
     route("login", "routes/login.tsx"),
-    route("ukk","routes/ukk/ukkIndex.tsx"),
-    layout("routes/guru/guruLayout.tsx", [
+    layout("admin/layout.tsx", [
+        ...prefix("admin",[
+            index("routes/admin/dashboard.tsx"),
+        ]),
+    ]),
+    layout("guru/layout.tsx", [
         ...prefix("guru", [
-            index("routes/guru/guruHome.tsx"),
-            route("scan", "routes/guru/guruScan.tsx"),
+            index("routes/guru/home.tsx"),
+            route("scan", "routes/guru/scan.tsx"),
         ])
     ]),
 ] satisfies RouteConfig;

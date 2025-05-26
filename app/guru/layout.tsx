@@ -23,7 +23,7 @@ type TeacherProfile = {
   attendanceMarked: boolean;
 };
 
-export default function GuruLayout() {
+export default function GuruLayoutPage() {
   const [cookies] = useCookies(['user']);
   const [teacherProfile, setTeacherProfile] = useState<TeacherProfile>({
     name: "Loading...",
