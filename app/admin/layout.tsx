@@ -1,83 +1,42 @@
-import { Outlet } from "react-router";
+import { Outlet } from "react-router"
+import { AppSidebar } from "~/components/app-sidebar"
+// import { ChartAreaInteractive } from "~/components/chart-area-interactive"
+// import { DataTable } from "~/components/data-table"
+import { SectionCards } from "~/components/section-cards"
+import { SiteHeader } from "~/components/site-header"
 import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "~/components/ui/navigation-menu";
-import { Link } from "react-router";
-import { Button } from "~/components/ui/button";
-// import { ModeToggle } from "~/components/mode-toggle";
+  SidebarInset,
+  SidebarProvider,
+} from "~/components/ui/sidebar"
 
-export default function GuruLayout() {
+// import data from "./data.json"
+
+export default function AdminLayout() {
   return (
-    <div className="flex min-h-screen flex-col">
-      {/* ShadCN Navbar */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 items-center justify-between">
-          <div className="mr-4 hidden md:flex">
-            <Link to="/" className="mr-6 flex items-center space-x-2">
-              <span className="hidden font-bold sm:inline-block">Guru Portal</span>
-            </Link>
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/guru/dashboard"
-                      className={navigationMenuTriggerStyle()}
-                    >
-                      Dashboard
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/guru/schedule"
-                      className={navigationMenuTriggerStyle()}
-                    >
-                      Jadwal
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      to="/guru/attendance"
-                      className={navigationMenuTriggerStyle()}
-                    >
-                      Presensi
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            {/* <ModeToggle /> */}
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/logout">Logout</Link>
-            </Button>
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="inset" />
+      <SidebarInset>
+        <SiteHeader header="Dashboard" />
+        <div className="flex flex-1 flex-col">
+          <div className="@container/main flex flex-1 flex-col gap-2">
+            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+              {/* <SectionCards /> */}
+              {/* <div className="px-4 lg:px-6">
+                <ChartAreaInteractive />
+              </div>
+              <DataTable data={data} /> */}
+              <Outlet />
+            </div>
           </div>
         </div>
-      </header>
-
-      {/* Main Content Area */}
-      <main className="flex-1">
-        <div className="container py-4">
-          <Outlet />
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t py-4">
-        <div className="container text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Sekolah Kami. All rights reserved.
-        </div>
-      </footer>
-    </div>
-  );
+      </SidebarInset>
+    </SidebarProvider>
+  )
 }

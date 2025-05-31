@@ -1,5 +1,6 @@
 
-import DashboardPage from "~/admin/dashboard";
+// import DashboardPage from "~/admin/layoutOldOld";
+import DashboardAdminPage from "~/admin/dashboard";
 import type { Route } from "./+types/dashboard";
 
 export function meta({ }: Route.MetaArgs) {
@@ -19,6 +20,11 @@ export const clientLoader = async () => {
 }
 
 export default function AdminDashboard() {
-  return <DashboardPage />;
+  return <DashboardAdminPage />;
+  // return (
+  //   <>
+  //     <h1>nyahh</h1>
+  //   </>
+  // )
   // return <Button className="to-blue-400">Test</Button>;
 }
