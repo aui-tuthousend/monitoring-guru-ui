@@ -1,36 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { ChevronRight } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
-import { Button } from "~/components/ui/button";
-import { Outlet } from "react-router";
+import { Outlet, useLoaderData } from "react-router";
 import { useCookies } from "react-cookie";
 import { useEffect, useState } from "react";
 import KawaiGura from "/IMG_3167.jpeg";
+import axios from "axios";
 
-// Type definitions
-type ScheduleItem = {
-  id: number;
-  subject: string;
-  class: string;
-  time: string;
-  room: string;
-};
-
-type TeacherProfile = {
-  name: string;
-  role: string;
-  npsn?: string;
-  attendanceMarked: boolean;
-};
-
+export async function loader() {
+  try {
+    const response = await axios.get("https://pokeapi.co/api/v2/pokemon/ditto");
+    return { response: response.data };  // Return as an object with response property
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return { response: null };  // Return null in case of error
+  }
+}
 export default function GuruLayoutPage() {
-  const [cookies] = useCookies(['user']);
-  const [teacherProfile, setTeacherProfile] = useState<TeacherProfile>({
+  const [cookies] = useCookies(['userData']);
+  const [teacherProfile, setTeacherProfile] = useState<any>({
     name: "Loading...",
     role: "Loading...",
     attendanceMarked: false
   });
-  const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
+  const [scheduleItems, setScheduleItems] = useState<any[]>([]);
 
   // Get today's date
   const today = new Date();
@@ -39,10 +30,13 @@ export default function GuruLayoutPage() {
     day: 'numeric'
   });
 
+  const data = useLoaderData() as { response: any };  // Type the response
+  console.log(data.response);  // Now this will log the actual response data
+
   // Load teacher data from cookies
   useEffect(() => {
-    if (cookies.user?.guru) {
-      const guruData = cookies.user.guru;
+    if (cookies.userData?.guru) {
+      const guruData = cookies.userData.guru;
       setTeacherProfile({
         name: guruData.nama,
         role: guruData.jabatan,
@@ -62,7 +56,7 @@ export default function GuruLayoutPage() {
         // Add more schedule items as needed
       ]);
     }
-  }, [cookies.user]);
+  }, [cookies.userData]);
 
   return (
     <div className="relative min-h-screen bg-gray-50 p-6">
@@ -96,10 +90,7 @@ export default function GuruLayoutPage() {
               <span className="font-medium">Total Classes</span>
               <span>{scheduleItems.length}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="font-medium">Next Class</span>
-              <span>{scheduleItems[0]?.subject || "None"}</span>
-            </div>
+           
           </div>
         </CardContent>
       </Card>
@@ -107,7 +98,10 @@ export default function GuruLayoutPage() {
       {/* Secondary card (content area) */}
       <Card className="relative -mt-8 z-20 w-full pt-5 pb-6 shadow-md">
         <Outlet />
-      </Card>
+      </Card> {/* <div className="flex justify-between">
+              <span className="font-medium">Next Class</span>
+              <span>{scheduleItems[0]?.subject || "None"}</span>
+            </div> */}
     </div>
   );
 }

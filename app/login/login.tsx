@@ -56,7 +56,7 @@ export default function LoginPage() {
         sameSite: 'strict'
       });
 
-      navigate("/dashboard");
+      navigate("/guru");
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.message || "Login failed");

@@ -1,4 +1,6 @@
 import { ScanQrCode } from "lucide-react";
+import { useOutletContext } from "react-router";
+import { useOutlet } from "react-router";
 import { useLoaderData, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
@@ -7,7 +9,7 @@ import type { clientLoader } from "~/routes/guru/home";
 
 export default async function GuruHomePage() {
     const navigate = useNavigate();
-    const { guru, jadwalAjar, timestamp } = useLoaderData<typeof clientLoader>();
+    const {jadwalAjar, timestamp } = useLoaderData<typeof clientLoader>();
 
     const handleScanClick = (mataPelajaran: string) => {
         navigate("/guru/scan");

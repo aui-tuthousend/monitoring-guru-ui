@@ -1,14 +1,9 @@
 import GuruHomePage from "~/guru/home";
 
-export async function clientLoader() {
+export function clientLoader() {
     const now = new Date();
 
     return {
-        guru: {
-            nama: "Dr. Ahmad Surya, M.Pd",
-            jabatan: "Guru Matematika",
-            npsn: "20230001"
-        },
         jadwalAjar: [
             {
                 mataPelajaran: "Matematika",
