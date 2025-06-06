@@ -1,8 +1,8 @@
 import { SectionCards } from "~/components/section-cards"
 import type { Route } from "./+types/dashboard";
-import data from "./data.json"
+import data from "./data-guru.json"
 import { ChartAreaInteractive } from "~/components/chart-area-interactive"
-import { DataTable } from "~/components/data-table-tem"
+import { DataTable } from "~/components/data-table-guru"
 
 export function meta({ }: Route.MetaArgs) {
   return [
