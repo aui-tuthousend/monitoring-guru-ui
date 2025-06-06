@@ -43,7 +43,7 @@ const data = {
       title: "Dashboard",
       url: "#",
       icon: IconDashboard,
-      active: true,
+      // active: true,
     },
     {
       title: "Guru",

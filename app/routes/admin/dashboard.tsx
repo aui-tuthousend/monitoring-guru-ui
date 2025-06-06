@@ -1,6 +1,4 @@
-
-// import DashboardPage from "~/admin/layoutOldOld";
-import DashboardAdminPage from "~/admin/dashboard";
+import { SectionCards } from "~/components/section-cards"
 import type { Route } from "./+types/dashboard";
 
 export function meta({ }: Route.MetaArgs) {
@@ -10,7 +8,7 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 
-export const clientLoader = async () => {
+export async function clientLoader() {
   return {
     classes: [
       { id: 1, name: "Matematika X IPA 1", schedule: "Senin 08:00-09:30", students: 32 },
@@ -20,11 +18,9 @@ export const clientLoader = async () => {
 }
 
 export default function AdminDashboard() {
-  return <DashboardAdminPage />;
-  // return (
-  //   <>
-  //     <h1>nyahh</h1>
-  //   </>
-  // )
-  // return <Button className="to-blue-400">Test</Button>;
+  return (
+    <>
+      <SectionCards />
+    </>
+  )
 }
