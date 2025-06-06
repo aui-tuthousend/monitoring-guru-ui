@@ -7,6 +7,7 @@ export default [
     layout("routes/admin/layout.tsx", [
         ...prefix("admin",[
             index("routes/admin/dashboard.tsx"),
+            route("guru", "routes/admin/guru/dashboard.tsx"),
         ]),
     ]),
     layout("routes/guru/layout.tsx", [
