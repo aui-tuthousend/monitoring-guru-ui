@@ -103,14 +103,14 @@ import {
 } from "@/components/ui/tabs"
 
 export const schema = z.object({
-  id: z.number(),
+  id: z.string(),
   nama: z.string(),
   jabatan: z.string(),
   nip: z.string(),
 })
 
 // Create a separate component for the drag handle
-function DragHandle({ id }: { id: number }) {
+function DragHandle({ id }: { id: string }) {
   const { attributes, listeners } = useSortable({
     id,
   })
@@ -162,11 +162,9 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "header",
+    accessorKey: "nama",
     header: "Nama Guru",
-    cell: ({ row }) => {
-      return <TableCellViewer item={row.original} />
-    },
+    cell: ({ row }) => <TableCellViewer item={row.original} />,
     enableHiding: false,
   },
   {
@@ -174,51 +172,40 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Jabatan",
     cell: ({ row }) => (
       <div className="w-32">
-        <Badge variant="outline" className="text-muted-foreground px-1.5">
+        <Badge variant="outline" className="px-1.5 text-muted-foreground">
           {row.original.jabatan}
         </Badge>
       </div>
     ),
   },
-  // {
-  //   accessorKey: "status",
-  //   header: "Status",
-  //   cell: ({ row }) => (
-  //     <Badge variant="outline" className="text-muted-foreground px-1.5">
-  //       {row.original.status === "Done" ? (
-  //         <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
-  //       ) : (
-  //         <IconLoader />
-  //       )}
-  //       {row.original.status}
-  //     </Badge>
-  //   ),
-  // },
   {
     accessorKey: "nip",
-    // header: () => <div className="w-full text-right">NIP</div>,
     header: "NIP",
     cell: ({ row }) => (
       <form
         onSubmit={(e) => {
-          e.preventDefault()
-          toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            loading: `Saving ${row.original.nama}`,
-            success: "Done",
-            error: "Error",
-          })
+          e.preventDefault();
+          toast.promise(
+            new Promise((resolve) => setTimeout(resolve, 1000)),
+            {
+              loading: `Saving ${row.original.nama}`,
+              success: "Done",
+              error: "Error",
+            }
+          );
         }}
       >
         <Label htmlFor={`${row.original.id}-nip`} className="sr-only">
           NIP
         </Label>
         <Input
-          className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-          defaultValue={row.original.nip}
           id={`${row.original.id}-nip`}
+          defaultValue={row.original.nip}
+          className="h-8 w-24 border-transparent bg-transparent font-mono hover:bg-accent focus:border focus:bg-background"
         />
       </form>
     ),
+    size: 120,
   },
   {
     id: "actions",
@@ -227,8 +214,8 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
             size="icon"
+            className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
           >
             <IconDotsVertical />
             <span className="sr-only">Open menu</span>
@@ -236,15 +223,12 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-32">
           <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuItem>Favorite</DropdownMenuItem>
-          <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
   },
-]
+];
 
 function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
@@ -672,6 +656,9 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
                   <SelectContent>
                     <SelectItem value="Guru">
                       Guru
+                    </SelectItem>
+                    <SelectItem value="kepala_sekolah">
+                      Kepala Sekolah
                     </SelectItem>
                     {/* <SelectItem value="Technical Approach">
                       Technical Approach

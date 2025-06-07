@@ -1,50 +1,14 @@
 [
   {
-    "id": 1,
-    "nama": "Cover page",
-    "nip": "Cover page",
-    "jabatan": "In Process"
+    "id": "1efcb820-0d30-4a2e-b2cc-7924a69faab2",
+    "nip": "07626",
+    "nama": "tyrese",
+    "jabatan": "guru"
   },
   {
-    "id": 2,
-    "nama": "Cover page",
-    "nip": "Cover page",
-    "jabatan": "In Process"
-  },
-  {
-    "id": 3,
-    "nama": "Cover page",
-    "nip": "Cover page",
-    "jabatan": "In Process"
-  },
-  {
-    "id": 4,
-    "nama": "Cover page",
-    "nip": "Cover page",
-    "jabatan": "In Process"
-  },
-  {
-    "id": 5,
-    "nama": "Cover page",
-    "nip": "Cover page",
-    "jabatan": "In Process"
-  },
-  {
-    "id": 1,
-    "nama": "Cover page",
-    "nip": "Cover page",
-    "jabatan": "In Process"
-  },
-  {
-    "id": 6,
-    "nama": "Cover page",
-    "nip": "Cover page",
-    "jabatan": "In Process"
-  },
-  {
-    "id": 7,
-    "nama": "Cover page",
-    "nip": "Cover page",
-    "jabatan": "In Process"
+    "id": "f2838f69-79f9-4285-ba83-7f47483882e6",
+    "nip": "07628",
+    "nama": "cikgubesar",
+    "jabatan": "kepala_sekolah"
   }
 ]
