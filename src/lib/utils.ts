@@ -8,18 +8,18 @@ export function cn(...inputs: ClassValue[]) {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export interface FetchParams {
-  [key: string]: string | number | boolean;
+  [key: string]: any
 }
 
 export const urlBuilder = (path: string, params?: FetchParams): string => {
   const url = new URL(`${API_BASE_URL}${path}`);
 
   if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.append(key, String(value));
-    });
+    for (const key of Object.keys(params)) {
+      url.searchParams.append(key, params[key]);
+    }
   }
 
-  console.log(url.toString())
+  // console.log(url.toString())
   return url.toString();
 };

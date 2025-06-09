@@ -34,18 +34,6 @@ function RouteComponent() {
         npsn: guruData.npsn,
         attendanceMarked: false // You might want to load this from cookies too
       });
-
-      // Mock schedule - replace with actual data fetching
-      // setScheduleItems([
-      //   {
-      //     id: 1,
-      //     subject: guruData.jabatan.includes("Matematika") ? "Mathematics" : "General",
-      //     class: "Grade 10-A",
-      //     time: "08:00 - 10:00",
-      //     room: "Room 302"
-      //   },
-      //   // Add more schedule items as needed
-      // ]);
     }
   }, [cookies.userData]);
 

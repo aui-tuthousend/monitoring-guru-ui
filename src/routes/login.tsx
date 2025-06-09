@@ -5,27 +5,25 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAuthLogin } from '@/store/auth/useAuth'
+import { useAuth } from '@/store/auth/useAuth'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
 })
 
 function LoginPage() {
-  const login = useAuthLogin()
+  const {loading, setLoading, login} = useAuth()
   const navigate = useNavigate()
 
   const [nip, setNip] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setIsLoading(true)
-
     try {
+      setLoading(true)
       const result = await login({ nip: nip, password });
       if (result.token) {
         console.log('Login successful:', result);
@@ -37,7 +35,7 @@ function LoginPage() {
       setError(err.message || 'Login failed');
       toast.error(err.message)
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
   };
 
@@ -142,9 +140,9 @@ function LoginPage() {
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading}
+              disabled={loading}
             >
-              {isLoading ? (
+              {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <Spinner />
                   Logging in...

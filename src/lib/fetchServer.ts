@@ -28,7 +28,6 @@ export const fetchServer = async (
       body: options.body ? JSON.stringify(options.body) : undefined,
     };
 
-    // Handle caching only for GET requests
     if (options.method === 'GET' && options.cache) {
       fetchOptions.cache = options.cache;
     }

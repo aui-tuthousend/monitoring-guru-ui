@@ -1,4 +1,5 @@
 import { urlBuilder } from '@/lib/utils';
+import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 
 export interface LoginRequest {
@@ -6,8 +7,9 @@ export interface LoginRequest {
   password: string;
 }
 
-export const useAuthLogin = () => {
-  const [, setCookie] = useCookies(['authToken', 'userData']);
+export const useAuth = () => {
+  const [, setCookie, removeCookie] = useCookies(['authToken', 'userData']);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const login = async (payload: LoginRequest) => {
     try {
@@ -16,11 +18,6 @@ export const useAuthLogin = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(err.message || `Login failed with status ${response.status}`);
-      }
 
       const data = await response.json();
       console.log(data)
@@ -36,16 +33,11 @@ export const useAuthLogin = () => {
     }
   };
 
-  return login;
+  const logout = () => {
+    removeCookie('authToken', { path: '/' });
+    removeCookie('userData', { path: '/' });
+  };
+
+  return {loading, setLoading, login, logout};
 };
 
-export const useAuthLogout = () => {
-    const [, , removeCookie] = useCookies(['authToken', 'userData']);
-  
-    const logout = () => {
-      removeCookie('authToken', { path: '/' });
-      removeCookie('userData', { path: '/' });
-    };
-  
-    return logout;
-};
