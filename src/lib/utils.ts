@@ -23,3 +23,7 @@ export const urlBuilder = (path: string, params?: FetchParams): string => {
   // console.log(url.toString())
   return url.toString();
 };
+
+export async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import KawaiGura from "/IMG_3167.jpeg";
 
-export const Route = createFileRoute('/guru')({
+export const Route = createFileRoute('/_auth/guru')({
   component: RouteComponent,
 })
 

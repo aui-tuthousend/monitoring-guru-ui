@@ -4,7 +4,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { ScanQrCode } from 'lucide-react';
 import { toast } from 'sonner';
 
-export const Route = createFileRoute('/guru/')({
+export const Route = createFileRoute('/_auth/guru/')({
   component: RouteComponent,
   loader: async () => {
     const now = new Date();
