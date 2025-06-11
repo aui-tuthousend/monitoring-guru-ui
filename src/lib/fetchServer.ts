@@ -1,9 +1,9 @@
-import { useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie'
+import { urlBuilder } from './utils';
 
 interface RequestConfig {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   body?: any;
-  cache?: RequestCache;
 }
 
 export const fetchServer = async (
@@ -11,38 +11,27 @@ export const fetchServer = async (
   options: RequestConfig = {},
   contentType: string = 'application/json'
 ): Promise<any> => {
-  try {
-    const [cookies] = useCookies(['authToken']);
-    const token = cookies.authToken;
+  const [cookies] = useCookies(['authToken']);
+  const token = cookies.authToken;
 
-    const fetchOptions: RequestInit = {
-      method: options.method || 'GET',
-      headers: {
-        authorization: token
-          ? token.includes('Bearer')
-            ? token
-            : `Bearer ${token}`
-          : '',
-        'Content-Type': contentType,
-      },
-      body: options.body ? JSON.stringify(options.body) : undefined,
-    };
-
-    if (options.method === 'GET' && options.cache) {
-      fetchOptions.cache = options.cache;
-    }
-
-    const response = await fetch(url, fetchOptions);
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const errorMessage = errorData.message || `HTTP error! Status: ${response.status}`;
-      throw new Error(errorMessage);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    throw error instanceof Error ? error : new Error('Unknown error occurred');
+  const headers = {
+    Authorization: token?.includes('Bearer') ? token : `Bearer ${token}`,
+    'Content-Type': contentType,
   }
-};
+
+  try {
+    const response = await fetch(urlBuilder(url), {
+      method: options.method || 'GET',
+      headers,
+      // body: JSON.stringify(options.body),
+    });
+
+    const data = await response.json();
+    console.log(data)
+
+    return data
+  } catch (error: any) {
+    console.error('Error fetching data:', error)
+    throw new Error(error?.response?.data?.message || 'Unknown error occurred')
+  }
+}

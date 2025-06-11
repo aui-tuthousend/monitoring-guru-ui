@@ -2,12 +2,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { SectionCards } from '@/components/section-cards'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 
-export const Route = createFileRoute('/admin/')({
-  component: RouteComponent,
-})
-
-function RouteComponent() {
-  return (
+export const Route: any = createFileRoute('/admin/')({
+  component: () => (
     <>
       <SectionCards />
       <div className="px-4 lg:px-6">
@@ -15,5 +11,6 @@ function RouteComponent() {
       </div>
       {/* <DataTable data={data} /> */}
     </>
-  )
-}
+  ),
+})
+
