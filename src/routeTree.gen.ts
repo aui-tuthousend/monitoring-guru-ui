@@ -8,37 +8,31 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
+import { Route as AdminImport } from './routes/admin'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as AdminGuruImport } from './routes/admin/guru'
-import { Route as AdminlayoutImport } from './routes/admin/__layout'
 import { Route as AuthGuruImport } from './routes/_auth/guru'
 import { Route as AuthGuruIndexImport } from './routes/_auth/guru/index'
 import { Route as AuthGuruScanImport } from './routes/_auth/guru/scan'
 
-// Create Virtual Routes
-
-const AdminImport = createFileRoute('/admin')()
-
 // Create/Update Routes
-
-const AdminRoute = AdminImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminRoute = AdminImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -68,11 +62,6 @@ const AdminIndexRoute = AdminIndexImport.update({
 const AdminGuruRoute = AdminGuruImport.update({
   id: '/guru',
   path: '/guru',
-  getParentRoute: () => AdminRoute,
-} as any)
-
-const AdminlayoutRoute = AdminlayoutImport.update({
-  id: '/__layout',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -119,6 +108,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -132,20 +128,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/guru'
       preLoaderRoute: typeof AuthGuruImport
       parentRoute: typeof AuthImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin/__layout': {
-      id: '/admin/__layout'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminlayoutImport
-      parentRoute: typeof AdminRoute
     }
     '/admin/guru': {
       id: '/admin/guru'
@@ -205,13 +187,11 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface AdminRouteChildren {
-  AdminlayoutRoute: typeof AdminlayoutRoute
   AdminGuruRoute: typeof AdminGuruRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminlayoutRoute: AdminlayoutRoute,
   AdminGuruRoute: AdminGuruRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -222,9 +202,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthRouteWithChildren
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/guru': typeof AuthGuruRouteWithChildren
-  '/admin': typeof AdminlayoutRoute
   '/admin/guru': typeof AdminGuruRoute
   '/admin/': typeof AdminIndexRoute
   '/guru/scan': typeof AuthGuruScanRoute
@@ -236,8 +216,8 @@ export interface FileRoutesByTo {
   '': typeof AuthRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
-  '/admin': typeof AdminIndexRoute
   '/admin/guru': typeof AdminGuruRoute
+  '/admin': typeof AdminIndexRoute
   '/guru/scan': typeof AuthGuruScanRoute
   '/guru': typeof AuthGuruIndexRoute
 }
@@ -247,10 +227,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/_auth/guru': typeof AuthGuruRouteWithChildren
-  '/admin': typeof AdminRouteWithChildren
-  '/admin/__layout': typeof AdminlayoutRoute
   '/admin/guru': typeof AdminGuruRoute
   '/admin/': typeof AdminIndexRoute
   '/_auth/guru/scan': typeof AuthGuruScanRoute
@@ -263,9 +242,9 @@ export interface FileRouteTypes {
     | '/'
     | ''
     | '/about'
+    | '/admin'
     | '/login'
     | '/guru'
-    | '/admin'
     | '/admin/guru'
     | '/admin/'
     | '/guru/scan'
@@ -276,8 +255,8 @@ export interface FileRouteTypes {
     | ''
     | '/about'
     | '/login'
-    | '/admin'
     | '/admin/guru'
+    | '/admin'
     | '/guru/scan'
     | '/guru'
   id:
@@ -285,10 +264,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/about'
+    | '/admin'
     | '/login'
     | '/_auth/guru'
-    | '/admin'
-    | '/admin/__layout'
     | '/admin/guru'
     | '/admin/'
     | '/_auth/guru/scan'
@@ -300,16 +278,16 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
   AboutRoute: typeof AboutRoute
-  LoginRoute: typeof LoginRoute
   AdminRoute: typeof AdminRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   AboutRoute: AboutRoute,
-  LoginRoute: LoginRoute,
   AdminRoute: AdminRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 
 export const routeTree = rootRoute
@@ -325,8 +303,8 @@ export const routeTree = rootRoute
         "/",
         "/_auth",
         "/about",
-        "/login",
-        "/admin"
+        "/admin",
+        "/login"
       ]
     },
     "/": {
@@ -341,6 +319,13 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.tsx"
     },
+    "/admin": {
+      "filePath": "admin.tsx",
+      "children": [
+        "/admin/guru",
+        "/admin/"
+      ]
+    },
     "/login": {
       "filePath": "login.tsx"
     },
@@ -351,18 +336,6 @@ export const routeTree = rootRoute
         "/_auth/guru/scan",
         "/_auth/guru/"
       ]
-    },
-    "/admin": {
-      "filePath": "admin",
-      "children": [
-        "/admin/__layout",
-        "/admin/guru",
-        "/admin/"
-      ]
-    },
-    "/admin/__layout": {
-      "filePath": "admin/__layout.tsx",
-      "parent": "/admin"
     },
     "/admin/guru": {
       "filePath": "admin/guru.tsx",

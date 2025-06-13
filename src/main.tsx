@@ -8,15 +8,14 @@ import { routeTree } from './routeTree.gen'
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 import { AuthProvider, useAuth } from './auth.tsx'
+import { SidebarProvider } from './components/ui/sidebar.tsx'
+import { ThemeProvider } from 'next-themes'
 
 // Create a new router instance
 const router = createRouter({
   routeTree,
   context: {
-    // auth: {
-    //   isAuthenticated: true,
-    // },
-    auth: undefined!,
+    auth: undefined!, // will be filled in dynamically
   },
   defaultPreload: 'intent',
   scrollRestoration: true,
@@ -31,32 +30,35 @@ declare module '@tanstack/react-router' {
   }
 }
 
+// Inner app with dynamic auth context and SidebarProvider
 function InnerApp() {
   const auth = useAuth()
-  return <RouterProvider router={router} context={{ auth }} />
+  return (
+      <RouterProvider router={router} context={{ auth }} />
+  )
 }
 
+// Main App with Theme and Auth
 function App() {
   return (
     <AuthProvider>
-      <InnerApp />
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <InnerApp />
+      </ThemeProvider>
     </AuthProvider>
   )
 }
 
-// Render the app
+// Mount the app to DOM
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      {/* <RouterProvider router={router} /> */}
       <App />
-    </StrictMode>,
+    </StrictMode>
   )
 }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// Performance monitoring (optional)
 reportWebVitals()
