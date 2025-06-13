@@ -9,15 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as LayRouteImport } from './routes/_lay'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminGuruRouteImport } from './routes/admin/guru'
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LayRoute = LayRouteImport.update({
@@ -43,13 +55,17 @@ const AdminGuruRoute = AdminGuruRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof LayRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
   '/admin/guru': typeof AdminGuruRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof LayRoute
+  '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
   '/admin/guru': typeof AdminGuruRoute
   '/admin': typeof AdminIndexRoute
 }
@@ -57,31 +73,64 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_lay': typeof LayRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
+  '/login': typeof LoginRoute
   '/admin/guru': typeof AdminGuruRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/admin' | '/admin/guru' | '/admin/'
+  fullPaths:
+    | '/'
+    | ''
+    | '/about'
+    | '/admin'
+    | '/login'
+    | '/admin/guru'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/admin/guru' | '/admin'
-  id: '__root__' | '/' | '/_lay' | '/admin' | '/admin/guru' | '/admin/'
+  to: '/' | '' | '/about' | '/login' | '/admin/guru' | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/_lay'
+    | '/about'
+    | '/admin'
+    | '/login'
+    | '/admin/guru'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LayRoute: typeof LayRoute
+  AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_lay': {
@@ -130,7 +179,9 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LayRoute: LayRoute,
+  AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

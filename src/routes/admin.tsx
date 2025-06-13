@@ -1,6 +1,6 @@
 import { AppSidebar } from '@/components/app-sidebar'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
 
@@ -11,10 +11,10 @@ export const Route = createFileRoute('/admin')({
 function RouteComponent() {
   // return <div>Hello "/admin"!</div>
   return (
-    <>
-    <AppSidebar />
-    <SidebarInset >
-      <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px]">
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset >
+        <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px]">
           <SidebarTrigger />
           <div className="flex-1">
             <h1 className="text-lg font-semibold">Dashboard</h1>
@@ -28,6 +28,6 @@ function RouteComponent() {
         </header>
         <Outlet />
       </SidebarInset>
-    </>
+    </SidebarProvider>
   )
 }
