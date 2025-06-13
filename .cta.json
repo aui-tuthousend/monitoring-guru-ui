@@ -1,9 +1,9 @@
 {
-  "projectName": ".",
+  "projectName": "dashboard-guru",
   "mode": "file-router",
   "typescript": true,
   "tailwind": true,
-  "packageManager": "pnpm",
+  "packageManager": "bun",
   "git": true,
   "version": 1,
   "framework": "react-cra",

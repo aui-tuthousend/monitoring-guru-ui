@@ -1,15 +1,12 @@
+import { DashboardContent } from '@/components/app-sidebar-content'
 import { createFileRoute } from '@tanstack/react-router'
-import { SectionCards } from '@/components/section-cards'
-import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 
-export const Route: any = createFileRoute('/admin/')({
-  component: () => (
-    <>
-      <SectionCards />
-      <div className="">
-        <ChartAreaInteractive />
-      </div>
-      {/* <DataTable data={data} /> */}
-    </>
-  ),
+export const Route = createFileRoute('/admin/')({
+  component: RouteComponent,
 })
+
+function RouteComponent() {
+  return (
+    <DashboardContent />
+  )
+}

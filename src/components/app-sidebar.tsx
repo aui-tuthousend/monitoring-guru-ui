@@ -1,232 +1,109 @@
-import * as React from "react"
-import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
-} from "@tabler/icons-react"
+"use client"
+import { BarChart3, Home, LayoutDashboard, LifeBuoy, Package, Settings, Users } from "lucide-react"
 
-
-import { NavUser } from "@/components/nav-user"
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarRail,
 } from "@/components/ui/sidebar"
-
-import { Link, useLocation } from "@tanstack/react-router"
+import { useLocation, Link } from "@tanstack/react-router"
 
 const navigationData = {
-  user: {
-    name: "Admin SMKN 02 Surabaya",
-    email: "admin@smkn2surabaya.sch.id",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/admin",
-      icon: IconDashboard,
+    user: {
+        name: "Admin SMKN 02 Surabaya",
+        email: "admin@smkn2surabaya.sch.id",
+        avatar: "/avatars/shadcn.jpg",
     },
-    {
-      title: "Guru",
-      url: "/admin/guru",
-      icon: IconListDetails,
-    },
-    {
-      title: "About",
-      url: "/about",
-      icon: IconChartBar,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
+    navMain: [
         {
-          title: "Active Proposals",
-          url: "#",
+            title: "Dashboard",
+            url: "/admin",
+            // icon: IconDashboard,
         },
         {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
+            title: "Guru",
+            url: "/admin/guru",
+            // icon: IconListDetails,
         },
         {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
+            title: "Kelas",
+            url: "/admin/kelas",
+            // icon: IconChartBar,
         },
         {
-          title: "Archived",
-          url: "#",
+            title: "Mata Pelajaran",
+            url: "/admin/mapel",
+            // icon: IconFolder,
         },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
-    },
-  ],
+        {
+            title: "Jadwal Ajar",
+            url: "/admin/jadwalajar",
+            // icon: IconUsers,
+        },
+        {
+            title: "Ruangan",
+            url: "/admin/ruangan",
+            // icon: IconUsers,
+        },
+    ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
-  const location = useLocation()
-  const pathname = location.pathname
+export function AppSidebar() {
 
-  
-  return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
-              <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">SMKN 02 Surabaya</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
+    const location = useLocation()
+    const pathname = location.pathname
 
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Main</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navigationData.navMain.map((item) => {
-                const isActive = pathname === item.url
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isActive}>
-                      <Link to={item.url}>
-                        <item.icon className="size-4" />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {navigationData.navClouds.map((group) => (
-          <SidebarGroup key={group.title}>
-            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {group.items.map((item) => {
-                  const isActive = pathname === item.url
-                  return (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild isActive={isActive}>
-                        <Link to={item.url}>
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
+    return (
+        <Sidebar>
+            <SidebarHeader className="border-b border-sidebar-border">
+                <div className="flex h-[2.8rem] items-center px-4">
+                    <span className="font-semibold">Acme Dashboard</span>
+                </div>
+            </SidebarHeader>
+            <SidebarContent>
+                <SidebarMenu>
+                    {navigationData.navMain.map((item) => {
+                        const isActive = pathname === item.url
+                        return (
+                            <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton asChild isActive={isActive}>
+                                    <Link to={item.url}>
+                                        {/* <item.icon className="size-4" /> */}
+                                        <span>{item.title}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        )
+                    })}
+                </SidebarMenu>
+            </SidebarContent>
+            <SidebarFooter className="border-t border-sidebar-border">
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <a href="#">
+                                <Settings className="h-4 w-4" />
+                                <span>Settings</span>
+                            </a>
+                        </SidebarMenuButton>
                     </SidebarMenuItem>
-                  )
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
-
-      <SidebarFooter>
-        <NavUser user={navigationData.user} />
-      </SidebarFooter>
-
-      <SidebarRail />
-
-    </Sidebar>
-  )
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <a href="#">
+                                <LifeBuoy className="h-4 w-4" />
+                                <span>Help</span>
+                            </a>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarFooter>
+            <SidebarRail />
+        </Sidebar>
+    )
 }

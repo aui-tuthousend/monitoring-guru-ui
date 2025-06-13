@@ -1,21 +1,15 @@
-import type { AuthContext } from '@/auth'
-import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
+import { Outlet, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { CookiesProvider } from 'react-cookie'
 
-// import Header from '../components/Header'
+import Header from '../components/Header'
+import { SidebarProvider } from '@/components/ui/sidebar'
 
-interface MyRouterContext {
-  auth: AuthContext
-}
-
-export const Route = createRootRouteWithContext<MyRouterContext>()({
+export const Route = createRootRoute({
   component: () => (
     <>
-      {/* <Header /> */}
-      <CookiesProvider>
+      <SidebarProvider>
         <Outlet />
-      </CookiesProvider>
+      </SidebarProvider>
       <TanStackRouterDevtools />
     </>
   ),
