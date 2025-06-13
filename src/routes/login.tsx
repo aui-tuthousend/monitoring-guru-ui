@@ -5,14 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAuth } from '@/store/auth/useAuth'
+import { useAuthStore } from '@/store/auth/useAuth'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
 })
 
 function LoginPage() {
-  const {loading, setLoading, login} = useAuth()
+  const {loading, setLoading, login} = useAuthStore()
   const navigate = useNavigate()
 
   const [nip, setNip] = useState<string>('');
@@ -29,11 +29,12 @@ function LoginPage() {
         console.log('Login successful:', result);
         toast.success('Login successful')
         navigate({ to: '/guru' })
+      } else {
+        toast.error(result.error)
       }
       // redirect or update UI as needed
     } catch (err: any) {
       setError(err.message || 'Login failed');
-      toast.error(err.message)
     } finally {
       setLoading(false)
     }
