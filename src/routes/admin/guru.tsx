@@ -1,7 +1,6 @@
 // import { DataTable } from '@/components/data-table-guru'
 import { createFileRoute } from '@tanstack/react-router'
-import { AppSidebar } from '@/components/app-sidebar'
-import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from '@/components/ui/separator'
 import {
   Dialog,
@@ -13,14 +12,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { useState } from 'react'
-import { useCookies } from 'react-cookie'
 import { Button } from '@/components/ui/button'
 import { Plus, Search } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { useGuruStore } from '@/store/guru/useGuru'
-import { fetchServer } from '@/lib/fetchServer'
-import { urlBuilder } from '@/lib/utils'
 // import { useQuery } from '@tanstack/react-query'
 
 export const Route = createFileRoute('/admin/guru')({

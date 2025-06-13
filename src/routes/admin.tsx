@@ -1,7 +1,6 @@
 import { AppSidebar } from '@/components/app-sidebar'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/admin')({

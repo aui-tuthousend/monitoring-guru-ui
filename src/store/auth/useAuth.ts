@@ -7,7 +7,7 @@ export interface LoginRequest {
   password: string;
 }
 
-export const useAuth = () => {
+export const useAuthStore = () => {
   const [, setCookie, removeCookie] = useCookies(['authToken', 'userData']);
   const [loading, setLoading] = useState<boolean>(false);
 

@@ -1,5 +1,5 @@
 "use client"
-import { BarChart3, Home, LayoutDashboard, LifeBuoy, Package, Settings, Users } from "lucide-react"
+import { LifeBuoy, Settings } from "lucide-react"
 
 import {
     Sidebar,

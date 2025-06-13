@@ -13,9 +13,13 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as LayRouteImport } from './routes/_lay'
+import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminGuruRouteImport } from './routes/admin/guru'
+import { Route as AuthGuruRouteImport } from './routes/_auth/guru'
+import { Route as AuthGuruIndexRouteImport } from './routes/_auth/guru/index'
+import { Route as AuthGuruScanRouteImport } from './routes/_auth/guru/scan'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -36,6 +40,10 @@ const LayRoute = LayRouteImport.update({
   id: '/_lay',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -51,6 +59,21 @@ const AdminGuruRoute = AdminGuruRouteImport.update({
   path: '/guru',
   getParentRoute: () => AdminRoute,
 } as any)
+const AuthGuruRoute = AuthGuruRouteImport.update({
+  id: '/guru',
+  path: '/guru',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthGuruIndexRoute = AuthGuruIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthGuruRoute,
+} as any)
+const AuthGuruScanRoute = AuthGuruScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
+  getParentRoute: () => AuthGuruRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -58,8 +81,11 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/guru': typeof AuthGuruRouteWithChildren
   '/admin/guru': typeof AdminGuruRoute
   '/admin/': typeof AdminIndexRoute
+  '/guru/scan': typeof AuthGuruScanRoute
+  '/guru/': typeof AuthGuruIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -68,16 +94,22 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/admin/guru': typeof AdminGuruRoute
   '/admin': typeof AdminIndexRoute
+  '/guru/scan': typeof AuthGuruScanRoute
+  '/guru': typeof AuthGuruIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_auth': typeof AuthRouteWithChildren
   '/_lay': typeof LayRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
+  '/_auth/guru': typeof AuthGuruRouteWithChildren
   '/admin/guru': typeof AdminGuruRoute
   '/admin/': typeof AdminIndexRoute
+  '/_auth/guru/scan': typeof AuthGuruScanRoute
+  '/_auth/guru/': typeof AuthGuruIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -87,23 +119,39 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/login'
+    | '/guru'
     | '/admin/guru'
     | '/admin/'
+    | '/guru/scan'
+    | '/guru/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/about' | '/login' | '/admin/guru' | '/admin'
+  to:
+    | '/'
+    | ''
+    | '/about'
+    | '/login'
+    | '/admin/guru'
+    | '/admin'
+    | '/guru/scan'
+    | '/guru'
   id:
     | '__root__'
     | '/'
+    | '/_auth'
     | '/_lay'
     | '/about'
     | '/admin'
     | '/login'
+    | '/_auth/guru'
     | '/admin/guru'
     | '/admin/'
+    | '/_auth/guru/scan'
+    | '/_auth/guru/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRouteWithChildren
   LayRoute: typeof LayRoute
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
@@ -140,6 +188,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -161,8 +216,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGuruRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_auth/guru': {
+      id: '/_auth/guru'
+      path: '/guru'
+      fullPath: '/guru'
+      preLoaderRoute: typeof AuthGuruRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/guru/': {
+      id: '/_auth/guru/'
+      path: '/'
+      fullPath: '/guru/'
+      preLoaderRoute: typeof AuthGuruIndexRouteImport
+      parentRoute: typeof AuthGuruRoute
+    }
+    '/_auth/guru/scan': {
+      id: '/_auth/guru/scan'
+      path: '/scan'
+      fullPath: '/guru/scan'
+      preLoaderRoute: typeof AuthGuruScanRouteImport
+      parentRoute: typeof AuthGuruRoute
+    }
   }
 }
+
+interface AuthGuruRouteChildren {
+  AuthGuruScanRoute: typeof AuthGuruScanRoute
+  AuthGuruIndexRoute: typeof AuthGuruIndexRoute
+}
+
+const AuthGuruRouteChildren: AuthGuruRouteChildren = {
+  AuthGuruScanRoute: AuthGuruScanRoute,
+  AuthGuruIndexRoute: AuthGuruIndexRoute,
+}
+
+const AuthGuruRouteWithChildren = AuthGuruRoute._addFileChildren(
+  AuthGuruRouteChildren,
+)
+
+interface AuthRouteChildren {
+  AuthGuruRoute: typeof AuthGuruRouteWithChildren
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthGuruRoute: AuthGuruRouteWithChildren,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface AdminRouteChildren {
   AdminGuruRoute: typeof AdminGuruRoute
@@ -178,6 +278,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRouteWithChildren,
   LayRoute: LayRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
