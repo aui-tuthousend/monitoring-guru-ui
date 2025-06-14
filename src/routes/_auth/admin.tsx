@@ -3,7 +3,7 @@ import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
 
-export const Route = createFileRoute('/admin')({
+export const Route = createFileRoute('/_auth/admin')({
   component: RouteComponent,
 })
 
