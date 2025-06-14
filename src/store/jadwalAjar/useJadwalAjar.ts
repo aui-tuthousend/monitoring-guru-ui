@@ -9,6 +9,33 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
     model: { guru: "", hari: "", jam_mulai: "", jam_selesai: "", kelas: "", mapel: "" },
     loading: false,
 
+    tableAttributes: [
+        {
+            accessorKey: "guru.name",
+            header: "Guru",
+        },
+        {
+            accessorKey: "mapel.name",
+            header: "Mapel",
+        },
+        {
+            accessorKey: "kelas.name",
+            header: "Kelas",
+        },
+        {
+            accessorKey: "hari",
+            header: "Hari",
+        },
+        {
+            accessorKey: "jam_mulai",
+            header: "Jam Mulai",
+        },
+        {
+            accessorKey: "jam_selesai",
+            header: "Jam Selesai",
+        },
+    ],
+
     setModel(model) {
         const currentModel = get().model;
         const newModel = model || get().default;
@@ -36,7 +63,25 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
             set({ loading: false });
         }
     },
+    GetAllJadwalajar: async (token) => {
+        set({ loading: true });
+        try {
+            const response = await fetchServer(token, urlBuilder('/jadwalajar'), {
+                method: 'GET',
+            });
 
+            const data = await response.data;
+            console.log(data)
+            set({ list: data.data })
+
+            return data;
+        } catch (error) {
+            console.error('Error getting list of jadwalajar:', error);
+            return error;
+        } finally {
+            set({ loading: false });
+        }
+    },
     GetListJadwalajarGuru: async (token, params: GetJadwalajarParams) => {
         try {
             set({ loading: true });
@@ -86,7 +131,4 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
             set({ loading: false });
         }
     },
-
-
-
 }));

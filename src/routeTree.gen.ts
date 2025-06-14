@@ -18,6 +18,7 @@ import { Route as AuthAdminRouteImport } from './routes/_auth/admin'
 import { Route as AuthGuruIndexRouteImport } from './routes/_auth/guru/index'
 import { Route as AuthAdminIndexRouteImport } from './routes/_auth/admin/index'
 import { Route as AuthGuruScanRouteImport } from './routes/_auth/guru/scan'
+import { Route as AuthAdminJadwalajarRouteImport } from './routes/_auth/admin/jadwalajar'
 import { Route as AuthAdminGuruRouteImport } from './routes/_auth/admin/guru'
 
 const LoginRoute = LoginRouteImport.update({
@@ -64,6 +65,11 @@ const AuthGuruScanRoute = AuthGuruScanRouteImport.update({
   path: '/scan',
   getParentRoute: () => AuthGuruRoute,
 } as any)
+const AuthAdminJadwalajarRoute = AuthAdminJadwalajarRouteImport.update({
+  id: '/jadwalajar',
+  path: '/jadwalajar',
+  getParentRoute: () => AuthAdminRoute,
+} as any)
 const AuthAdminGuruRoute = AuthAdminGuruRouteImport.update({
   id: '/guru',
   path: '/guru',
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthAdminRouteWithChildren
   '/guru': typeof AuthGuruRouteWithChildren
   '/admin/guru': typeof AuthAdminGuruRoute
+  '/admin/jadwalajar': typeof AuthAdminJadwalajarRoute
   '/guru/scan': typeof AuthGuruScanRoute
   '/admin/': typeof AuthAdminIndexRoute
   '/guru/': typeof AuthGuruIndexRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/admin/guru': typeof AuthAdminGuruRoute
+  '/admin/jadwalajar': typeof AuthAdminJadwalajarRoute
   '/guru/scan': typeof AuthGuruScanRoute
   '/admin': typeof AuthAdminIndexRoute
   '/guru': typeof AuthGuruIndexRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/_auth/admin': typeof AuthAdminRouteWithChildren
   '/_auth/guru': typeof AuthGuruRouteWithChildren
   '/_auth/admin/guru': typeof AuthAdminGuruRoute
+  '/_auth/admin/jadwalajar': typeof AuthAdminJadwalajarRoute
   '/_auth/guru/scan': typeof AuthGuruScanRoute
   '/_auth/admin/': typeof AuthAdminIndexRoute
   '/_auth/guru/': typeof AuthGuruIndexRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/guru'
     | '/admin/guru'
+    | '/admin/jadwalajar'
     | '/guru/scan'
     | '/admin/'
     | '/guru/'
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/login'
     | '/admin/guru'
+    | '/admin/jadwalajar'
     | '/guru/scan'
     | '/admin'
     | '/guru'
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '/_auth/admin'
     | '/_auth/guru'
     | '/_auth/admin/guru'
+    | '/_auth/admin/jadwalajar'
     | '/_auth/guru/scan'
     | '/_auth/admin/'
     | '/_auth/guru/'
@@ -214,6 +226,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthGuruScanRouteImport
       parentRoute: typeof AuthGuruRoute
     }
+    '/_auth/admin/jadwalajar': {
+      id: '/_auth/admin/jadwalajar'
+      path: '/jadwalajar'
+      fullPath: '/admin/jadwalajar'
+      preLoaderRoute: typeof AuthAdminJadwalajarRouteImport
+      parentRoute: typeof AuthAdminRoute
+    }
     '/_auth/admin/guru': {
       id: '/_auth/admin/guru'
       path: '/guru'
@@ -226,11 +245,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthAdminRouteChildren {
   AuthAdminGuruRoute: typeof AuthAdminGuruRoute
+  AuthAdminJadwalajarRoute: typeof AuthAdminJadwalajarRoute
   AuthAdminIndexRoute: typeof AuthAdminIndexRoute
 }
 
 const AuthAdminRouteChildren: AuthAdminRouteChildren = {
   AuthAdminGuruRoute: AuthAdminGuruRoute,
+  AuthAdminJadwalajarRoute: AuthAdminJadwalajarRoute,
   AuthAdminIndexRoute: AuthAdminIndexRoute,
 }
 

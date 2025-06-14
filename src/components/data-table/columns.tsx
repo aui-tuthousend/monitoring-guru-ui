@@ -44,7 +44,7 @@ export const DefineColumns = (attributes: DataTableAttributes[]) => {
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ getValue }: any) => <div>{getValue() as string}</div>,
+      cell: ({ getValue }: any) => <div className="pl-3">{getValue() as string}</div>,
     }
   })
 
