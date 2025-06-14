@@ -41,11 +41,11 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
         try {
             set({ loading: true });
 
-            const response = await fetchServer(token, urlBuilder('/jadwalajar/guru', params), {
+            const response = await fetchServer(token, urlBuilder('/jadwalajar/guru/'+params.uuid+'/'+params.hari), {
                 method: 'GET',
             });
 
-            const raw = await response.data.json();
+            const raw = await response.data;
             const data = raw.data;
 
             const list: Jadwalajar[] = data.map((item: any) => ({

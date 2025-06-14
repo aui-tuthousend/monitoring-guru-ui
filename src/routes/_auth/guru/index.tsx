@@ -18,19 +18,19 @@ function RouteComponent() {
   const [timestamp, setTimestamp] = useState<{ date: string, time: string } | null>(null);
 
   useEffect(() => {
-    // const now = new Date();
-    // setTimestamp({
-    //   date: now.toLocaleDateString("id-ID", {
-    //     weekday: "long",
-    //     year: "numeric",
-    //     month: "long",
-    //     day: "numeric"
-    //   }).replace("Minggu", "Senen"),
-    //   time: now.toLocaleTimeString("id-ID", {
-    //     hour: "2-digit",
-    //     minute: "2-digit"
-    //   }),
-    // });
+    const now = new Date();
+    setTimestamp({
+      date: now.toLocaleDateString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }),
+      time: now.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit"
+      }),
+    });
 
     if (cookies.authToken && cookies.userData?.id) {
       jadwalStore.GetListJadwalajarGuru(cookies.authToken, { uuid: cookies.userData.id, hari: 'senin' });
