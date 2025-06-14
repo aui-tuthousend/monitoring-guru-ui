@@ -6,9 +6,9 @@ export const Route = createFileRoute('/_auth')({
     if (!context.auth.isAuthenticated) {
       throw redirect({
         to: '/login',
-        search: {
-          redirect: location.href,
-        },
+        // search: {
+        //   redirect: location.href,
+        // },
       })
     }
   },
@@ -18,7 +18,7 @@ export const Route = createFileRoute('/_auth')({
 function RouteComponent() {
   return (
     <>
-      <div>Hello "/_auth Appliasased Here"!</div>
+      {/* <div>Hello "/_auth Appliasased Here"!</div> */}
       <Outlet />
     </>
   )

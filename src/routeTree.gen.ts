@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
-import { Route as LayRouteImport } from './routes/_lay'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -34,10 +33,6 @@ const AdminRoute = AdminRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LayRoute = LayRouteImport.update({
-  id: '/_lay',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -77,7 +72,7 @@ const AuthGuruScanRoute = AuthGuruScanRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '': typeof LayRoute
+  '': typeof AuthRouteWithChildren
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
@@ -89,7 +84,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '': typeof LayRoute
+  '': typeof AuthRouteWithChildren
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/admin/guru': typeof AdminGuruRoute
@@ -101,7 +96,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
-  '/_lay': typeof LayRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
@@ -138,7 +132,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
-    | '/_lay'
     | '/about'
     | '/admin'
     | '/login'
@@ -152,7 +145,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
-  LayRoute: typeof LayRoute
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
@@ -179,13 +171,6 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_lay': {
-      id: '/_lay'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof LayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -279,7 +264,6 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
-  LayRoute: LayRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,

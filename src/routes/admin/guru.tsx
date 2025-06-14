@@ -8,9 +8,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Plus, Search } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { DataTable } from '@/components/data-table/table'
@@ -19,6 +19,7 @@ import { DefineColumns } from '@/components/data-table/columns'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import PasswordInput from '@/components/ui/input-password'
 import { toast } from 'sonner'
+import { useCookies } from 'react-cookie'
 
 export const Route = createFileRoute('/admin/guru')({
   component: RouteComponent,
@@ -27,9 +28,16 @@ export const Route = createFileRoute('/admin/guru')({
 
 function RouteComponent() {
 
+  const [cookies] = useCookies(['authToken']);
+  const token = cookies.authToken;
+
   const store = useGuruStore()
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
   const guruColumns = DefineColumns(store.tableAttributes)
+
+  useEffect(() => {
+    store.GetListGuru(token)
+  }, [token])
 
   const validation = () => {
     if (!store.model.nip || !store.model.name || !store.model.password || !store.model.jabatan) {

@@ -31,9 +31,9 @@ function LoginPage() {
         auth.login(result.user_data.nip)
         console.log('Login successful:', result);
         toast.success('Login successful')
-        if (result.user_data.role === 'guru') {
+        if (result.user_data.jabatan === 'guru') {
           navigate({ to: '/guru' })
-        } else if (result.user_data.role === 'kepala_sekolah') {
+        } else if (result.user_data.jabatan === 'kepala_sekolah') {
           navigate({ to: '/admin' })
         }
       } else {

@@ -1,23 +1,10 @@
 import { create } from 'zustand';
-import { fetchServer } from "@/lib/fetchServer";
+import { fetchServer } from '@/lib/fetchServer';
 import { urlBuilder } from "@/lib/utils";
 import type { GuruStore } from "./types";
 
 export const useGuruStore = create<GuruStore>((set, get) => ({
-    list: [
-        {
-            id: "1",
-            jabatan: "Guru",
-            name: "Steve Kerr",
-            nip: "07626",
-        },
-        {
-            id: "2",
-            jabatan: "Kepala Lab",
-            name: "W. Chan Kim",
-            nip: "07627",
-        },
-    ],
+    list: [],
     default: { jabatan: "", name: "", nip: "" },
     model: { jabatan: "", name: "", nip: "" },
     loading: false,
@@ -43,10 +30,10 @@ export const useGuruStore = create<GuruStore>((set, get) => ({
             set({ model: newModel });
         }
     },
-    RegisterGuru: async (payload) => {
+    RegisterGuru: async (token, payload) => {
         set({loading: true});
         try {
-            const response = await fetchServer(urlBuilder('/guru'), {
+            const response = await fetchServer(token, urlBuilder('/guru'), {
                 method: 'POST',
                 body: JSON.stringify(payload),
             });
@@ -62,17 +49,17 @@ export const useGuruStore = create<GuruStore>((set, get) => ({
             set({loading: false});
         }
     },
-    GetListGuru: async () => {
+    GetListGuru: async (token) => {
         try {
             set({loading: true});
-            const response = await fetchServer(urlBuilder('/guru'), {
+            const response = await fetchServer(token, urlBuilder('/guru'), {
                 method: 'GET',
             });
 
-            const data = await response.data.json();
-            console.log(data)
+            const data = await response.data;
+            // console.log(data)
 
-            set({list: data})
+            set({list: data.data})
             return data;
         } catch (error) {
             console.error('Error getting list of users:', error);
