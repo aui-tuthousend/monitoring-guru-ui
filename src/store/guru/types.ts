@@ -1,16 +1,20 @@
+import type { DataTableAttributes } from "@/components/data-table/columns";
+
 interface Guru {
     id?: string;
     jabatan: string;
-    nama: string;
+    name: string;
     nip: string;
+    password?: string;
 }
 
 export interface GuruStore {
-    list: any[];
+    list: Guru[];
     default: Guru;
     model: Guru;
     loading: boolean;
-    setModel: (model?: any) => void;
+    tableAttributes: DataTableAttributes[];
+    setModel: (model?: Guru) => void;
     RegisterGuru: (payload: Guru) => Promise<void>;
     GetListGuru: () => Promise<void>;
 }

@@ -15,7 +15,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     <>
       {/* <Header /> */}
       <CookiesProvider>
-        <Toaster />
+        <Toaster position='top-center'/>
         <Outlet />
       </CookiesProvider>
       <TanStackRouterDevtools />

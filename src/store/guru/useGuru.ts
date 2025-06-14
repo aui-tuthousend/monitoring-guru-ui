@@ -4,10 +4,37 @@ import { urlBuilder } from "@/lib/utils";
 import type { GuruStore } from "./types";
 
 export const useGuruStore = create<GuruStore>((set, get) => ({
-    list: [],
-    default: { jabatan: "", nama: "", nip: "" },
-    model: { jabatan: "", nama: "", nip: "" },
+    list: [
+        {
+            id: "1",
+            jabatan: "Guru",
+            name: "Steve Kerr",
+            nip: "07626",
+        },
+        {
+            id: "2",
+            jabatan: "Kepala Lab",
+            name: "W. Chan Kim",
+            nip: "07627",
+        },
+    ],
+    default: { jabatan: "", name: "", nip: "" },
+    model: { jabatan: "", name: "", nip: "" },
     loading: false,
+    tableAttributes: [
+        {
+            accessorKey: "nip",
+            header: "NIP",
+        },
+        {
+            accessorKey: "name",
+            header: "Name",
+        },
+        {
+            accessorKey: "jabatan",
+            header: "Jabatan",
+        },
+    ],
 
     setModel(model) {
         const currentModel = get().model;
