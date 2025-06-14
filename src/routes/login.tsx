@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuthStore } from '@/store/auth/useAuth'
+import { useAuth } from '@/auth'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
 })
 
 function LoginPage() {
+  const auth = useAuth()
   const {loading, setLoading, login} = useAuthStore()
   const navigate = useNavigate()
 
@@ -26,6 +28,7 @@ function LoginPage() {
       setLoading(true)
       const result = await login({ nip: nip, password });
       if (result.token) {
+        auth.login(result.user_data.nip)
         console.log('Login successful:', result);
         toast.success('Login successful')
         navigate({ to: '/guru' })
