@@ -22,9 +22,11 @@ export const useAuthStore = () => {
       const data = await response.json();
       console.log(data)
 
-      // Set cookies
-      setCookie('authToken', data.token, { path: '/' });
-      setCookie('userData', JSON.stringify(data.user_data), { path: '/' });
+      const expires = new Date();
+      expires.setDate(expires.getDate() + 2);
+
+      setCookie('authToken', data.token, { path: '/', expires });
+      setCookie('userData', JSON.stringify(data.user_data), { path: '/', expires });
 
       return data;
     } catch (error) {

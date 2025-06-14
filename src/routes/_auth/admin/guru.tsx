@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
+import { CircleX, Plus } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { DataTable } from '@/components/data-table/table'
@@ -43,21 +43,24 @@ function RouteComponent() {
     if (!store.model.nip || !store.model.name || !store.model.password || !store.model.jabatan) {
       toast.error('Please fill all fields')
       return false
-    } else if (store.model.nip.length < 8) {
-      toast.error('NIP must be at least 8 characters')
+    } else if (store.model.nip.length < 5) {
+      toast.error('NIP must be at least 6 characters')
       return false
-    } else if (store.model.password.length < 8) {
-      toast.error('Password must be at least 8 characters')
+    } else if (store.model.password.length < 6) {
+      toast.error('Password must be at least 6 characters')
       return false
     }
     return true
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
 
     if (!validation()) return
-    // store.RegisterGuru(store.model)
-    console.log(store.model)
+    await store.RegisterGuru(token, store.model)
+    await store.GetListGuru(token)
+
+    toast.success('Guru berhasil ditambah')
+    // console.log(store.model)
     store.setModel()
     setIsAddDialogOpen(false)
   }
@@ -117,13 +120,20 @@ function RouteComponent() {
                         <SelectValue placeholder="Pilih Jabatan" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Guru">Guru</SelectItem>
-                        <SelectItem value="Kepala Lab">Kepala Lab</SelectItem>
+                        <SelectItem value="guru">Guru</SelectItem>
+                        <SelectItem value="kepala_sekolah">Kepala Sekolah</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <DialogFooter>
+                <Button 
+                    onClick={() => store.setModel()}
+                    disabled={store.loading}
+                    size="icon" 
+                    className="bg-red-500 hover:bg-red-600">
+                    <CircleX />
+                  </Button>
                   <Button
                     type="button"
                     onClick={handleSubmit}

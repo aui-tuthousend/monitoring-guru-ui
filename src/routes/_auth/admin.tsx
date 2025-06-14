@@ -19,10 +19,10 @@ function RouteComponent() {
             <h1 className="text-lg font-semibold">Dashboard</h1>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              Settings
-            </Button>
             <Button size="sm">View Profile</Button>
+            <Button variant="destructive" size="sm">
+              Log out
+            </Button>
           </div>
         </header>
         <Outlet />

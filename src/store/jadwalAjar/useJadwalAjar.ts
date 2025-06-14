@@ -71,7 +71,7 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
             });
 
             const data = await response.data;
-            console.log(data)
+            // console.log(data)
             set({ list: data.data })
 
             return data;

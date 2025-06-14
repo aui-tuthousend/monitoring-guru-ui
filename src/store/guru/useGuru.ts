@@ -31,22 +31,21 @@ export const useGuruStore = create<GuruStore>((set, get) => ({
         }
     },
     RegisterGuru: async (token, payload) => {
-        set({loading: true});
+        set({ loading: true });
         try {
-            const response = await fetchServer(token, urlBuilder('/guru'), {
-                method: 'POST',
-                body: JSON.stringify(payload),
-            });
-
-            const data = await response.data.json();
-            console.log(data)
-
-            return data;
+          const response = await fetchServer(token, urlBuilder('/guru'), {
+            method: 'POST',
+            body: payload,
+          });
+      
+        //   console.log(response.data);
+      
+          return response.data;
         } catch (error) {
-            console.error('Error registering user:', error);
-            return error;
+          console.error('Error registering user:', error);
+          return error;
         } finally {
-            set({loading: false});
+          set({ loading: false });
         }
     },
     GetListGuru: async (token) => {

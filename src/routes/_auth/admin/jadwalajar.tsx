@@ -12,8 +12,9 @@ export const Route = createFileRoute('/_auth/admin/jadwalajar')({
 
 function RouteComponent() {
 
-  const [cookies] = useCookies(['authToken']);
+  const [cookies] = useCookies(['authToken', 'userData']);
   const token = cookies.authToken;
+  const userData = cookies.userData;
 
   const store = useJadwalajarStore()
 
@@ -21,6 +22,7 @@ function RouteComponent() {
 
   useEffect(() => {
     store.GetAllJadwalajar(token)
+    // store.GetListJadwalajarGuru(token, { uuid: userData?.id, hari: 'senin' })
   }, [token])
 
   return (

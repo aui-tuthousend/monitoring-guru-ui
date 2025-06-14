@@ -1,5 +1,5 @@
 "use client"
-import { LifeBuoy, Settings } from "lucide-react"
+import { CalendarClock, CircleGauge, LifeBuoy, NotebookPen, School, Settings, UserLock, Warehouse } from "lucide-react"
 
 import {
     Sidebar,
@@ -23,32 +23,32 @@ const navigationData = {
         {
             title: "Dashboard",
             url: "/admin",
-            // icon: IconDashboard,
+            icon: <CircleGauge />
         },
         {
             title: "Guru",
             url: "/admin/guru",
-            // icon: IconListDetails,
+            icon: <UserLock />,
         },
         {
             title: "Kelas",
             url: "/admin/kelas",
-            // icon: IconChartBar,
+            icon: <School />
         },
         {
             title: "Mata Pelajaran",
             url: "/admin/mapel",
-            // icon: IconFolder,
+            icon: <NotebookPen />
         },
         {
             title: "Jadwal Ajar",
             url: "/admin/jadwalajar",
-            // icon: IconUsers,
+            icon: <CalendarClock />
         },
         {
             title: "Ruangan",
             url: "/admin/ruangan",
-            // icon: IconUsers,
+            icon: <Warehouse />
         },
     ],
 }
@@ -63,18 +63,18 @@ export function AppSidebar() {
         <Sidebar>
             <SidebarHeader className="border-b border-sidebar-border">
                 <div className="flex h-[2.8rem] items-center px-4">
-                    <span className="font-semibold">Acme Dashboard</span>
+                    <span className="font-semibold">SMKN 02 Dashboard</span>
                 </div>
             </SidebarHeader>
             <SidebarContent>
-                <SidebarMenu>
+                <SidebarMenu className="pt-2 px-2 gap-2">
                     {navigationData.navMain.map((item) => {
                         const isActive = pathname === item.url
                         return (
                             <SidebarMenuItem key={item.title}>
                                 <SidebarMenuButton asChild isActive={isActive}>
                                     <Link to={item.url}>
-                                        {/* <item.icon className="size-4" /> */}
+                                        {item.icon}
                                         <span>{item.title}</span>
                                     </Link>
                                 </SidebarMenuButton>
