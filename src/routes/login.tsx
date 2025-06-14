@@ -28,13 +28,13 @@ function LoginPage() {
       setLoading(true)
       const result = await login({ nip: nip, password });
       if (result.token) {
-        auth.login(result.user_data.nip)
+        auth.login(result.user_data.id)
         console.log('Login successful:', result);
         toast.success('Login successful')
         if (result.user_data.jabatan === 'guru') {
-          navigate({ to: '/guru' })
+          await navigate({ to: '/guru' })
         } else if (result.user_data.jabatan === 'kepala_sekolah') {
-          navigate({ to: '/admin' })
+          await navigate({ to: '/admin' })
         }
       } else {
         toast.error(result.error)

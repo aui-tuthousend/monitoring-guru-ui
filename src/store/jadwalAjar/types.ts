@@ -1,4 +1,4 @@
-interface Jadwalajar {
+export interface Jadwalajar {
     id?: string,
     guru: string,
     hari: string,
@@ -19,7 +19,7 @@ export interface JadwalajarStore {
     model: Jadwalajar;
     loading: boolean;
     setModel: (model?: any) => void;
-    RegisterJadwalajar: (payload: Jadwalajar) => Promise<void>;
-    GetListJadwalajarGuru: (params: GetJadwalajarParams) => Promise<void>;
-    GetListJadwalajarKelas: (params: GetJadwalajarParams) => Promise<void>;
+    RegisterJadwalajar: (token: string, payload: Jadwalajar) => Promise<void>;
+    GetListJadwalajarGuru: (token: string, params: GetJadwalajarParams) => Promise<void>;
+    GetListJadwalajarKelas: (token: string, params: GetJadwalajarParams) => Promise<void>;
 }
