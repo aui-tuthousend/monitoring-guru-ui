@@ -24,7 +24,7 @@ export const useAuthStore = () => {
 
       // Set cookies
       setCookie('authToken', data.token, { path: '/' });
-    //   setCookie('userData', JSON.stringify(data.user), { path: '/' });
+      setCookie('userData', JSON.stringify(data.user), { path: '/' });
 
       return data;
     } catch (error) {
