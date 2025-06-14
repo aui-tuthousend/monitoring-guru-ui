@@ -18,7 +18,7 @@ export const Route = createFileRoute('/_auth')({
 function RouteComponent() {
   return (
     <>
-      <div>Hello "/_auth Applied Here"!</div>
+      <div>Hello "/_auth Appliasased Here"!</div>
       <Outlet />
     </>
   )
