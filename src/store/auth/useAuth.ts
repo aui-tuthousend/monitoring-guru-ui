@@ -7,7 +7,7 @@ export interface LoginRequest {
   password: string;
 }
 
-export const useAuth = () => {
+export const useAuthStore = () => {
   const [, setCookie, removeCookie] = useCookies(['authToken', 'userData']);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -22,9 +22,11 @@ export const useAuth = () => {
       const data = await response.json();
       console.log(data)
 
-      // Set cookies
-      setCookie('authToken', data.token, { path: '/' });
-    //   setCookie('userData', JSON.stringify(data.user), { path: '/' });
+      const expires = new Date();
+      expires.setDate(expires.getDate() + 2);
+
+      setCookie('authToken', data.token, { path: '/', expires });
+      setCookie('userData', JSON.stringify(data.user_data), { path: '/', expires });
 
       return data;
     } catch (error) {

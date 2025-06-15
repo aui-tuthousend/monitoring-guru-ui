@@ -1,13 +1,27 @@
 import { create } from 'zustand';
-import { fetchServer } from "@/lib/fetchServer";
+import { fetchServer } from '@/lib/fetchServer';
 import { urlBuilder } from "@/lib/utils";
 import type { GuruStore } from "./types";
 
 export const useGuruStore = create<GuruStore>((set, get) => ({
     list: [],
-    default: { jabatan: "", nama: "", nip: "" },
-    model: { jabatan: "", nama: "", nip: "" },
+    default: { jabatan: "", name: "", nip: "" },
+    model: { jabatan: "", name: "", nip: "" },
     loading: false,
+    tableAttributes: [
+        {
+            accessorKey: "nip",
+            header: "NIP",
+        },
+        {
+            accessorKey: "name",
+            header: "Name",
+        },
+        {
+            accessorKey: "jabatan",
+            header: "Jabatan",
+        },
+    ],
 
     setModel(model) {
         const currentModel = get().model;
@@ -16,36 +30,35 @@ export const useGuruStore = create<GuruStore>((set, get) => ({
             set({ model: newModel });
         }
     },
-    RegisterGuru: async (payload) => {
-        set({loading: true});
+    RegisterGuru: async (token, payload) => {
+        set({ loading: true });
         try {
-            const response = await fetchServer(urlBuilder('/guru'), {
-                method: 'POST',
-                body: JSON.stringify(payload),
-            });
-
-            const data = await response.data.json();
-            console.log(data)
-
-            return data;
+          const response = await fetchServer(token, urlBuilder('/guru'), {
+            method: 'POST',
+            body: payload,
+          });
+      
+        //   console.log(response.data);
+      
+          return response.data;
         } catch (error) {
-            console.error('Error registering user:', error);
-            return error;
+          console.error('Error registering user:', error);
+          return error;
         } finally {
-            set({loading: false});
+          set({ loading: false });
         }
     },
-    GetListGuru: async () => {
+    GetListGuru: async (token) => {
         try {
             set({loading: true});
-            const response = await fetchServer(urlBuilder('/guru'), {
+            const response = await fetchServer(token, urlBuilder('/guru'), {
                 method: 'GET',
             });
 
-            const data = await response.data.json();
-            console.log(data)
+            const data = await response.data;
+            // console.log(data)
 
-            set({list: data})
+            set({list: data.data})
             return data;
         } catch (error) {
             console.error('Error getting list of users:', error);

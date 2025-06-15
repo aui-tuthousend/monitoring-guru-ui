@@ -8,159 +8,256 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthGuruRouteImport } from './routes/_auth/guru'
+import { Route as AuthAdminRouteImport } from './routes/_auth/admin'
+import { Route as AuthGuruIndexRouteImport } from './routes/_auth/guru/index'
+import { Route as AuthAdminIndexRouteImport } from './routes/_auth/admin/index'
+import { Route as AuthGuruScanRouteImport } from './routes/_auth/guru/scan'
+import { Route as AuthAdminJadwalajarRouteImport } from './routes/_auth/admin/jadwalajar'
+import { Route as AuthAdminGuruRouteImport } from './routes/_auth/admin/guru'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as LoginImport } from './routes/login'
-import { Route as AdminImport } from './routes/admin'
-import { Route as AboutImport } from './routes/about'
-import { Route as AuthImport } from './routes/_auth'
-import { Route as IndexImport } from './routes/index'
-import { Route as AdminIndexImport } from './routes/admin/index'
-import { Route as AdminGuruImport } from './routes/admin/guru'
-import { Route as AuthGuruImport } from './routes/_auth/guru'
-import { Route as AuthGuruIndexImport } from './routes/_auth/guru/index'
-import { Route as AuthGuruScanImport } from './routes/_auth/guru/scan'
-
-// Create/Update Routes
-
-const LoginRoute = LoginImport.update({
+const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminRoute = AdminImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AboutRoute = AboutImport.update({
+const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AuthRoute = AuthImport.update({
+const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminIndexRoute = AdminIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
-} as any)
-
-const AdminGuruRoute = AdminGuruImport.update({
-  id: '/guru',
-  path: '/guru',
-  getParentRoute: () => AdminRoute,
-} as any)
-
-const AuthGuruRoute = AuthGuruImport.update({
+const AuthGuruRoute = AuthGuruRouteImport.update({
   id: '/guru',
   path: '/guru',
   getParentRoute: () => AuthRoute,
 } as any)
-
-const AuthGuruIndexRoute = AuthGuruIndexImport.update({
+const AuthAdminRoute = AuthAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthGuruIndexRoute = AuthGuruIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthGuruRoute,
 } as any)
-
-const AuthGuruScanRoute = AuthGuruScanImport.update({
+const AuthAdminIndexRoute = AuthAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthAdminRoute,
+} as any)
+const AuthGuruScanRoute = AuthGuruScanRouteImport.update({
   id: '/scan',
   path: '/scan',
   getParentRoute: () => AuthGuruRoute,
 } as any)
+const AuthAdminJadwalajarRoute = AuthAdminJadwalajarRouteImport.update({
+  id: '/jadwalajar',
+  path: '/jadwalajar',
+  getParentRoute: () => AuthAdminRoute,
+} as any)
+const AuthAdminGuruRoute = AuthAdminGuruRouteImport.update({
+  id: '/guru',
+  path: '/guru',
+  getParentRoute: () => AuthAdminRoute,
+} as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '': typeof AuthRouteWithChildren
+  '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/admin': typeof AuthAdminRouteWithChildren
+  '/guru': typeof AuthGuruRouteWithChildren
+  '/admin/guru': typeof AuthAdminGuruRoute
+  '/admin/jadwalajar': typeof AuthAdminJadwalajarRoute
+  '/guru/scan': typeof AuthGuruScanRoute
+  '/admin/': typeof AuthAdminIndexRoute
+  '/guru/': typeof AuthGuruIndexRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '': typeof AuthRouteWithChildren
+  '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/admin/guru': typeof AuthAdminGuruRoute
+  '/admin/jadwalajar': typeof AuthAdminJadwalajarRoute
+  '/guru/scan': typeof AuthGuruScanRoute
+  '/admin': typeof AuthAdminIndexRoute
+  '/guru': typeof AuthGuruIndexRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/_auth': typeof AuthRouteWithChildren
+  '/about': typeof AboutRoute
+  '/login': typeof LoginRoute
+  '/_auth/admin': typeof AuthAdminRouteWithChildren
+  '/_auth/guru': typeof AuthGuruRouteWithChildren
+  '/_auth/admin/guru': typeof AuthAdminGuruRoute
+  '/_auth/admin/jadwalajar': typeof AuthAdminJadwalajarRoute
+  '/_auth/guru/scan': typeof AuthGuruScanRoute
+  '/_auth/admin/': typeof AuthAdminIndexRoute
+  '/_auth/guru/': typeof AuthGuruIndexRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | ''
+    | '/about'
+    | '/login'
+    | '/admin'
+    | '/guru'
+    | '/admin/guru'
+    | '/admin/jadwalajar'
+    | '/guru/scan'
+    | '/admin/'
+    | '/guru/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | ''
+    | '/about'
+    | '/login'
+    | '/admin/guru'
+    | '/admin/jadwalajar'
+    | '/guru/scan'
+    | '/admin'
+    | '/guru'
+  id:
+    | '__root__'
+    | '/'
+    | '/_auth'
+    | '/about'
+    | '/login'
+    | '/_auth/admin'
+    | '/_auth/guru'
+    | '/_auth/admin/guru'
+    | '/_auth/admin/jadwalajar'
+    | '/_auth/guru/scan'
+    | '/_auth/admin/'
+    | '/_auth/guru/'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRouteWithChildren
+  AboutRoute: typeof AboutRoute
+  LoginRoute: typeof LoginRoute
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/about': {
       id: '/about'
       path: '/about'
       fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminImport
-      parentRoute: typeof rootRoute
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_auth/guru': {
       id: '/_auth/guru'
       path: '/guru'
       fullPath: '/guru'
-      preLoaderRoute: typeof AuthGuruImport
-      parentRoute: typeof AuthImport
+      preLoaderRoute: typeof AuthGuruRouteImport
+      parentRoute: typeof AuthRoute
     }
-    '/admin/guru': {
-      id: '/admin/guru'
-      path: '/guru'
-      fullPath: '/admin/guru'
-      preLoaderRoute: typeof AdminGuruImport
-      parentRoute: typeof AdminImport
-    }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexImport
-      parentRoute: typeof AdminImport
-    }
-    '/_auth/guru/scan': {
-      id: '/_auth/guru/scan'
-      path: '/scan'
-      fullPath: '/guru/scan'
-      preLoaderRoute: typeof AuthGuruScanImport
-      parentRoute: typeof AuthGuruImport
+    '/_auth/admin': {
+      id: '/_auth/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthAdminRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_auth/guru/': {
       id: '/_auth/guru/'
       path: '/'
       fullPath: '/guru/'
-      preLoaderRoute: typeof AuthGuruIndexImport
-      parentRoute: typeof AuthGuruImport
+      preLoaderRoute: typeof AuthGuruIndexRouteImport
+      parentRoute: typeof AuthGuruRoute
+    }
+    '/_auth/admin/': {
+      id: '/_auth/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthAdminIndexRouteImport
+      parentRoute: typeof AuthAdminRoute
+    }
+    '/_auth/guru/scan': {
+      id: '/_auth/guru/scan'
+      path: '/scan'
+      fullPath: '/guru/scan'
+      preLoaderRoute: typeof AuthGuruScanRouteImport
+      parentRoute: typeof AuthGuruRoute
+    }
+    '/_auth/admin/jadwalajar': {
+      id: '/_auth/admin/jadwalajar'
+      path: '/jadwalajar'
+      fullPath: '/admin/jadwalajar'
+      preLoaderRoute: typeof AuthAdminJadwalajarRouteImport
+      parentRoute: typeof AuthAdminRoute
+    }
+    '/_auth/admin/guru': {
+      id: '/_auth/admin/guru'
+      path: '/guru'
+      fullPath: '/admin/guru'
+      preLoaderRoute: typeof AuthAdminGuruRouteImport
+      parentRoute: typeof AuthAdminRoute
     }
   }
 }
 
-// Create and export the route tree
+interface AuthAdminRouteChildren {
+  AuthAdminGuruRoute: typeof AuthAdminGuruRoute
+  AuthAdminJadwalajarRoute: typeof AuthAdminJadwalajarRoute
+  AuthAdminIndexRoute: typeof AuthAdminIndexRoute
+}
+
+const AuthAdminRouteChildren: AuthAdminRouteChildren = {
+  AuthAdminGuruRoute: AuthAdminGuruRoute,
+  AuthAdminJadwalajarRoute: AuthAdminJadwalajarRoute,
+  AuthAdminIndexRoute: AuthAdminIndexRoute,
+}
+
+const AuthAdminRouteWithChildren = AuthAdminRoute._addFileChildren(
+  AuthAdminRouteChildren,
+)
 
 interface AuthGuruRouteChildren {
   AuthGuruScanRoute: typeof AuthGuruScanRoute
@@ -177,182 +274,23 @@ const AuthGuruRouteWithChildren = AuthGuruRoute._addFileChildren(
 )
 
 interface AuthRouteChildren {
+  AuthAdminRoute: typeof AuthAdminRouteWithChildren
   AuthGuruRoute: typeof AuthGuruRouteWithChildren
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  AuthAdminRoute: AuthAdminRouteWithChildren,
   AuthGuruRoute: AuthGuruRouteWithChildren,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
-interface AdminRouteChildren {
-  AdminGuruRoute: typeof AdminGuruRoute
-  AdminIndexRoute: typeof AdminIndexRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminGuruRoute: AdminGuruRoute,
-  AdminIndexRoute: AdminIndexRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
-export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '': typeof AuthRouteWithChildren
-  '/about': typeof AboutRoute
-  '/admin': typeof AdminRouteWithChildren
-  '/login': typeof LoginRoute
-  '/guru': typeof AuthGuruRouteWithChildren
-  '/admin/guru': typeof AdminGuruRoute
-  '/admin/': typeof AdminIndexRoute
-  '/guru/scan': typeof AuthGuruScanRoute
-  '/guru/': typeof AuthGuruIndexRoute
-}
-
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '': typeof AuthRouteWithChildren
-  '/about': typeof AboutRoute
-  '/login': typeof LoginRoute
-  '/admin/guru': typeof AdminGuruRoute
-  '/admin': typeof AdminIndexRoute
-  '/guru/scan': typeof AuthGuruScanRoute
-  '/guru': typeof AuthGuruIndexRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/_auth': typeof AuthRouteWithChildren
-  '/about': typeof AboutRoute
-  '/admin': typeof AdminRouteWithChildren
-  '/login': typeof LoginRoute
-  '/_auth/guru': typeof AuthGuruRouteWithChildren
-  '/admin/guru': typeof AdminGuruRoute
-  '/admin/': typeof AdminIndexRoute
-  '/_auth/guru/scan': typeof AuthGuruScanRoute
-  '/_auth/guru/': typeof AuthGuruIndexRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | ''
-    | '/about'
-    | '/admin'
-    | '/login'
-    | '/guru'
-    | '/admin/guru'
-    | '/admin/'
-    | '/guru/scan'
-    | '/guru/'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | ''
-    | '/about'
-    | '/login'
-    | '/admin/guru'
-    | '/admin'
-    | '/guru/scan'
-    | '/guru'
-  id:
-    | '__root__'
-    | '/'
-    | '/_auth'
-    | '/about'
-    | '/admin'
-    | '/login'
-    | '/_auth/guru'
-    | '/admin/guru'
-    | '/admin/'
-    | '/_auth/guru/scan'
-    | '/_auth/guru/'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRouteWithChildren
-  AboutRoute: typeof AboutRoute
-  AdminRoute: typeof AdminRouteWithChildren
-  LoginRoute: typeof LoginRoute
-}
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   AboutRoute: AboutRoute,
-  AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/_auth",
-        "/about",
-        "/admin",
-        "/login"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/_auth": {
-      "filePath": "_auth.tsx",
-      "children": [
-        "/_auth/guru"
-      ]
-    },
-    "/about": {
-      "filePath": "about.tsx"
-    },
-    "/admin": {
-      "filePath": "admin.tsx",
-      "children": [
-        "/admin/guru",
-        "/admin/"
-      ]
-    },
-    "/login": {
-      "filePath": "login.tsx"
-    },
-    "/_auth/guru": {
-      "filePath": "_auth/guru.tsx",
-      "parent": "/_auth",
-      "children": [
-        "/_auth/guru/scan",
-        "/_auth/guru/"
-      ]
-    },
-    "/admin/guru": {
-      "filePath": "admin/guru.tsx",
-      "parent": "/admin"
-    },
-    "/admin/": {
-      "filePath": "admin/index.tsx",
-      "parent": "/admin"
-    },
-    "/_auth/guru/scan": {
-      "filePath": "_auth/guru/scan.tsx",
-      "parent": "/_auth/guru"
-    },
-    "/_auth/guru/": {
-      "filePath": "_auth/guru/index.tsx",
-      "parent": "/_auth/guru"
-    }
-  }
-}
-ROUTE_MANIFEST_END */

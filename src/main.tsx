@@ -8,14 +8,12 @@ import { routeTree } from './routeTree.gen'
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 import { AuthProvider, useAuth } from './auth.tsx'
-import { SidebarProvider } from './components/ui/sidebar.tsx'
-import { ThemeProvider } from 'next-themes'
 
 // Create a new router instance
 const router = createRouter({
   routeTree,
   context: {
-    auth: undefined!, // will be filled in dynamically
+    auth: undefined!
   },
   defaultPreload: 'intent',
   scrollRestoration: true,
@@ -42,9 +40,9 @@ function InnerApp() {
 function App() {
   return (
     <AuthProvider>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange> */}
         <InnerApp />
-      </ThemeProvider>
+      {/* </ThemeProvider> */}
     </AuthProvider>
   )
 }
@@ -60,5 +58,7 @@ if (rootElement && !rootElement.innerHTML) {
   )
 }
 
-// Performance monitoring (optional)
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals()

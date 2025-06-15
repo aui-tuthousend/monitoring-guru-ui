@@ -1,37 +1,50 @@
-import { useCookies } from 'react-cookie'
-import { urlBuilder } from './utils';
 
 interface RequestConfig {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
   body?: any;
+  headers?: Record<string, string>;
 }
 
-export const fetchServer = async (
+interface FetchResponse<T> {
+  data: T;
+  status: number;
+  success: boolean;
+}
+
+export const fetchServer = async <T = any>(
+  token: string,
   url: string,
   options: RequestConfig = {},
   contentType: string = 'application/json'
-): Promise<any> => {
-  const [cookies] = useCookies(['authToken']);
-  const token = cookies.authToken;
+): Promise<FetchResponse<T>> => {
 
-  const headers = {
-    Authorization: token?.includes('Bearer') ? token : `Bearer ${token}`,
+  const defaultHeaders = {
     'Content-Type': contentType,
-  }
+    ...(token ? { Authorization: token.includes('Bearer') ? token : `Bearer ${token}` } : {})
+  } as const;
+
+  const headers = { ...defaultHeaders, ...options.headers };
 
   try {
-    const response = await fetch(urlBuilder(url), {
+    const response = await fetch(url, {
       method: options.method || 'GET',
       headers,
-      // body: JSON.stringify(options.body),
+      body: options.body ? JSON.stringify(options.body) : undefined,
     });
 
     const data = await response.json();
-    console.log(data)
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-    return data
-  } catch (error: any) {
-    console.error('Error fetching data:', error)
-    throw new Error(error?.response?.data?.message || 'Unknown error occurred')
+    return {
+      data,
+      status: response.status,
+      success: true,
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw new Error(error instanceof Error ? error.message : 'Unknown error occurred');
   }
 }
