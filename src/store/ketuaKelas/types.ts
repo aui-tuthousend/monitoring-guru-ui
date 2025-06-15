@@ -9,6 +9,7 @@ export interface KetuaKelas {
 
 export interface KetuaKelasStore {
     list: any[];
+    unsignedList: any[];
     tableAttributes: DataTableAttributes[];
     default: KetuaKelas;
     model: KetuaKelas;
@@ -16,4 +17,5 @@ export interface KetuaKelasStore {
     setModel: (model?: any) => void;
     RegisterKetuaKelas: (token: string, payload: KetuaKelas) => Promise<void>;
     GetAllKetuaKelas: (token: string) => Promise<void>;
+    GetUnsignedKetuaKelas: (token: string) => Promise<void>;
 }

@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Plus, CircleX } from 'lucide-react'
+import { Plus, CircleX, Loader2 } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import {
@@ -50,7 +50,7 @@ function RouteComponent() {
 
     const fetchData = async () => {
         await kelasStore.GetAllKelas(token)
-        await ketuaStore.GetAllKetuaKelas(token)
+        await ketuaStore.GetUnsignedKetuaKelas(token)
         await jurusanStore.GetAllJurusan(token)
     }
     fetchData()
@@ -86,8 +86,14 @@ function RouteComponent() {
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90">
-                <Plus className="mr-2 h-4 w-4" />
+              <Button 
+                disabled={kelasStore.loading || ketuaStore.loading}
+                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90">
+                  {kelasStore.loading || ketuaStore.loading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ):(
+                    <Plus className="mr-2 h-4 w-4" />
+                  )}
                 Add Kelas
               </Button>
             </DialogTrigger>
@@ -109,7 +115,7 @@ function RouteComponent() {
                   />
                 </div>
                 {/* Ketua */}
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
                   <Label>Ketua Kelas</Label>
                   <Select
                     value={kelasStore.model.ketua_kelas}
@@ -117,11 +123,17 @@ function RouteComponent() {
                       kelasStore.setModel({ ...kelasStore.model, ketua_kelas: value })
                     }
                   >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-[16rem]">
                       <SelectValue placeholder="Pilih Ketua" />
                     </SelectTrigger>
                     <SelectContent>
-                      {ketuaStore.list.map(k => (
+                      {ketuaStore.unsignedList.length == 0 && (
+                        <SelectItem disabled value="null">
+                          {/* <Loader2 className="mr-2 h-4 w-4 animate-spin" /> */}
+                          No data
+                        </SelectItem>
+                      )}
+                      {ketuaStore.unsignedList.map(k => (
                         <SelectItem key={k.id} value={k.id!}>
                           {k.name}
                         </SelectItem>
@@ -130,7 +142,7 @@ function RouteComponent() {
                   </Select>
                 </div>
                 {/* Jurusan */}
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
                   <Label>Jurusan</Label>
                   <Select
                     disabled={kelasStore.loading}
@@ -139,7 +151,7 @@ function RouteComponent() {
                       kelasStore.setModel({ ...kelasStore.model, jurusan: value })
                     }
                   >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-[16rem]">
                       <SelectValue placeholder="Pilih Jurusan" />
                     </SelectTrigger>
                     <SelectContent>
@@ -168,6 +180,9 @@ function RouteComponent() {
                   disabled={kelasStore.loading}
                   className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90"
                 >
+                  {kelasStore.loading && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   Add Kelas
                 </Button>
               </DialogFooter>

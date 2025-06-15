@@ -1,5 +1,5 @@
 "use client"
-import { CalendarClock, CircleGauge, LifeBuoy, NotebookPen, School, Settings, UserLock, Warehouse } from "lucide-react"
+import { CalendarClock, CircleGauge, LifeBuoy, NotebookPen, School, Settings, User, UserLock, Warehouse } from "lucide-react"
 
 import {
     Sidebar,
@@ -29,6 +29,11 @@ const navigationData = {
             title: "Guru",
             url: "/admin/guru",
             icon: <UserLock />,
+        },
+        {
+            title: "Ketua Kelas",
+            url: "/admin/ketua-kelas",
+            icon: <User />,
         },
         {
             title: "Kelas",

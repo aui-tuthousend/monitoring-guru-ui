@@ -5,6 +5,7 @@ import type { KetuaKelasStore } from "./types";
 
 export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
     list: [],
+    unsignedList: [],
     default: { name: "", nisn: "", password: "" },
     model: { name: "", nisn: "", password: "" },
     loading: false,
@@ -46,6 +47,25 @@ export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
             return data;
         } catch (error) {
             console.error('Error registering ketua kelas:', error);
+            return error;
+        } finally {
+            set({ loading: false });
+        }
+    },
+
+    GetUnsignedKetuaKelas: async (token) => {
+        set({ loading: true });
+        try {
+            const response = await fetchServer(token, urlBuilder('/ketua-kelas/unsigned'), {
+                method: 'GET',
+            });
+
+            const data = await response.data;
+            set({ unsignedList: data.data });
+
+            return data;
+        } catch (error) {
+            console.error('Error getting list of ketua kelas:', error);
             return error;
         } finally {
             set({ loading: false });
