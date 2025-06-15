@@ -8,3 +8,4 @@ count.txt
 .*lock*
 pnpm-lock.yaml
 bun.lock
+bun.lock
