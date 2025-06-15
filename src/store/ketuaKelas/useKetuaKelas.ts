@@ -1,17 +1,17 @@
 import { create } from "zustand";
 import { fetchServer } from "@/lib/fetchServer";
 import { urlBuilder } from "@/lib/utils";
-import type { KetuaKelas, KetuaKelasStore } from "./types";
+import type { KetuaKelasStore } from "./types";
 
 export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
     list: [],
-    default: { nama: "", nis: "", password: "" },
-    model: { nama: "", nis: "", password: "" },
+    default: { name: "", nisn: "", password: "" },
+    model: { name: "", nisn: "", password: "" },
     loading: false,
 
     tableAttributes: [
         {
-            accessorKey: "nama",
+            accessorKey: "name",
             header: "Nama",
         },
         {
@@ -35,7 +35,7 @@ export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
     RegisterKetuaKelas: async (token, payload) => {
         set({ loading: true });
         try {
-            const response = await fetchServer(token, urlBuilder('/ketuakelas'), {
+            const response = await fetchServer(token, urlBuilder('/ketua-kelas'), {
                 method: 'POST',
                 body: JSON.stringify(payload),
             });
@@ -55,7 +55,7 @@ export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
     GetAllKetuaKelas: async (token) => {
         set({ loading: true });
         try {
-            const response = await fetchServer(token, urlBuilder('/ketuakelas'), {
+            const response = await fetchServer(token, urlBuilder('/ketua-kelas'), {
                 method: 'GET',
             });
 

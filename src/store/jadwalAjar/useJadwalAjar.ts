@@ -86,7 +86,7 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
         try {
             set({ loading: true });
 
-            const response = await fetchServer(token, urlBuilder('/jadwalajar/guru/'+params.uuid+'/'+params.hari), {
+            const response = await fetchServer(token, urlBuilder('/jadwalajar/guru', params), {
                 method: 'GET',
             });
 

@@ -2,13 +2,13 @@ import type { DataTableAttributes } from "@/components/data-table/columns";
 
 export interface KetuaKelas {
     id?: string;
-    nama: string;
-    nis: string;
+    name: string;
+    nisn: string;
     password: string;
 }
 
 export interface KetuaKelasStore {
-    list: KetuaKelas[];
+    list: any[];
     tableAttributes: DataTableAttributes[];
     default: KetuaKelas;
     model: KetuaKelas;

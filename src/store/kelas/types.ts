@@ -1,19 +1,15 @@
 import type { DataTableAttributes } from "@/components/data-table/columns";
-import type { KetuaKelas } from "../ketuaKelas/types";
-import type { Jurusan } from "../jurusan/types";
 
 export interface Kelas {
     id?: string;
     name: string;
-    ketua_id: string;
-    jurusan_id?: string;
-    is_active: boolean;
-    ketua?: KetuaKelas;
-    jurusan?: Jurusan;
+    ketua_kelas: string;
+    jurusan: string;
+    // is_active: boolean;
 }
 
 export interface KelasStore {
-    list: Kelas[];
+    list: any[];
     tableAttributes: DataTableAttributes[];
     default: Kelas;
     model: Kelas;

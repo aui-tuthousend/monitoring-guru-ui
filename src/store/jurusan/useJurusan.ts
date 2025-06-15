@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { fetchServer } from "@/lib/fetchServer";
 import { urlBuilder } from "@/lib/utils";
-import type { Jurusan, JurusanStore } from "./types";
+import type { JurusanStore } from "./types";
 
 export const useJurusanStore = create<JurusanStore>((set, get) => ({
     list: [],

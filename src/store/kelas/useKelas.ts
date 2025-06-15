@@ -1,20 +1,20 @@
 import { create } from "zustand";
 import { fetchServer } from "@/lib/fetchServer";
 import { urlBuilder } from "@/lib/utils";
-import type { Kelas, KelasStore } from "./types";
+import type { KelasStore } from "./types";
 
 export const useKelasStore = create<KelasStore>((set, get) => ({
     list: [],
     default: {
         name: "",
-        ketua_id: "",
-        jurusan_id: undefined,
+        ketua_kelas: "",
+        jurusan: "",
         is_active: false,
     },
     model: {
         name: "",
-        ketua_id: "",
-        jurusan_id: undefined,
+        ketua_kelas: "",
+        jurusan: "",
         is_active: false,
     },
     loading: false,
@@ -25,7 +25,7 @@ export const useKelasStore = create<KelasStore>((set, get) => ({
             header: "Nama Kelas",
         },
         {
-            accessorKey: "ketua.name",
+            accessorKey: "ketua_kelas.name",
             header: "Ketua Kelas",
         },
         {
@@ -51,12 +51,12 @@ export const useKelasStore = create<KelasStore>((set, get) => ({
         try {
             const response = await fetchServer(token, urlBuilder('/kelas'), {
                 method: 'POST',
-                body: JSON.stringify(payload),
+                body: payload,
             });
 
-            const data = await response.data.json();
-            console.log(data);
-            return data;
+            console.log(response.data);
+      
+            return response.data;
         } catch (error) {
             console.error('Error registering kelas:', error);
             return error;

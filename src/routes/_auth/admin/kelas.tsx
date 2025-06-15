@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button'
 import { Plus, CircleX } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Select,
   SelectTrigger,
@@ -48,16 +47,19 @@ function RouteComponent() {
 
   // fetch awal
   useEffect(() => {
-    if (token) {
-      kelasStore.GetAllKelas(token)
-      ketuaStore.GetAllKetuaKelas(token)
-      jurusanStore.GetAllJurusan(token)
+
+    const fetchData = async () => {
+        await kelasStore.GetAllKelas(token)
+        await ketuaStore.GetAllKetuaKelas(token)
+        await jurusanStore.GetAllJurusan(token)
     }
+    fetchData()
+    
   }, [token])
 
   const validate = () => {
     const m = kelasStore.model
-    if (!m.name || !m.ketua_id || !m.jurusan_id) {
+    if (!m.name || !m.ketua_kelas || !m.jurusan) {
       toast.error('Nama, Ketua, dan Jurusan wajib diisi')
       return false
     }
@@ -110,9 +112,9 @@ function RouteComponent() {
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label>Ketua Kelas</Label>
                   <Select
-                    value={kelasStore.model.ketua_id}
+                    value={kelasStore.model.ketua_kelas}
                     onValueChange={value =>
-                      kelasStore.setModel({ ...kelasStore.model, ketua_id: value })
+                      kelasStore.setModel({ ...kelasStore.model, ketua_kelas: value })
                     }
                   >
                     <SelectTrigger className="w-full">
@@ -121,7 +123,7 @@ function RouteComponent() {
                     <SelectContent>
                       {ketuaStore.list.map(k => (
                         <SelectItem key={k.id} value={k.id!}>
-                          {k.nama}
+                          {k.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -131,9 +133,10 @@ function RouteComponent() {
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label>Jurusan</Label>
                   <Select
-                    value={kelasStore.model.jurusan_id}
+                    disabled={kelasStore.loading}
+                    value={kelasStore.model.jurusan}
                     onValueChange={value =>
-                      kelasStore.setModel({ ...kelasStore.model, jurusan_id: value })
+                      kelasStore.setModel({ ...kelasStore.model, jurusan: value })
                     }
                   >
                     <SelectTrigger className="w-full">
@@ -148,23 +151,11 @@ function RouteComponent() {
                     </SelectContent>
                   </Select>
                 </div>
-                {/* Aktif? */}
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label>Aktif?</Label>
-                  <Checkbox
-                    checked={kelasStore.model.is_active}
-                    onCheckedChange={checked =>
-                      kelasStore.setModel({ ...kelasStore.model, is_active: Boolean(checked) })
-                    }
-                    className="col-span-3"
-                  />
-                </div>
               </div>
               <DialogFooter>
                 <Button
                   onClick={() => {
                     kelasStore.setModel()
-                    setIsDialogOpen(false)
                   }}
                   disabled={kelasStore.loading}
                   size="icon"
@@ -188,7 +179,7 @@ function RouteComponent() {
         <DataTable
           columns={columns}
           data={kelasStore.list}
-          searchKey="name"
+          searchKey="Nama Kelas"
           searchPlaceholder="Cari nama kelas"
         />
       </div>

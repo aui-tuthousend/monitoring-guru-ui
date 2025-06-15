@@ -11,18 +11,14 @@ export interface FetchParams {
   [key: string]: any
 }
 
+
 export const urlBuilder = (path: string, params?: FetchParams): string => {
-  const url = new URL(`${API_BASE_URL}${path}`);
+  const urlPath = params
+    ? `/${Object.values(params).map(encodeURIComponent).join("/")}`
+    : ""
 
-  if (params) {
-    for (const key of Object.keys(params)) {
-      url.searchParams.append(key, params[key]);
-    }
-  }
-
-  // console.log(url.toString())
-  return url.toString();
-};
+  return `${API_BASE_URL}${path}${urlPath}`
+}
 
 export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
