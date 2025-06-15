@@ -1,4 +1,4 @@
-import { Cookies, useCookies } from 'react-cookie'
+import { useCookies } from 'react-cookie'
 import { urlBuilder } from './utils';
 
 interface RequestConfig {
@@ -11,10 +11,8 @@ export const fetchServer = async (
   options: RequestConfig = {},
   contentType: string = 'application/json'
 ): Promise<any> => {
-  // const [cookies] = useCookies(['authToken']);
-  // const token = cookies.authToken;
-  const cookies = new Cookies()
-  const token = cookies.get('authToken')
+  const [cookies] = useCookies(['authToken']);
+  const token = cookies.authToken;
 
   const headers = {
     Authorization: token?.includes('Bearer') ? token : `Bearer ${token}`,
@@ -22,14 +20,11 @@ export const fetchServer = async (
   }
 
   try {
-    const fetchOptions: RequestInit = {
+    const response = await fetch(urlBuilder(url), {
       method: options.method || 'GET',
       headers,
-    };
-    if (options.body) {
-      fetchOptions.body = options.body;
-    }
-    const response = await fetch(urlBuilder(url), fetchOptions);
+      // body: JSON.stringify(options.body),
+    });
 
     const data = await response.json();
     console.log(data)

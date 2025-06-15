@@ -1,56 +1,43 @@
-// src/store/auth/useAuthStore.ts
+import { urlBuilder } from '@/lib/utils';
+import { useState } from 'react';
+import { useCookies } from 'react-cookie';
 
-import { create } from 'zustand'
-import { fetchServer } from '@/lib/fetchServer'
-import { urlBuilder } from '@/lib/utils'
-import { Cookies } from 'react-cookie'
-import type { AuthStore, LoginRequest, UserData } from './types'
+export interface LoginRequest {
+  nip: string;
+  password: string;
+}
 
-const cookies = new Cookies()
+export const useAuth = () => {
+  const [, setCookie, removeCookie] = useCookies(['authToken', 'userData']);
+  const [loading, setLoading] = useState<boolean>(false);
 
-export const useAuthStore = create<AuthStore>((set, get) => ({
-  token: null,
-  userData: null,
-  loading: false,
-
-  setLoading: (loading) => set({ loading }),
-
-  login: async (payload) => {
-    set({ loading: true })
+  const login = async (payload: LoginRequest) => {
     try {
-      // panggil API login
-      const data = await fetchServer('/auth/login-guru', {
+      const response = await fetch(urlBuilder('/auth/login-guru'), {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-      })
+      });
 
-      const { token, user_data } = data
-      if (!token || !user_data) {
-        throw new Error('Login gagal: respons tidak lengkap')
-      }
+      const data = await response.json();
+      console.log(data)
 
-      // simpan ke cookie
-      cookies.set('authToken', token, { path: '/' })
-      cookies.set('userData', JSON.stringify(user_data), { path: '/' })
+      // Set cookies
+      setCookie('authToken', data.token, { path: '/' });
+    //   setCookie('userData', JSON.stringify(data.user), { path: '/' });
 
-      // update store
-      set({
-        token,
-        userData: user_data as UserData,
-      })
-
-      return user_data as UserData
-    } finally {
-      set({ loading: false })
+      return data;
+    } catch (error) {
+      console.error('Error authenticating user:', error);
+      return error;
     }
-  },
+  };
 
-  logout: () => {
-    cookies.remove('authToken', { path: '/' })
-    cookies.remove('userData', { path: '/' })
-    set({
-      token: null,
-      userData: null,
-    })
-  },
-}))
+  const logout = () => {
+    removeCookie('authToken', { path: '/' });
+    removeCookie('userData', { path: '/' });
+  };
+
+  return {loading, setLoading, login, logout};
+};
+

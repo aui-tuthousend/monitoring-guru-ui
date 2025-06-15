@@ -5,14 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAuthStore } from '@/store/auth/useAuth'
+import { useAuth } from '@/store/auth/useAuth'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
 })
 
 function LoginPage() {
-  const {loading, setLoading} = useAuthStore()
+  const {loading, setLoading, login} = useAuth()
   const navigate = useNavigate()
 
   const [nip, setNip] = useState<string>('');
@@ -20,24 +20,24 @@ function LoginPage() {
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  setError(null)
-
-  try {
-    setLoading(true)
-    const user = await useAuthStore.getState().login({ nip, password })
-
-    if (user.jabatan === 'guru') navigate({ to: '/guru' })
-    else if (user.jabatan === 'kepala_sekolah') navigate({ to: '/admin' })
-    else toast.error('Role tidak dikenali')
-
-  } catch (err: any) {
-    setError(err.message || 'Login gagal')
-    toast.error(err.message || 'Login gagal')
-  } finally {
-    setLoading(false)
-  }
-}
+    e.preventDefault();
+    setError(null);
+    try {
+      setLoading(true)
+      const result = await login({ nip: nip, password });
+      if (result.token) {
+        console.log('Login successful:', result);
+        toast.success('Login successful')
+        navigate({ to: '/guru' })
+      }
+      // redirect or update UI as needed
+    } catch (err: any) {
+      setError(err.message || 'Login failed');
+      toast.error(err.message)
+    } finally {
+      setLoading(false)
+    }
+  };
 
 
   // const handleSubmit = async (e: React.FormEvent) => {
