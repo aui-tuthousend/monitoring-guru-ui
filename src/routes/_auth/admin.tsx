@@ -2,6 +2,7 @@ import { AppSidebar } from '@/components/app-sidebar'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
+import LogoutButton from '@/components/logout-button'
 
 export const Route = createFileRoute('/_auth/admin')({
   component: RouteComponent,
@@ -20,9 +21,7 @@ function RouteComponent() {
           </div>
           <div className="flex items-center gap-2">
             <Button size="sm">View Profile</Button>
-            <Button variant="destructive" size="sm">
-              Log out
-            </Button>
+            <LogoutButton />
           </div>
         </header>
         <Outlet />
