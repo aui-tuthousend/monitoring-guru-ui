@@ -3,3 +3,8 @@ node_modules
 dist
 dist-ssr
 *.local
+count.txt
+.env
+.*lock*
+pnpm-lock.yaml
+bun.lock

@@ -5,14 +5,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAuth } from '@/store/auth/useAuth'
+import { useAuthStore } from '@/store/auth/useAuth'
+import { useAuth } from '@/auth'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
 })
 
 function LoginPage() {
-  const {loading, setLoading, login} = useAuth()
+  const auth = useAuth()
+  const {loading, setLoading, login} = useAuthStore()
   const navigate = useNavigate()
 
   const [nip, setNip] = useState<string>('');
@@ -26,14 +28,20 @@ function LoginPage() {
       setLoading(true)
       const result = await login({ nip: nip, password });
       if (result.token) {
+        auth.login(result.user_data.id)
         console.log('Login successful:', result);
         toast.success('Login successful')
-        navigate({ to: '/guru' })
+        if (result.user_data.jabatan === 'guru') {
+          await navigate({ to: '/guru' })
+        } else if (result.user_data.jabatan === 'kepala_sekolah') {
+          await navigate({ to: '/admin' })
+        }
+      } else {
+        toast.error(result.error)
       }
       // redirect or update UI as needed
     } catch (err: any) {
       setError(err.message || 'Login failed');
-      toast.error(err.message)
     } finally {
       setLoading(false)
     }
