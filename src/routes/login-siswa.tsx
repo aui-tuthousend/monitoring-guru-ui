@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { useAuthStore } from '@/store/auth/useAuth'
 import { useAuth } from '@/auth'
 
-export const Route = createFileRoute('/login')({
+export const Route = createFileRoute('/login-siswa')({
   component: LoginPage,
 })
 

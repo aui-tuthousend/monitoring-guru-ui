@@ -4,7 +4,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import { Button } from '@/components/ui/button'
 import LogoutButton from '@/components/logout-button'
 
-export const Route = createFileRoute('/_auth/admin')({
+export const Route = createFileRoute('/_auth_guru/admin')({
   component: RouteComponent,
 })
 
