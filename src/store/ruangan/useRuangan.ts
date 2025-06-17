@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { fetchServer } from "@/lib/fetchServer";
 import { urlBuilder } from "@/lib/utils";
-import type { Ruangan, RuanganStore } from "./types";
+import type { RuanganStore } from "./types";
 
 export const useRuanganStore = create<RuanganStore>((set, get) => ({
     list: [],
@@ -11,7 +11,7 @@ export const useRuanganStore = create<RuanganStore>((set, get) => ({
 
     tableAttributes: [
         {
-            accessorKey: "name",
+            accessorKey: "nama",
             header: "Nama Ruangan",
         },
     ],
@@ -29,13 +29,10 @@ export const useRuanganStore = create<RuanganStore>((set, get) => ({
         try {
             const response = await fetchServer(token, urlBuilder('/ruangan'), {
                 method: 'POST',
-                body: JSON.stringify(payload),
+                body: payload,
             });
 
-            const data = await response.data.json();
-            console.log(data);
-
-            return data;
+            return response.data;
         } catch (error) {
             console.error('Error registering ruangan:', error);
             return error;

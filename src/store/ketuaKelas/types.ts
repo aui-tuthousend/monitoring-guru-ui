@@ -5,6 +5,7 @@ export interface KetuaKelas {
     name: string;
     nisn: string;
     password: string;
+    kelas_id?: string;
 }
 
 export interface KetuaKelasStore {

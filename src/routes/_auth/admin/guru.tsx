@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { CircleX, Plus } from 'lucide-react'
+import { CircleX, Loader2, Plus } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { DataTable } from '@/components/data-table/table'
@@ -54,7 +54,6 @@ function RouteComponent() {
   }
 
   const handleSubmit = async () => {
-
     if (!validation()) return
     await store.RegisterGuru(token, store.model)
     await store.GetListGuru(token)
@@ -77,12 +76,18 @@ function RouteComponent() {
 
 
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90 transition-opacity">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Guru
-                </Button>
-              </DialogTrigger>
+            <DialogTrigger asChild>
+              <Button 
+                disabled={store.loading}
+                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90">
+                  {store.loading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ):(
+                    <Plus className="mr-2 h-4 w-4" />
+                  )}
+                Add Guru
+              </Button>
+            </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
                 <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
                   <DialogTitle>Add New Guru</DialogTitle>

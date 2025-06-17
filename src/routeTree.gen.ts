@@ -18,6 +18,9 @@ import { Route as AuthAdminRouteImport } from './routes/_auth/admin'
 import { Route as AuthGuruIndexRouteImport } from './routes/_auth/guru/index'
 import { Route as AuthAdminIndexRouteImport } from './routes/_auth/admin/index'
 import { Route as AuthGuruScanRouteImport } from './routes/_auth/guru/scan'
+import { Route as AuthAdminRuanganRouteImport } from './routes/_auth/admin/ruangan'
+import { Route as AuthAdminMapelRouteImport } from './routes/_auth/admin/mapel'
+import { Route as AuthAdminKetuaKelasRouteImport } from './routes/_auth/admin/ketua-kelas'
 import { Route as AuthAdminKelasRouteImport } from './routes/_auth/admin/kelas'
 import { Route as AuthAdminJadwalajarRouteImport } from './routes/_auth/admin/jadwalajar'
 import { Route as AuthAdminGuruRouteImport } from './routes/_auth/admin/guru'
@@ -66,6 +69,21 @@ const AuthGuruScanRoute = AuthGuruScanRouteImport.update({
   path: '/scan',
   getParentRoute: () => AuthGuruRoute,
 } as any)
+const AuthAdminRuanganRoute = AuthAdminRuanganRouteImport.update({
+  id: '/ruangan',
+  path: '/ruangan',
+  getParentRoute: () => AuthAdminRoute,
+} as any)
+const AuthAdminMapelRoute = AuthAdminMapelRouteImport.update({
+  id: '/mapel',
+  path: '/mapel',
+  getParentRoute: () => AuthAdminRoute,
+} as any)
+const AuthAdminKetuaKelasRoute = AuthAdminKetuaKelasRouteImport.update({
+  id: '/ketua-kelas',
+  path: '/ketua-kelas',
+  getParentRoute: () => AuthAdminRoute,
+} as any)
 const AuthAdminKelasRoute = AuthAdminKelasRouteImport.update({
   id: '/kelas',
   path: '/kelas',
@@ -91,6 +109,9 @@ export interface FileRoutesByFullPath {
   '/admin/guru': typeof AuthAdminGuruRoute
   '/admin/jadwalajar': typeof AuthAdminJadwalajarRoute
   '/admin/kelas': typeof AuthAdminKelasRoute
+  '/admin/ketua-kelas': typeof AuthAdminKetuaKelasRoute
+  '/admin/mapel': typeof AuthAdminMapelRoute
+  '/admin/ruangan': typeof AuthAdminRuanganRoute
   '/guru/scan': typeof AuthGuruScanRoute
   '/admin/': typeof AuthAdminIndexRoute
   '/guru/': typeof AuthGuruIndexRoute
@@ -102,6 +123,9 @@ export interface FileRoutesByTo {
   '/admin/guru': typeof AuthAdminGuruRoute
   '/admin/jadwalajar': typeof AuthAdminJadwalajarRoute
   '/admin/kelas': typeof AuthAdminKelasRoute
+  '/admin/ketua-kelas': typeof AuthAdminKetuaKelasRoute
+  '/admin/mapel': typeof AuthAdminMapelRoute
+  '/admin/ruangan': typeof AuthAdminRuanganRoute
   '/guru/scan': typeof AuthGuruScanRoute
   '/admin': typeof AuthAdminIndexRoute
   '/guru': typeof AuthGuruIndexRoute
@@ -117,6 +141,9 @@ export interface FileRoutesById {
   '/_auth/admin/guru': typeof AuthAdminGuruRoute
   '/_auth/admin/jadwalajar': typeof AuthAdminJadwalajarRoute
   '/_auth/admin/kelas': typeof AuthAdminKelasRoute
+  '/_auth/admin/ketua-kelas': typeof AuthAdminKetuaKelasRoute
+  '/_auth/admin/mapel': typeof AuthAdminMapelRoute
+  '/_auth/admin/ruangan': typeof AuthAdminRuanganRoute
   '/_auth/guru/scan': typeof AuthGuruScanRoute
   '/_auth/admin/': typeof AuthAdminIndexRoute
   '/_auth/guru/': typeof AuthGuruIndexRoute
@@ -132,6 +159,9 @@ export interface FileRouteTypes {
     | '/admin/guru'
     | '/admin/jadwalajar'
     | '/admin/kelas'
+    | '/admin/ketua-kelas'
+    | '/admin/mapel'
+    | '/admin/ruangan'
     | '/guru/scan'
     | '/admin/'
     | '/guru/'
@@ -143,6 +173,9 @@ export interface FileRouteTypes {
     | '/admin/guru'
     | '/admin/jadwalajar'
     | '/admin/kelas'
+    | '/admin/ketua-kelas'
+    | '/admin/mapel'
+    | '/admin/ruangan'
     | '/guru/scan'
     | '/admin'
     | '/guru'
@@ -157,6 +190,9 @@ export interface FileRouteTypes {
     | '/_auth/admin/guru'
     | '/_auth/admin/jadwalajar'
     | '/_auth/admin/kelas'
+    | '/_auth/admin/ketua-kelas'
+    | '/_auth/admin/mapel'
+    | '/_auth/admin/ruangan'
     | '/_auth/guru/scan'
     | '/_auth/admin/'
     | '/_auth/guru/'
@@ -234,6 +270,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthGuruScanRouteImport
       parentRoute: typeof AuthGuruRoute
     }
+    '/_auth/admin/ruangan': {
+      id: '/_auth/admin/ruangan'
+      path: '/ruangan'
+      fullPath: '/admin/ruangan'
+      preLoaderRoute: typeof AuthAdminRuanganRouteImport
+      parentRoute: typeof AuthAdminRoute
+    }
+    '/_auth/admin/mapel': {
+      id: '/_auth/admin/mapel'
+      path: '/mapel'
+      fullPath: '/admin/mapel'
+      preLoaderRoute: typeof AuthAdminMapelRouteImport
+      parentRoute: typeof AuthAdminRoute
+    }
+    '/_auth/admin/ketua-kelas': {
+      id: '/_auth/admin/ketua-kelas'
+      path: '/ketua-kelas'
+      fullPath: '/admin/ketua-kelas'
+      preLoaderRoute: typeof AuthAdminKetuaKelasRouteImport
+      parentRoute: typeof AuthAdminRoute
+    }
     '/_auth/admin/kelas': {
       id: '/_auth/admin/kelas'
       path: '/kelas'
@@ -262,6 +319,9 @@ interface AuthAdminRouteChildren {
   AuthAdminGuruRoute: typeof AuthAdminGuruRoute
   AuthAdminJadwalajarRoute: typeof AuthAdminJadwalajarRoute
   AuthAdminKelasRoute: typeof AuthAdminKelasRoute
+  AuthAdminKetuaKelasRoute: typeof AuthAdminKetuaKelasRoute
+  AuthAdminMapelRoute: typeof AuthAdminMapelRoute
+  AuthAdminRuanganRoute: typeof AuthAdminRuanganRoute
   AuthAdminIndexRoute: typeof AuthAdminIndexRoute
 }
 
@@ -269,6 +329,9 @@ const AuthAdminRouteChildren: AuthAdminRouteChildren = {
   AuthAdminGuruRoute: AuthAdminGuruRoute,
   AuthAdminJadwalajarRoute: AuthAdminJadwalajarRoute,
   AuthAdminKelasRoute: AuthAdminKelasRoute,
+  AuthAdminKetuaKelasRoute: AuthAdminKetuaKelasRoute,
+  AuthAdminMapelRoute: AuthAdminMapelRoute,
+  AuthAdminRuanganRoute: AuthAdminRuanganRoute,
   AuthAdminIndexRoute: AuthAdminIndexRoute,
 }
 

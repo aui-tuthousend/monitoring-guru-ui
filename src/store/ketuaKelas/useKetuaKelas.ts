@@ -11,18 +11,9 @@ export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
     loading: false,
 
     tableAttributes: [
-        {
-            accessorKey: "name",
-            header: "Nama",
-        },
-        {
-            accessorKey: "nis",
-            header: "NISN",
-        },
-        {
-            accessorKey: "password",
-            header: "Password",
-        },
+        {accessorKey: "nisn",header: "NISN"},
+        {accessorKey: "name",header: "Name"},
+        
     ],
 
     setModel(model) {
@@ -38,13 +29,12 @@ export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
         try {
             const response = await fetchServer(token, urlBuilder('/ketua-kelas'), {
                 method: 'POST',
-                body: JSON.stringify(payload),
+                body: payload,
             });
 
-            const data = await response.data.json();
-            console.log(data);
+            console.log(response.data);
 
-            return data;
+            return response.data;
         } catch (error) {
             console.error('Error registering ketua kelas:', error);
             return error;
