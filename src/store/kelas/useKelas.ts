@@ -7,14 +7,14 @@ export const useKelasStore = create<KelasStore>((set, get) => ({
     list: [],
     default: {
         name: "",
-        ketua_kelas: "",
-        jurusan: "",
+        ketua_kelas_id: "",
+        jurusan_id: "",
         is_active: false,
     },
     model: {
         name: "",
-        ketua_kelas: "",
-        jurusan: "",
+        ketua_kelas_id: "",
+        jurusan_id: "",
         is_active: false,
     },
     loading: false,

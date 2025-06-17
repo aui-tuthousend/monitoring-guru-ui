@@ -20,7 +20,7 @@ import PasswordInput from '@/components/ui/input-password';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 
-export const Route = createFileRoute('/_auth/admin/ketua-kelas')({
+export const Route = createFileRoute('/_auth_guru/admin/ketua-kelas')({
   component: RouteComponent,
 })
 
@@ -81,7 +81,7 @@ function RouteComponent() {
                   ):(
                     <Plus className="mr-2 h-4 w-4" />
                   )}
-                Add Ketua Kelas
+                Tambah Ketua Kelas
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
@@ -165,7 +165,7 @@ function RouteComponent() {
                   {store.loading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Add Kelas
+                  Submit
                 </Button>
               </DialogFooter>
             </DialogContent>

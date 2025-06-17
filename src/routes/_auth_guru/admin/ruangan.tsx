@@ -20,7 +20,7 @@ import { DefineColumns } from '@/components/data-table/columns'
 import { DataTable } from '@/components/data-table/table'
 import { toast } from 'sonner'
 
-export const Route = createFileRoute('/_auth/admin/ruangan')({
+export const Route = createFileRoute('/_auth_guru/admin/ruangan')({
   component: RouteComponent,
 })
 
@@ -74,7 +74,7 @@ function RouteComponent() {
                   ):(
                     <Plus className="mr-2 h-4 w-4" />
                   )}
-                Add Ruangan
+                Tambah Ruangan
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
@@ -114,7 +114,7 @@ function RouteComponent() {
                   {store.loading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Add Kelas
+                  Submit
                 </Button>
               </DialogFooter>
             </DialogContent>

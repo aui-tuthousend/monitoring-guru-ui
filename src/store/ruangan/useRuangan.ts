@@ -11,7 +11,7 @@ export const useRuanganStore = create<RuanganStore>((set, get) => ({
 
     tableAttributes: [
         {
-            accessorKey: "nama",
+            accessorKey: "name",
             header: "Nama Ruangan",
         },
     ],

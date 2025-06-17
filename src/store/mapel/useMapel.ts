@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { fetchServer } from "@/lib/fetchServer";
 import { urlBuilder } from "@/lib/utils";
-import type { Mapel, MapelStore } from "./types";
+import type { MapelStore } from "./types";
 
 export const useMapelStore = create<MapelStore>((set, get) => ({
     list: [],
@@ -33,13 +33,12 @@ export const useMapelStore = create<MapelStore>((set, get) => ({
         try {
             const response = await fetchServer(token, urlBuilder('/mapel'), {
                 method: 'POST',
-                body: JSON.stringify(payload),
+                body: payload,
             });
 
-            const data = await response.data.json();
-            console.log(data)
+            console.log(response.data);
 
-            return data;
+            return response.data;
         } catch (error) {
             console.error('Error registering mapel:', error);
             return error;

@@ -71,7 +71,7 @@ function RouteComponent() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold gradient-text">Guru</h1>
-              <p className="text-muted-foreground">Manage Guru information</p>
+              <p className="text-muted-foreground">Manage data guru</p>
             </div>
 
 
@@ -85,12 +85,12 @@ function RouteComponent() {
                   ):(
                     <Plus className="mr-2 h-4 w-4" />
                   )}
-                Add Guru
+                Tambah Guru
               </Button>
             </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
                 <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
-                  <DialogTitle>Add New Guru</DialogTitle>
+                  <DialogTitle>Tambah Guru</DialogTitle>
                   <DialogDescription>Input data Guru</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -145,7 +145,7 @@ function RouteComponent() {
                     disabled={store.loading}
                     className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90 transition-opacity"
                   >
-                    Add Guru
+                    Submit
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -155,7 +155,7 @@ function RouteComponent() {
           </div>
 
 
-          <DataTable columns={guruColumns} data={store.list} searchKey='Name' searchPlaceholder='Cari nama guru' />
+          <DataTable columns={guruColumns} data={store.list} searchKey='Nama Guru' searchPlaceholder='Cari nama guru' />
         </div>
       </main>
     </>

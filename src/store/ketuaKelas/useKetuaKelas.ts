@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { fetchServer } from "@/lib/fetchServer";
 import { urlBuilder } from "@/lib/utils";
 import type { KetuaKelasStore } from "./types";
+import { toast } from "sonner";
 
 export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
     list: [],
@@ -27,12 +28,15 @@ export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
     RegisterKetuaKelas: async (token, payload) => {
         set({ loading: true });
         try {
-            const response = await fetchServer(token, urlBuilder('/ketua-kelas'), {
+            const response: any = await fetchServer(token, urlBuilder('/ketua-kelas'), {
                 method: 'POST',
                 body: payload,
             });
 
             console.log(response.data);
+            if(response.code !== 200){
+                toast.error('Internal Server Error')
+            }
 
             return response.data;
         } catch (error) {

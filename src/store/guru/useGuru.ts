@@ -15,7 +15,7 @@ export const useGuruStore = create<GuruStore>((set, get) => ({
         },
         {
             accessorKey: "name",
-            header: "Name",
+            header: "Nama Guru",
         },
         {
             accessorKey: "jabatan",

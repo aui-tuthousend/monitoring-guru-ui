@@ -3,8 +3,8 @@ import type { DataTableAttributes } from "@/components/data-table/columns";
 export interface Kelas {
     id?: string;
     name: string;
-    ketua_kelas: string;
-    jurusan: string;
+    ketua_kelas_id: string;
+    jurusan_id: string;
     // is_active: boolean;
 }
 

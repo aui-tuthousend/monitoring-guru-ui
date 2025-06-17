@@ -21,6 +21,7 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select'
+
 import { DataTable } from '@/components/data-table/table'
 import { DefineColumns } from '@/components/data-table/columns'
 import { toast } from 'sonner'
@@ -29,6 +30,8 @@ import { useCookies } from 'react-cookie'
 import { useKelasStore } from '@/store/kelas/useKelas'
 import { useKetuaKelasStore } from '@/store/ketuaKelas/useKetuaKelas'
 import { useJurusanStore } from '@/store/jurusan/useJurusan'
+
+import { AutoComplete } from '@/components/autocomplete'
 
 export const Route = createFileRoute('/_auth_guru/admin/kelas')({
   component: RouteComponent,
@@ -42,6 +45,7 @@ function RouteComponent() {
   const ketuaStore = useKetuaKelasStore()
   const jurusanStore = useJurusanStore()
 
+  const [value, setValue] = useState<string>("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const columns = DefineColumns(kelasStore.tableAttributes)
 
@@ -55,11 +59,11 @@ function RouteComponent() {
     }
     fetchData()
     
-  }, [token])
+  }, [])
 
   const validate = () => {
     const m = kelasStore.model
-    if (!m.name || !m.ketua_kelas || !m.jurusan) {
+    if (!m.name || !m.ketua_kelas_id || !m.jurusan_id) {
       toast.error('Nama, Ketua, dan Jurusan wajib diisi')
       return false
     }
@@ -68,10 +72,13 @@ function RouteComponent() {
 
   const handleAdd = async () => {
     if (!validate()) return
+    // console.log(kelasStore.model)
     await kelasStore.RegisterKelas(token, kelasStore.model)
     await kelasStore.GetAllKelas(token)
+    await ketuaStore.GetUnsignedKetuaKelas(token)
     toast.success('Kelas berhasil ditambahkan')
     kelasStore.setModel()      // reset ke default
+    setValue("")
     setIsDialogOpen(false)
   }
 
@@ -94,7 +101,7 @@ function RouteComponent() {
                   ):(
                     <Plus className="mr-2 h-4 w-4" />
                   )}
-                Add Kelas
+                Tambah Kelas
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
@@ -117,38 +124,24 @@ function RouteComponent() {
                 {/* Ketua */}
                 <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
                   <Label>Ketua Kelas</Label>
-                  <Select
-                    value={kelasStore.model.ketua_kelas}
-                    onValueChange={value =>
-                      kelasStore.setModel({ ...kelasStore.model, ketua_kelas: value })
-                    }
-                  >
-                    <SelectTrigger className="w-[16rem]">
-                      <SelectValue placeholder="Pilih Ketua" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ketuaStore.unsignedList.length == 0 && (
-                        <SelectItem disabled value="null">
-                          {/* <Loader2 className="mr-2 h-4 w-4 animate-spin" /> */}
-                          No data
-                        </SelectItem>
-                      )}
-                      {ketuaStore.unsignedList.map(k => (
-                        <SelectItem key={k.id} value={k.id!}>
-                          {k.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <AutoComplete
+                    data={ketuaStore.unsignedList}
+                    value={value}
+                    placeholder="Cari Ketua Kelas..."
+                    onChange={(item) => {
+                      setValue(item?.name || "")
+                      kelasStore.setModel({ ...kelasStore.model, ketua_kelas_id: item?.id || "" })
+                    }}
+                  />
                 </div>
                 {/* Jurusan */}
                 <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
                   <Label>Jurusan</Label>
                   <Select
                     disabled={kelasStore.loading}
-                    value={kelasStore.model.jurusan}
+                    value={kelasStore.model.jurusan_id}
                     onValueChange={value =>
-                      kelasStore.setModel({ ...kelasStore.model, jurusan: value })
+                      kelasStore.setModel({ ...kelasStore.model, jurusan_id: value })
                     }
                   >
                     <SelectTrigger className="w-[16rem]">
@@ -174,6 +167,7 @@ function RouteComponent() {
                 <Button
                   onClick={() => {
                     kelasStore.setModel()
+                    setValue("")
                   }}
                   disabled={kelasStore.loading}
                   size="icon"
@@ -189,7 +183,7 @@ function RouteComponent() {
                   {kelasStore.loading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  Add Kelas
+                  Submit
                 </Button>
               </DialogFooter>
             </DialogContent>

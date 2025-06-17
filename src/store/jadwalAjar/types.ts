@@ -2,12 +2,13 @@ import type { DataTableAttributes } from "@/components/data-table/columns";
 
 export interface Jadwalajar {
     id?: string,
-    guru: string,
+    guru_id: string,
     hari: string,
     jam_mulai: string,
     jam_selesai: string,
-    kelas: string,
-    mapel: string
+    kelas_id: string,
+    mapel_id: string,
+    ruangan_id: string
 }
 
 export interface GetJadwalajarParams {
@@ -16,7 +17,8 @@ export interface GetJadwalajarParams {
 }
 
 export interface JadwalajarStore {
-    list: Jadwalajar[];
+    list: any[];
+    hari: any[];
     tableAttributes: DataTableAttributes[];
     default: Jadwalajar;
     model: Jadwalajar;
