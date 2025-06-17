@@ -30,7 +30,7 @@ import { useKelasStore } from '@/store/kelas/useKelas'
 import { useKetuaKelasStore } from '@/store/ketuaKelas/useKetuaKelas'
 import { useJurusanStore } from '@/store/jurusan/useJurusan'
 
-export const Route = createFileRoute('/_auth/admin/kelas')({
+export const Route = createFileRoute('/_auth_guru/admin/kelas')({
   component: RouteComponent,
 })
 

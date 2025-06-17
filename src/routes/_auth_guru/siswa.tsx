@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useState, useEffect } from "react"
 import { Bell, LogOut, GraduationCap } from "lucide-react"
+import Kawai from '/IMG_3661.jpeg';
 
-export const Route = createFileRoute('/_auth/siswa')({
+export const Route = createFileRoute('/_auth_guru/siswa')({
   component: RouteComponent,
 })
 
@@ -86,13 +87,13 @@ function RouteComponent() {
         {/* Profile Card */}
         <Card className="relative bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg mb-6">
           <CardHeader className="flex flex-row items-center space-x-4 space-y-0">
-            {/* <div className="relative">
+            <div className="relative">
               <img
-                src={studentProfile.avatar || "/placeholder.svg"}
+                src={Kawai}
                 alt="Student Profile"
                 className="h-20 w-20 rounded-full object-cover border-4 border-white/20"
               />
-            </div> */}
+            </div>
             <div className="flex-1">
               <CardTitle className="text-xl">{studentProfile.name}</CardTitle>
               <p className="text-green-100">{studentProfile.grade}</p>

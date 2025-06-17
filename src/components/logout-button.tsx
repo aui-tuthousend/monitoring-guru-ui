@@ -17,7 +17,7 @@ export default function LogoutButton() {
     const handleLogout = () => {
         logout()
         setOpen(false)
-        navigate({ to: '/login' })
+        navigate({ to: '/login-guru' })
         toast.success('Logout berhasil')
     }
     const [open, setOpen] = useState(false);

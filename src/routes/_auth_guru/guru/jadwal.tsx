@@ -17,7 +17,7 @@ interface WeeklySchedule {
     }[]
 }
 
-export const Route = createFileRoute('/_auth/guru/jadwal')({
+export const Route = createFileRoute('/_auth_guru/guru/jadwal')({
     component: RouteComponent,
 })
 

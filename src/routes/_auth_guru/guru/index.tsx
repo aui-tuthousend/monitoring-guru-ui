@@ -8,7 +8,7 @@ import { useCookies } from "react-cookie"
 import { useJadwalajarStore } from "@/store/jadwalAjar/useJadwalAjar"
 import { toast } from "sonner"
 
-export const Route = createFileRoute('/_auth/guru/')({
+export const Route = createFileRoute('/_auth_guru/guru/')({
   component: RouteComponent,
 });
 

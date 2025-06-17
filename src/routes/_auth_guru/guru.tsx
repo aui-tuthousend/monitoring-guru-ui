@@ -8,6 +8,8 @@ import { Bell, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
+// untuk masuk ke scan qr code guru tergantung jam, jadi nanti kalau jamnya sesuai bakalan bisa di klik
+
 const navigationData = {
   navMain: [
     {
@@ -17,7 +19,7 @@ const navigationData = {
     },]
 }
 
-export const Route = createFileRoute('/_auth/guru')({
+export const Route = createFileRoute('/_auth_guru/guru')({
   component: RouteComponent,
 });
 
@@ -105,6 +107,16 @@ function RouteComponent() {
         {/* Profile Card */}
         <Card className="relative bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg mb-6">
           <CardHeader className="flex flex-row items-center space-x-4 space-y-0">
+            <div className="relative">
+              <img
+                src={KawaiGura}
+                alt="Teacher Profile"
+                className="h-20 w-20 rounded-full object-cover border-4 border-white/20"
+              />
+              {!teacherProfile.attendanceMarked && (
+                <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-red-500 border-2 border-white animate-pulse"></div>
+              )}
+            </div>
             <div className="flex-1">
               <CardTitle className="text-xl">{teacherProfile.name}</CardTitle>
               {/* <p className="text-blue-100">{teacherProfile.subject} Teacher</p> */}
@@ -132,11 +144,11 @@ function RouteComponent() {
               Dashboard
             </Button>
           </Link>
-          <Link to={'/guru/jadwal'}>
+          {/* <Link to={'/guru/jadwal'}>
             <Button variant="outline" size="sm">
               Schedule
             </Button>
-          </Link>
+          </Link> */}
           {/* <Link href="/teacher/classes">
             <Button variant="outline" size="sm">
               Classes

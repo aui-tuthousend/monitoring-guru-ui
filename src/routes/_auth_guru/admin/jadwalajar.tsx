@@ -5,7 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useCookies } from "react-cookie";
 
-export const Route = createFileRoute('/_auth/admin/jadwalajar')({
+export const Route = createFileRoute('/_auth_guru/admin/jadwalajar')({
   component: RouteComponent,
 });
 

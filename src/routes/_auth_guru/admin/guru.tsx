@@ -21,7 +21,7 @@ import PasswordInput from '@/components/ui/input-password'
 import { toast } from 'sonner'
 import { useCookies } from 'react-cookie'
 
-export const Route = createFileRoute('/_auth/admin/guru')({
+export const Route = createFileRoute('/_auth_guru/admin/guru')({
   component: RouteComponent,
 });
 
