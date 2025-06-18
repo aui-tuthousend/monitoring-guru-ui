@@ -55,13 +55,18 @@ function RouteComponent() {
 
   const handleSubmit = async () => {
     if (!validation()) return
-    await store.RegisterGuru(token, store.model)
-    await store.GetListGuru(token)
 
-    toast.success('Guru berhasil ditambah')
-    // console.log(store.model)
-    store.setModel()
-    setIsAddDialogOpen(false)
+    const response = await store.RegisterGuru(token, store.model)
+    console.log(response.success)
+    if (response.success) {
+      await store.GetListGuru(token)
+      store.setModel({...store.model, nip: "", name: ""})
+      toast.success('Guru berhasil ditambah')
+      // setIsAddDialogOpen(false)
+    } else {
+      toast.error(response.message)
+    }
+
   }
 
   return (

@@ -15,6 +15,6 @@ export interface GuruStore {
     loading: boolean;
     tableAttributes: DataTableAttributes[];
     setModel: (model?: Guru) => void;
-    RegisterGuru: (token: string, payload: Guru) => Promise<void>;
-    GetListGuru: (token: string) => Promise<void>;
+    RegisterGuru: (token: string, payload: Guru) => Promise<any>;
+    GetListGuru: (token: string) => Promise<any>;
 }

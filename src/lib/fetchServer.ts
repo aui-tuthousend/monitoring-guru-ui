@@ -7,7 +7,8 @@ interface RequestConfig {
 
 interface FetchResponse<T> {
   data: T;
-  status: number;
+  code: number;
+  message: string;
   success: boolean;
 }
 
@@ -40,7 +41,8 @@ export const fetchServer = async <T = any>(
 
     return {
       data,
-      status: response.status,
+      code: response.status,
+      message: data.message,
       success: true,
     };
   } catch (error) {

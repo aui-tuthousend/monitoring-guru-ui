@@ -40,7 +40,7 @@ export const useGuruStore = create<GuruStore>((set, get) => ({
       
         //   console.log(response.data);
       
-          return response.data;
+          return response
         } catch (error) {
           console.error('Error registering user:', error);
           return error;
@@ -56,10 +56,10 @@ export const useGuruStore = create<GuruStore>((set, get) => ({
             });
 
             const data = await response.data;
-            // console.log(data)
+            console.log(data)
 
             set({list: data.data})
-            return data;
+            // return data;
         } catch (error) {
             console.error('Error getting list of users:', error);
             return error;

@@ -15,6 +15,6 @@ export interface KelasStore {
     model: Kelas;
     loading: boolean;
     setModel: (model?: any) => void;
-    RegisterKelas: (token: string, payload: Kelas) => Promise<void>;
+    RegisterKelas: (token: string, payload: Kelas) => Promise<any>;
     GetAllKelas: (token: string) => Promise<void>;
 }

@@ -56,7 +56,7 @@ export const useKelasStore = create<KelasStore>((set, get) => ({
 
             console.log(response.data);
       
-            return response.data;
+            return response
         } catch (error) {
             console.error('Error registering kelas:', error);
             return error;

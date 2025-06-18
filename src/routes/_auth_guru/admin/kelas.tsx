@@ -73,13 +73,17 @@ function RouteComponent() {
   const handleAdd = async () => {
     if (!validate()) return
     // console.log(kelasStore.model)
-    await kelasStore.RegisterKelas(token, kelasStore.model)
-    await kelasStore.GetAllKelas(token)
-    await ketuaStore.GetUnsignedKetuaKelas(token)
-    toast.success('Kelas berhasil ditambahkan')
-    kelasStore.setModel()      // reset ke default
-    setValue("")
-    setIsDialogOpen(false)
+    const response = await kelasStore.RegisterKelas(token, kelasStore.model)
+    if (response.success) {
+      await kelasStore.GetAllKelas(token)
+      await ketuaStore.GetUnsignedKetuaKelas(token)
+      toast.success('Kelas berhasil ditambahkan')
+      kelasStore.setModel()
+      setValue("")
+      setIsDialogOpen(false)
+    } else {
+      toast.error(response.message)
+    }
   }
 
   return (
