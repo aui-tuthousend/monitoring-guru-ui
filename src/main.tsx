@@ -8,6 +8,7 @@ import { routeTree } from './routeTree.gen'
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 import { AuthProvider, useAuth } from './auth.tsx'
+import { CookiesProvider } from 'react-cookie'
 
 // Create a new router instance
 const router = createRouter({
@@ -32,18 +33,20 @@ declare module '@tanstack/react-router' {
 function InnerApp() {
   const auth = useAuth()
   return (
-      <RouterProvider router={router} context={{ auth }} />
+    <RouterProvider router={router} context={{ auth }} />
   )
 }
 
 // Main App with Theme and Auth
 function App() {
   return (
-    <AuthProvider>
-      {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange> */}
+    <CookiesProvider>
+      <AuthProvider>
+        {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange> */}
         <InnerApp />
-      {/* </ThemeProvider> */}
-    </AuthProvider>
+        {/* </ThemeProvider> */}
+      </AuthProvider>
+    </CookiesProvider>
   )
 }
 

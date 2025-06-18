@@ -1,4 +1,3 @@
-// src/routes/_auth/admin/kelas.tsx
 import { createFileRoute } from '@tanstack/react-router'
 import {
   Dialog,
@@ -46,7 +45,7 @@ function RouteComponent() {
   const jurusanStore = useJurusanStore()
 
   const [value, setValue] = useState<string>("")
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const columns = DefineColumns(kelasStore.tableAttributes)
 
   // fetch awal
@@ -60,6 +59,12 @@ function RouteComponent() {
     fetchData()
     
   }, [])
+
+  useEffect(()=> {
+    if (isAddDialogOpen === false && kelasStore.model.id) {
+      kelasStore.setModel()
+    }
+  },[isAddDialogOpen])
 
   const validate = () => {
     const m = kelasStore.model
@@ -80,7 +85,7 @@ function RouteComponent() {
       toast.success('Kelas berhasil ditambahkan')
       kelasStore.setModel()
       setValue("")
-      setIsDialogOpen(false)
+      setIsAddDialogOpen(false)
     } else {
       toast.error(response.message)
     }
@@ -107,7 +112,7 @@ function RouteComponent() {
             <h1 className="text-3xl font-bold gradient-text">Kelas</h1>
             <p className="text-muted-foreground">Manage data Kelas</p>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
               <Button 
                 disabled={kelasStore.loading || ketuaStore.loading}
@@ -122,8 +127,10 @@ function RouteComponent() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
               <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
-                <DialogTitle>Tambah Kelas</DialogTitle>
-                <DialogDescription>Isi data Kelas baru</DialogDescription>
+                <DialogTitle>{kelasStore.model.id ? 'Update' : 'Tambah'} Kelas</DialogTitle>
+                <DialogDescription>{kelasStore.model.id ? 'Update' : 'Tambah'} Data Kelas</DialogDescription>
+                {/* <DialogTitle>Tambah Kelas</DialogTitle>
+                <DialogDescription>Isi data Kelas baru</DialogDescription> */}
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 {/* Nama */}
@@ -212,6 +219,7 @@ function RouteComponent() {
           data={kelasStore.list}
           searchKey="Nama Kelas"
           searchPlaceholder="Cari nama kelas"
+          onUpdate={handleUpdate}
           onUpdate={handleUpdate}
         />
       </div>

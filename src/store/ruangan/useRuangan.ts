@@ -28,7 +28,7 @@ export const useRuanganStore = create<RuanganStore>((set, get) => ({
         set({ loading: true });
         try {
             const response = await fetchServer(token, urlBuilder('/ruangan'), {
-                method: 'POST',
+                method: payload.id ? 'PUT' : 'POST',
                 body: payload,
             });
 

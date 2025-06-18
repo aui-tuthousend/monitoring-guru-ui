@@ -3,6 +3,11 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_auth_guru')({
   beforeLoad: ({ context }) => {
+    // Wait for auth to initialize
+    if (!context.auth.initialized) {
+      throw new Error('Auth not initialized')
+    }
+    
     if (!context.auth.isAuthenticated) {
       throw redirect({
         to: '/login-guru',
@@ -13,10 +18,5 @@ export const Route = createFileRoute('/_auth_guru')({
 })
 
 function RouteComponent() {
-  return (
-    <>
-      {/* <div>Hello "/_auth Appliasased Here"!</div> */}
-      <Outlet />
-    </>
-  )
+  return <Outlet />
 }

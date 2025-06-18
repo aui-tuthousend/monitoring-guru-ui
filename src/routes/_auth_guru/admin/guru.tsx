@@ -39,6 +39,12 @@ function RouteComponent() {
     store.GetListGuru(token)
   }, [token])
 
+  useEffect(()=> {
+    if (isAddDialogOpen === false && store.model.id) {
+      store.setModel()
+    }
+  },[isAddDialogOpen])
+
   const validation = () => {
     if (!store.model.nip || !store.model.name || !store.model.jabatan) {
       toast.error('Please fill all fields')
@@ -105,7 +111,7 @@ function RouteComponent() {
               <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
                 <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
                   <DialogTitle>{store.model.id ? 'Update' : 'Tambah'} Guru</DialogTitle>
-                  <DialogDescription>{store.model.id ? 'Update' : 'Tambah'} data Guru</DialogDescription>
+                  <DialogDescription>{store.model.id ? 'Update' : 'Tambah'} Data Guru</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">

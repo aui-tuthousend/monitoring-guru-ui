@@ -32,21 +32,31 @@ function RouteComponent() {
   const store = useKetuaKelasStore()
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
   const ketuaKelasColumns = DefineColumns(store.tableAttributes)
-
+  
   useEffect(() => {
     store.GetAllKetuaKelas(token)
   }, [token])
 
+  useEffect(()=> {
+    if (isAddDialogOpen === false && store.model.id) {
+      store.setModel()
+    }
+  },[isAddDialogOpen])
+
   const validation = () => {
-    if (!store.model.name || !store.model.nisn || !store.model.password) {
+    if (!store.model.name || !store.model.nisn ) {
       toast.error('Please fill all fields')
       return false
     } else if (store.model.nisn.length < 5) {
       toast.error('NISN must be at least 6 characters')
       return false
-    } else if (store.model.password.length < 6) {
-      toast.error('Password must be at least 6 characters')
-      return false
+    }
+
+    if(!store.model.id){
+      if(!store.model.password){
+        toast.error('Please fill password')
+        return false
+      }
     }
     return true
   }
@@ -60,6 +70,11 @@ function RouteComponent() {
     // console.log(store.model)
     store.setModel()
     setIsAddDialogOpen(false)
+  }
+
+  const handleUpdate = async (data: any) => {
+    setIsAddDialogOpen(true)
+    store.setModel(data)
   }
 
   return (
@@ -86,8 +101,10 @@ function RouteComponent() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
               <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
-                <DialogTitle>Tambah Ketua Kelas</DialogTitle>
-                <DialogDescription>Isi Data Ketua Kelas baru</DialogDescription>
+                <DialogTitle>{store.model.id ? 'Update' : 'Tambah'} Ketua Kelas</DialogTitle>
+                <DialogDescription>{store.model.id ? 'Update' : 'Tambah'} Data Ketua Kelas</DialogDescription>
+                {/* <DialogTitle>Tambah Ketua Kelas</DialogTitle>
+                <DialogDescription>Isi Data Ketua Kelas</DialogDescription> */}
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 {/* Nama */}
@@ -111,14 +128,17 @@ function RouteComponent() {
                     className="col-span-3 border-primary/20 focus:border-primary"
                   />
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label>Password</Label>
-                  <PasswordInput 
-                    value={store.model.password}
-                    onChange={(e) => store.setModel({ ...store.model, password: e.target.value })}
-                    required className="col-span-3 border-primary/20 focus:border-primary" 
-                  />
-                </div>
+                {!store.model.id && (
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label>Password</Label>
+                    <PasswordInput 
+                      value={store.model.password}
+                      onChange={(e) => store.setModel({ ...store.model, password: e.target.value })}
+                      required className="col-span-3 border-primary/20 focus:border-primary" 
+                    />
+                  </div>
+                )}
+                
                 {/* Ketua */}
                 {/* <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
                   <Label>Ketua Kelas</Label>
@@ -178,6 +198,7 @@ function RouteComponent() {
           data={store.list}
           searchKey="Name"
           searchPlaceholder="Cari nama ketua kelas"
+          onUpdate={handleUpdate}
         />
       </div>
     </main>

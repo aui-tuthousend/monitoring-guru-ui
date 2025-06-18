@@ -44,6 +44,12 @@ function RouteComponent() {
         }
         return true
     }
+
+    useEffect(()=> {
+    if (isAddDialogOpen === false && store.model.id) {
+      store.setModel()
+    }
+  },[isAddDialogOpen])
     
     const handleAdd = async () => {
         if (!validation()) return
@@ -54,6 +60,11 @@ function RouteComponent() {
         store.setModel()
         setIsAddDialogOpen(false)
     }
+
+  const handleUpdate = async (data: any) => {
+    setIsAddDialogOpen(true)
+    store.setModel(data)
+  }
     
   return (
     <main className="flex-1 overflow-y-auto p-6">
@@ -79,8 +90,8 @@ function RouteComponent() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
               <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
-                <DialogTitle>Tambah Ruangan</DialogTitle>
-                <DialogDescription>Isi Data Ruangan baru</DialogDescription>
+                <DialogTitle>{store.model.id ? 'Update' : 'Tambah'} Ruangan</DialogTitle>
+                <DialogDescription>{store.model.id ? 'Update' : 'Tambah'} Data </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 {/* Nama */}
@@ -127,6 +138,7 @@ function RouteComponent() {
           data={store.list}
           searchKey="Nama Ruangan"
           searchPlaceholder="Cari nama ruangan"
+          onUpdate={handleUpdate}
         />
       </div>
     </main>

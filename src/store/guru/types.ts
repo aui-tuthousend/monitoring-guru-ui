@@ -17,4 +17,5 @@ export interface GuruStore {
     setModel: (model?: Guru) => void;
     RegisterGuru: (token: string, payload: Guru) => Promise<any>;
     GetListGuru: (token: string) => Promise<any>;
+    GetProfileGuru: (token: string) => Promise<any>;
 }

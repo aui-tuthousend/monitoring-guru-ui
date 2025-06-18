@@ -32,7 +32,7 @@ export const useMapelStore = create<MapelStore>((set, get) => ({
         set({ loading: true });
         try {
             const response = await fetchServer(token, urlBuilder('/mapel'), {
-                method: 'POST',
+                method: payload.id ? 'PUT' : 'POST',
                 body: payload,
             });
 

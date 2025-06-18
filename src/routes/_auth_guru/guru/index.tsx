@@ -190,7 +190,7 @@ function RouteComponent() {
         <div>
           <h3 className="text-lg font-semibold mb-4">Today's Classes</h3>
           <div className="space-y-3">
-            {todaySchedule.map((schedule) => (
+            {/* {todaySchedule.map((schedule) => (
               <div key={schedule.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
@@ -236,6 +236,50 @@ function RouteComponent() {
                         {schedule.status === "ongoing" ? "Take Attendance" : "Prepare"}
                       </Button>
                     )}
+                  </div>
+                </div>
+              </div>
+            ))} */}
+            {jadwalStore.list.map((jadwal, index) => (
+              <div key={index} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h4 className="font-medium text-lg">{jadwal.mapel.name}</h4>
+                      <Badge className="bg-blue-100 text-blue-800">
+                        <div className="flex items-center gap-1">
+                          <BookOpen className="h-4 w-4" />
+                          {jadwal.kelas.name}
+                        </div>
+                      </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        {jadwal.jam_mulai} - {jadwal.jam_selesai}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <BookOpen className="h-4 w-4" />
+                        Room {jadwal.ruangan.name || 'N/A'}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4" />
+                        {jadwal.hari}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => handleScanClick(jadwal.mapel.name)}
+                      variant="default"
+                      size="sm"
+                      className="flex items-center gap-2"
+                    >
+                      <QrCode className="h-4 w-4" />
+                      Take Attendance
+                    </Button>
                   </div>
                 </div>
               </div>

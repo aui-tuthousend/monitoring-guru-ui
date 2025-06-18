@@ -53,7 +53,7 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
         set({ loading: true });
         try {
             const response = await fetchServer(token, urlBuilder('/jadwalajar'), {
-                method: 'POST',
+                method: payload.id ? 'PUT' : 'POST',
                 body: payload
             });
 
