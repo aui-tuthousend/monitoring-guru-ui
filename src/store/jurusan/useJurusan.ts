@@ -28,7 +28,7 @@ export const useJurusanStore = create<JurusanStore>((set, get) => ({
         set({ loading: true });
         try {
             const response = await fetchServer(token, urlBuilder('/jurusan'), {
-                method: 'POST',
+                method: payload.id ? 'PUT' : 'POST',
                 body: JSON.stringify(payload),
             });
 

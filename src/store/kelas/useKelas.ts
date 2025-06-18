@@ -50,7 +50,7 @@ export const useKelasStore = create<KelasStore>((set, get) => ({
         set({ loading: true });
         try {
             const response = await fetchServer(token, urlBuilder('/kelas'), {
-                method: 'POST',
+                method: payload.id ? 'PUT' : 'POST',
                 body: payload,
             });
 

@@ -29,7 +29,7 @@ export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
         set({ loading: true });
         try {
             const response: any = await fetchServer(token, urlBuilder('/ketua-kelas'), {
-                method: 'POST',
+                method: payload.id ? 'PUT' : 'POST',
                 body: payload,
             });
 

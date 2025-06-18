@@ -58,7 +58,7 @@ function RouteComponent() {
   const [mapelValue, setMapelValue] = useState<string>("")
   const [ruanganValue, setRuanganValue] = useState<string>("")
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
 
   useEffect(() => {
 
@@ -114,6 +114,11 @@ function RouteComponent() {
     // setIsDialogOpen(false)
   }
 
+  const handleUpdate = async (data: any) => {
+    setIsAddDialogOpen(true)
+    // store.setModel(data)
+  }
+
   return (
     <>
       <main className="flex-1 overflow-y-auto p-6">
@@ -125,7 +130,7 @@ function RouteComponent() {
               <p className="text-muted-foreground">Manage Jadwalajar information</p>
             </div>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
                 <Button
                   disabled={store.jadwalajarStore.loading}
@@ -140,6 +145,8 @@ function RouteComponent() {
               </DialogTrigger>
               <DialogContent className="sm:max-w-[725px] border border-primary/20 shadow-lg">
                 <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
+                  {/* <DialogTitle>{store.model.id ? 'Update' : 'Tambah'} Jadwal Ajar</DialogTitle>
+                  <DialogDescription>{store.model.id ? 'Update' : 'Tambah'} Data Jadwal Ajar</DialogDescription> */}
                   <DialogTitle>Tambah Jadwalajar</DialogTitle>
                   <DialogDescription>Isi data Jadwalajar baru</DialogDescription>
                 </DialogHeader>
@@ -282,7 +289,13 @@ function RouteComponent() {
             </Dialog>
           </div>
 
-          <DataTable columns={jadwalajarColumns} data={store.jadwalajarStore.list} searchKey='Mapel' searchPlaceholder='Cari nama mata pelajaran' />
+          <DataTable 
+            columns={jadwalajarColumns} 
+            data={store.jadwalajarStore.list} 
+            searchKey='Mapel' 
+            searchPlaceholder='Cari nama mata pelajaran' 
+            onUpdate={handleUpdate}
+          />
         </div>
       </main>
     </>

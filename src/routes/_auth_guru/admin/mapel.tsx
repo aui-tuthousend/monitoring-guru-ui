@@ -39,7 +39,7 @@ function RouteComponent() {
   const mapelStore = useMapelStore()
   const jurusanStore = useJurusanStore()
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
   const columns = DefineColumns(mapelStore.tableAttributes)
 
   // fetch awal
@@ -75,6 +75,15 @@ function RouteComponent() {
     // setIsDialogOpen(false)
   }
 
+  const handleUpdate = async (data: any) => {
+    setIsAddDialogOpen(true)
+    mapelStore.setModel({
+      id: data.id,
+      name: data.name,
+      jurusan_id: data.jurusan.id
+    })
+  }
+
   return (
     <main className="flex-1 overflow-y-auto p-6">
       <div className="space-y-6">
@@ -84,7 +93,7 @@ function RouteComponent() {
             <h1 className="text-3xl font-bold gradient-text">Mata Pelajaran</h1>
             <p className="text-muted-foreground">Manage data Mata Pelajaran</p>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
               <Button 
                 disabled={mapelStore.loading || jurusanStore.loading}
@@ -99,8 +108,8 @@ function RouteComponent() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
               <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
-                <DialogTitle>Tambah Mapel</DialogTitle>
-                <DialogDescription>Isi data Mapel baru</DialogDescription>
+                <DialogTitle>{mapelStore.model.id ? 'Update' : 'Tambah'} Mata Pelajaran</DialogTitle>
+                <DialogDescription>{mapelStore.model.id ? 'Update' : 'Tambah'} Data Mata Pelajaran</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 
@@ -175,6 +184,7 @@ function RouteComponent() {
           data={mapelStore.list}
           searchKey="Nama Mapel"
           searchPlaceholder="Cari nama mapel"
+          onUpdate={handleUpdate}
         />
       </div>
     </main>
