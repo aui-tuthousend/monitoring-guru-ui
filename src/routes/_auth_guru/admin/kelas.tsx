@@ -60,6 +60,12 @@ function RouteComponent() {
     
   }, [])
 
+  useEffect(()=> {
+    if (isAddDialogOpen === false && kelasStore.model.id) {
+      kelasStore.setModel()
+    }
+  },[isAddDialogOpen])
+
   const validate = () => {
     const m = kelasStore.model
     if (!m.name || !m.ketua_kelas_id || !m.jurusan_id) {

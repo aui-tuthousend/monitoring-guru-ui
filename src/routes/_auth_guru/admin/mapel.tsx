@@ -53,6 +53,12 @@ function RouteComponent() {
     
   }, [token])
 
+  useEffect(()=> {
+    if (isAddDialogOpen === false && mapelStore.model.id) {
+      mapelStore.setModel()
+    }
+  },[isAddDialogOpen])
+
   const validate = () => {
     const m = mapelStore.model
     if (!m.name || !m.jurusan_id) {

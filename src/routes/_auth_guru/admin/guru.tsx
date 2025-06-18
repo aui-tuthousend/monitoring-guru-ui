@@ -39,6 +39,12 @@ function RouteComponent() {
     store.GetListGuru(token)
   }, [token])
 
+  useEffect(()=> {
+    if (isAddDialogOpen === false && store.model.id) {
+      store.setModel()
+    }
+  },[isAddDialogOpen])
+
   const validation = () => {
     if (!store.model.nip || !store.model.name || !store.model.jabatan) {
       toast.error('Please fill all fields')

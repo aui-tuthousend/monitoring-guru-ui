@@ -44,6 +44,12 @@ function RouteComponent() {
         }
         return true
     }
+
+    useEffect(()=> {
+    if (isAddDialogOpen === false && store.model.id) {
+      store.setModel()
+    }
+  },[isAddDialogOpen])
     
     const handleAdd = async () => {
         if (!validation()) return
