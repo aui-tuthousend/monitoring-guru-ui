@@ -40,15 +40,19 @@ function RouteComponent() {
   }, [token])
 
   const validation = () => {
-    if (!store.model.nip || !store.model.name || !store.model.password || !store.model.jabatan) {
+    if (!store.model.nip || !store.model.name || !store.model.jabatan) {
       toast.error('Please fill all fields')
       return false
     } else if (store.model.nip.length < 5) {
       toast.error('NIP must be at least 6 characters')
       return false
-    } else if (store.model.password.length < 6) {
-      toast.error('Password must be at least 6 characters')
-      return false
+    }
+
+    if(!store.model.id){
+      if(!store.model.password){
+        toast.error('Please fill password')
+        return false
+      }
     }
     return true
   }
@@ -60,13 +64,18 @@ function RouteComponent() {
     console.log(response.success)
     if (response.success) {
       await store.GetListGuru(token)
+      toast.success(`Guru berhasil ${store.model.id ? 'diperbarui' : 'ditambahkan'}`)
       store.setModel({...store.model, nip: "", name: ""})
-      toast.success('Guru berhasil ditambah')
-      // setIsAddDialogOpen(false)
+      setIsAddDialogOpen(false)
     } else {
       toast.error(response.message)
     }
 
+  }
+
+  const handleUpdate = async (data: any) => {
+    setIsAddDialogOpen(true)
+    store.setModel(data)
   }
 
   return (
@@ -95,8 +104,8 @@ function RouteComponent() {
             </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
                 <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
-                  <DialogTitle>Tambah Guru</DialogTitle>
-                  <DialogDescription>Input data Guru</DialogDescription>
+                  <DialogTitle>{store.model.id ? 'Update' : 'Tambah'} Guru</DialogTitle>
+                  <DialogDescription>{store.model.id ? 'Update' : 'Tambah'} data Guru</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -115,14 +124,16 @@ function RouteComponent() {
                       required className="col-span-3 border-primary/20 focus:border-primary" 
                     />
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label>Password</Label>
-                    <PasswordInput 
-                      value={store.model.password}
-                      onChange={(e) => store.setModel({ ...store.model, password: e.target.value })}
-                      required className="col-span-3 border-primary/20 focus:border-primary" 
-                    />
-                  </div>
+                  {!store.model.id && (
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label>Password</Label>
+                      <PasswordInput 
+                        value={store.model.password}
+                        onChange={(e) => store.setModel({ ...store.model, password: e.target.value })}
+                        required className="col-span-3 border-primary/20 focus:border-primary" 
+                      />
+                    </div>
+                  )}
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label>Jabatan</Label>
                     <Select onValueChange={(value) => store.setModel({ ...store.model, jabatan: value })} defaultValue={store.model.jabatan}>
@@ -155,12 +166,15 @@ function RouteComponent() {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-
-            
           </div>
 
-
-          <DataTable columns={guruColumns} data={store.list} searchKey='Nama Guru' searchPlaceholder='Cari nama guru' />
+          <DataTable 
+            columns={guruColumns} 
+            data={store.list} 
+            searchKey='Nama Guru' 
+            searchPlaceholder='Cari nama guru' 
+            onUpdate={handleUpdate}
+          />
         </div>
       </main>
     </>

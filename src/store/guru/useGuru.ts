@@ -34,7 +34,7 @@ export const useGuruStore = create<GuruStore>((set, get) => ({
         set({ loading: true });
         try {
           const response = await fetchServer(token, urlBuilder('/guru'), {
-            method: 'POST',
+            method: payload.id ? 'PUT' : 'POST',
             body: payload,
           });
       
