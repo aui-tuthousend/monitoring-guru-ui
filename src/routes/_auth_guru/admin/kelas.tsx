@@ -86,6 +86,18 @@ function RouteComponent() {
     }
   }
 
+  const handleUpdate = async (data: any) => {
+    console.log(data)
+    setIsDialogOpen(true)
+    kelasStore.setModel({
+      id: data.id,
+      name: data.name,
+      jurusan_id: data.jurusan.id,
+      ketua_kelas_id: data.ketua_kelas.id,
+    })
+  }
+
+
   return (
     <main className="flex-1 overflow-y-auto p-6">
       <div className="space-y-6">
@@ -200,6 +212,7 @@ function RouteComponent() {
           data={kelasStore.list}
           searchKey="Nama Kelas"
           searchPlaceholder="Cari nama kelas"
+          onUpdate={handleUpdate}
         />
       </div>
     </main>

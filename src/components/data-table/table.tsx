@@ -91,12 +91,12 @@ export function DataTable<TData, TValue>({
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => navigator.clipboard.writeText(user.id)}>
-              Copy user ID
+              Copy ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => console.log(user)}>View details</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleUpdate(user)}>Edit user</DropdownMenuItem>
-            <DropdownMenuItem className="text-red-600">Delete user</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleUpdate(user)}>Edit</DropdownMenuItem>
+            <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
