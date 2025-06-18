@@ -93,7 +93,7 @@ function RouteComponent() {
 
   const handleUpdate = async (data: any) => {
     console.log(data)
-    setIsDialogOpen(true)
+    setIsAddDialogOpen(true)
     kelasStore.setModel({
       id: data.id,
       name: data.name,
@@ -219,7 +219,6 @@ function RouteComponent() {
           data={kelasStore.list}
           searchKey="Nama Kelas"
           searchPlaceholder="Cari nama kelas"
-          onUpdate={handleUpdate}
           onUpdate={handleUpdate}
         />
       </div>
