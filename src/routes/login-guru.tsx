@@ -14,7 +14,8 @@ export const Route = createFileRoute('/login-guru')({
 
 function LoginPage() {
   const auth = useAuth()
-  const {loading, setLoading, login} = useAuthStore()
+  const loading = auth.loading
+  // const {loading, setLoading, login} = useAuthStore()
   const navigate = useNavigate()
 
   const [nip, setNip] = useState<string>('');
@@ -25,10 +26,10 @@ function LoginPage() {
     e.preventDefault();
     setError(null);
     try {
-      setLoading(true)
-      const result = await login({ nip: nip, password });
-      if (result.token) {
-        auth.login(result.user_data.id)
+      auth.loading = true
+      // const result = await login({ nip: nip, password });
+      const result = await auth.login({nip, password})
+      if (result.success && result.token) {
         console.log('Login successful:', result);
         toast.success('Login successful')
         if (result.user_data.jabatan === 'guru') {
@@ -43,7 +44,7 @@ function LoginPage() {
     } catch (err: any) {
       setError(err.message || 'Login failed');
     } finally {
-      setLoading(false)
+      auth.loading = false
     }
   };
 
@@ -106,7 +107,7 @@ function LoginPage() {
             />
           </div>
           <CardTitle className="text-2xl font-bold text-center text-gray-800">
-            Teacher Monitoring System
+            Login Guru
           </CardTitle>
         </CardHeader>
 
