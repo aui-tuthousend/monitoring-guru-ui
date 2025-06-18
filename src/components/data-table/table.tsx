@@ -13,13 +13,17 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ChevronDown, SlidersHorizontal } from "lucide-react"
+
+import { ChevronDown, MoreHorizontal, SlidersHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -30,6 +34,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   searchKey?: string
   searchPlaceholder?: string
+  onUpdate: (data: TData) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -37,6 +42,7 @@ export function DataTable<TData, TValue>({
   data,
   searchKey = "",
   searchPlaceholder = "Search...",
+  onUpdate,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -59,6 +65,41 @@ export function DataTable<TData, TValue>({
       columnFilters,
       columnVisibility,
       rowSelection,
+    },
+  })
+
+  const handleUpdate = (item: any) =>{
+    if(onUpdate){
+      onUpdate(item)
+    }
+  }
+
+
+  columns.push({
+    id: "actions",
+    cell: ({ row }: any) => {
+      const user = row.original
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(user.id)}>
+              Copy user ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => console.log(user)}>View details</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleUpdate(user)}>Edit user</DropdownMenuItem>
+            <DropdownMenuItem className="text-red-600">Delete user</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
     },
   })
 

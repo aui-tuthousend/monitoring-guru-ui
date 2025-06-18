@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import QRScanner from "@/components/QrScan";
 
-export const Route = createFileRoute('/_auth/guru/scan')({
+export const Route = createFileRoute('/_auth_guru/guru/scan')({
   component: RouteComponent,
   loader: async () => {
     const now = new Date();

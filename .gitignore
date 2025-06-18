@@ -7,3 +7,5 @@ count.txt
 .env
 .*lock*
 pnpm-lock.yaml
+bun.lock
+bun.lock

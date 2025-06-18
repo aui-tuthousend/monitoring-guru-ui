@@ -1,0 +1,248 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
+import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { useEffect, useState } from "react"
+import { Clock, Users, BookOpen, QrCode, CheckCircle } from "lucide-react"
+import { useCookies } from "react-cookie"
+import { useJadwalajarStore } from "@/store/jadwalAjar/useJadwalAjar"
+import { toast } from "sonner"
+
+export const Route = createFileRoute('/_auth_guru/guru/')({
+  component: RouteComponent,
+});
+
+// untuk masuk ke scan qr code guru tergantung jam, jadi nanti kalau jamnya sesuai bakalan bisa di klik
+
+interface ClassSchedule {
+  id: string
+  subject: string
+  class: string
+  time: string
+  duration: string
+  room: string
+  students: number
+  status: "upcoming" | "ongoing" | "completed"
+}
+
+function RouteComponent() {
+  const navigate = useNavigate();
+  const [cookies] = useCookies(['userData', 'authToken']);
+  // logic fetch data jadwal ajar
+  const jadwalStore = useJadwalajarStore();
+  const [timestamp, setTimestamp] = useState<{ date: string, time: string } | null>(null);
+  const [todaySchedule, setTodaySchedule] = useState<ClassSchedule[]>([
+    {
+      id: "1",
+      subject: "Advanced Mathematics",
+      class: "Grade 12A",
+      time: "08:00 - 09:30",
+      duration: "90 min",
+      room: "Room 201",
+      students: 28,
+      status: "completed",
+    },
+    {
+      id: "2",
+      subject: "Calculus",
+      class: "Grade 11B",
+      time: "10:00 - 11:30",
+      duration: "90 min",
+      room: "Room 203",
+      students: 25,
+      status: "ongoing",
+    },
+    {
+      id: "3",
+      subject: "Statistics",
+      class: "Grade 10C",
+      time: "13:00 - 14:30",
+      duration: "90 min",
+      room: "Room 201",
+      students: 30,
+      status: "upcoming",
+    },
+    {
+      id: "4",
+      subject: "Algebra",
+      class: "Grade 9A",
+      time: "15:00 - 16:30",
+      duration: "90 min",
+      room: "Room 205",
+      students: 26,
+      status: "upcoming",
+    },
+  ])
+
+  const [stats, setStats] = useState({
+    totalStudents: 109,
+    classesCompleted: 1,
+    classesRemaining: 3,
+    attendanceRate: 94,
+  })
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "bg-green-100 text-green-800"
+      case "ongoing":
+        return "bg-blue-100 text-blue-800"
+      case "upcoming":
+        return "bg-yellow-100 text-yellow-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "completed":
+        return <CheckCircle className="h-4 w-4" />
+      case "ongoing":
+        return <Clock className="h-4 w-4" />
+      case "upcoming":
+        return <BookOpen className="h-4 w-4" />
+      default:
+        return null
+    }
+  }
+
+  // logic fetch data ke be
+  useEffect(() => {
+    const now = new Date();
+    setTimestamp({
+      date: now.toLocaleDateString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }),
+      time: now.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit"
+      }),
+    });
+
+    if (cookies.authToken && cookies.userData?.id) {
+      jadwalStore.GetListJadwalajarGuru(cookies.authToken, { uuid: cookies.userData.id, hari: 'senin' });
+    }
+  }, [cookies.authToken, cookies.userData?.id]);
+
+  const handleScanClick = (mataPelajaran: string) => {
+    navigate({ to: '/guru/scan', from: '/guru' });
+    toast.success(`Membuka scanner untuk ${mataPelajaran}`);
+  };
+
+  const handleScanAttendance = (classId: string, subject: string) => {
+    // Simulate attendance scanning
+    console.log(`Scanning attendance for ${subject} (${classId})`)
+    // In a real app, this would navigate to a QR scanner or attendance page
+    navigate({ to: '/guru/scan', from: '/guru' });
+    toast.success(`Membuka scanner untuk ${classId} ${subject}`);
+  }
+
+  return (
+    <>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <BookOpen className="h-5 w-5" />
+          Today's Dashboard
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="space-y-6">
+        {/* Stats Overview */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Users className="h-5 w-5 text-blue-600" />
+              <span className="text-sm font-medium text-blue-600">Students</span>
+            </div>
+            <p className="text-2xl font-bold text-blue-900">{stats.totalStudents}</p>
+          </div>
+
+          <div className="bg-green-50 p-4 rounded-lg">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              <span className="text-sm font-medium text-green-600">Completed</span>
+            </div>
+            <p className="text-2xl font-bold text-green-900">{stats.classesCompleted}</p>
+          </div>
+
+          <div className="bg-yellow-50 p-4 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Clock className="h-5 w-5 text-yellow-600" />
+              <span className="text-sm font-medium text-yellow-600">Remaining</span>
+            </div>
+            <p className="text-2xl font-bold text-yellow-900">{stats.classesRemaining}</p>
+          </div>
+
+          <div className="bg-purple-50 p-4 rounded-lg">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-purple-600" />
+              <span className="text-sm font-medium text-purple-600">Attendance</span>
+            </div>
+            <p className="text-2xl font-bold text-purple-900">{stats.attendanceRate}%</p>
+          </div>
+        </div>
+
+        {/* Today's Schedule */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4">Today's Classes</h3>
+          <div className="space-y-3">
+            {todaySchedule.map((schedule) => (
+              <div key={schedule.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h4 className="font-medium text-lg">{schedule.subject}</h4>
+                      <Badge className={getStatusColor(schedule.status)}>
+                        <div className="flex items-center gap-1">
+                          {getStatusIcon(schedule.status)}
+                          {schedule.status}
+                        </div>
+                      </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4" />
+                        {schedule.class}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        {schedule.time}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <BookOpen className="h-4 w-4" />
+                        {schedule.room}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Users className="h-4 w-4" />
+                        {schedule.students} students
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2">
+                    {schedule.status !== "completed" && (
+                      <Button
+                        onClick={() => handleScanAttendance(schedule.id, schedule.subject)}
+                        variant={schedule.status === "ongoing" ? "default" : "outline"}
+                        size="sm"
+                        className="flex items-center gap-2"
+                      >
+                        <QrCode className="h-4 w-4" />
+                        {schedule.status === "ongoing" ? "Take Attendance" : "Prepare"}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </>
+  )
+}

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { CircleX, Plus } from 'lucide-react'
+import { CircleX, Loader2, Plus } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { DataTable } from '@/components/data-table/table'
@@ -21,7 +21,7 @@ import PasswordInput from '@/components/ui/input-password'
 import { toast } from 'sonner'
 import { useCookies } from 'react-cookie'
 
-export const Route = createFileRoute('/_auth/admin/guru')({
+export const Route = createFileRoute('/_auth_guru/admin/guru')({
   component: RouteComponent,
 });
 
@@ -40,29 +40,42 @@ function RouteComponent() {
   }, [token])
 
   const validation = () => {
-    if (!store.model.nip || !store.model.name || !store.model.password || !store.model.jabatan) {
+    if (!store.model.nip || !store.model.name || !store.model.jabatan) {
       toast.error('Please fill all fields')
       return false
     } else if (store.model.nip.length < 5) {
       toast.error('NIP must be at least 6 characters')
       return false
-    } else if (store.model.password.length < 6) {
-      toast.error('Password must be at least 6 characters')
-      return false
+    }
+
+    if(!store.model.id){
+      if(!store.model.password){
+        toast.error('Please fill password')
+        return false
+      }
     }
     return true
   }
 
   const handleSubmit = async () => {
-
     if (!validation()) return
-    await store.RegisterGuru(token, store.model)
-    await store.GetListGuru(token)
 
-    toast.success('Guru berhasil ditambah')
-    // console.log(store.model)
-    store.setModel()
-    setIsAddDialogOpen(false)
+    const response = await store.RegisterGuru(token, store.model)
+    console.log(response.success)
+    if (response.success) {
+      await store.GetListGuru(token)
+      toast.success(`Guru berhasil ${store.model.id ? 'diperbarui' : 'ditambahkan'}`)
+      store.setModel({...store.model, nip: "", name: ""})
+      setIsAddDialogOpen(false)
+    } else {
+      toast.error(response.message)
+    }
+
+  }
+
+  const handleUpdate = async (data: any) => {
+    setIsAddDialogOpen(true)
+    store.setModel(data)
   }
 
   return (
@@ -72,21 +85,27 @@ function RouteComponent() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold gradient-text">Guru</h1>
-              <p className="text-muted-foreground">Manage Guru information</p>
+              <p className="text-muted-foreground">Manage data guru</p>
             </div>
 
 
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90 transition-opacity">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Guru
-                </Button>
-              </DialogTrigger>
+            <DialogTrigger asChild>
+              <Button 
+                disabled={store.loading}
+                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90">
+                  {store.loading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ):(
+                    <Plus className="mr-2 h-4 w-4" />
+                  )}
+                Tambah Guru
+              </Button>
+            </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
                 <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
-                  <DialogTitle>Add New Guru</DialogTitle>
-                  <DialogDescription>Input data Guru</DialogDescription>
+                  <DialogTitle>{store.model.id ? 'Update' : 'Tambah'} Guru</DialogTitle>
+                  <DialogDescription>{store.model.id ? 'Update' : 'Tambah'} data Guru</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -105,14 +124,16 @@ function RouteComponent() {
                       required className="col-span-3 border-primary/20 focus:border-primary" 
                     />
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label>Password</Label>
-                    <PasswordInput 
-                      value={store.model.password}
-                      onChange={(e) => store.setModel({ ...store.model, password: e.target.value })}
-                      required className="col-span-3 border-primary/20 focus:border-primary" 
-                    />
-                  </div>
+                  {!store.model.id && (
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label>Password</Label>
+                      <PasswordInput 
+                        value={store.model.password}
+                        onChange={(e) => store.setModel({ ...store.model, password: e.target.value })}
+                        required className="col-span-3 border-primary/20 focus:border-primary" 
+                      />
+                    </div>
+                  )}
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label>Jabatan</Label>
                     <Select onValueChange={(value) => store.setModel({ ...store.model, jabatan: value })} defaultValue={store.model.jabatan}>
@@ -140,17 +161,20 @@ function RouteComponent() {
                     disabled={store.loading}
                     className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90 transition-opacity"
                   >
-                    Add Guru
+                    Submit
                   </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-
-            
           </div>
 
-
-          <DataTable columns={guruColumns} data={store.list} searchKey='Name' searchPlaceholder='Cari nama guru' />
+          <DataTable 
+            columns={guruColumns} 
+            data={store.list} 
+            searchKey='Nama Guru' 
+            searchPlaceholder='Cari nama guru' 
+            onUpdate={handleUpdate}
+          />
         </div>
       </main>
     </>

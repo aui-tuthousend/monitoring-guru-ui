@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { fetchServer } from "@/lib/fetchServer";
 import { urlBuilder } from "@/lib/utils";
-import type { GetJadwalajarParams, Jadwalajar, JadwalajarStore } from "./types";
+import type { GetJadwalajarParams, JadwalajarStore } from "./types";
 
 export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
     list: [],
-    default: { guru: "", hari: "", jam_mulai: "", jam_selesai: "", kelas: "", mapel: "" },
-    model: { guru: "", hari: "", jam_mulai: "", jam_selesai: "", kelas: "", mapel: "" },
+    hari: [{value: "senin", label: "Senin"}, {value: "selasa", label: "Selasa"}, {value: "rabu", label: "Rabu"}, {value: "kamis", label: "Kamis"}, {value: "jumat", label: "Jumat"}, {value: "sabtu", label: "Sabtu"}],
+    default: { guru_id: "", hari: "", jam_mulai: "", jam_selesai: "", kelas_id: "", mapel_id: "", ruangan_id: "" },
+    model: { guru_id: "", hari: "", jam_mulai: "", jam_selesai: "", kelas_id: "", mapel_id: "", ruangan_id: "" },
     loading: false,
 
     tableAttributes: [
@@ -21,6 +22,10 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
         {
             accessorKey: "kelas.name",
             header: "Kelas",
+        },
+        {
+            accessorKey: "ruangan.name",
+            header: "Ruangan",
         },
         {
             accessorKey: "hari",
@@ -49,11 +54,11 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
         try {
             const response = await fetchServer(token, urlBuilder('/jadwalajar'), {
                 method: 'POST',
-                body: JSON.stringify(payload),
+                body: payload
             });
 
-            const data = await response.data.json();
-            console.log(data)
+            const data = await response.data;
+            console.log(data);
 
             return data;
         } catch (error) {
@@ -71,8 +76,7 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
             });
 
             const data = await response.data;
-            // console.log(data)
-            set({ list: data.data })
+            set({ list: data.data });
 
             return data;
         } catch (error) {
@@ -86,25 +90,14 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
         try {
             set({ loading: true });
 
-            const response = await fetchServer(token, urlBuilder('/jadwalajar/guru/'+params.uuid+'/'+params.hari), {
+            const response = await fetchServer(token, urlBuilder('/jadwalajar/guru', params), {
                 method: 'GET',
             });
 
-            const raw = await response.data;
-            const data = raw.data;
+            const data = await response.data;
+            set({ list: data.data });
 
-            const list: Jadwalajar[] = data.map((item: any) => ({
-                id: item.id,
-                guru: item.guru.name, // Flattened to name
-                mapel: item.mapel.name,
-                kelas: item.kelas.name,
-                hari: item.hari.charAt(0).toUpperCase() + item.hari.slice(1),
-                jam_mulai: item.jam_mulai,
-                jam_selesai: item.jam_selesai,
-            }));
-
-            set({ list });
-            return data
+            return data;
         } catch (error) {
             console.error('Error getting jadwal guru:', error);
             set({ list: [] }); // fallback to empty list
@@ -119,9 +112,8 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
                 method: 'GET',
             });
 
-            const data = await response.data.json();
-            console.log(data)
-            set({ list: data })
+            const data = await response.data;
+            set({ list: data.data });
 
             return data;
         } catch (error) {

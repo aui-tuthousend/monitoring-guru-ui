@@ -1,11 +1,11 @@
 import { Outlet } from '@tanstack/react-router'
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_auth')({
+export const Route = createFileRoute('/_auth_siswa')({
   beforeLoad: ({ context }) => {
     if (!context.auth.isAuthenticated) {
       throw redirect({
-        to: '/login',
+        to: '/login-siswa',
       })
     }
   },

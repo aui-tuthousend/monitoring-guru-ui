@@ -1,5 +1,5 @@
 "use client"
-import { CalendarClock, CircleGauge, LifeBuoy, NotebookPen, School, Settings, UserLock, Warehouse } from "lucide-react"
+import { CalendarClock, CircleGauge, LifeBuoy, NotebookPen, School, Settings, User, UserLock, Warehouse } from "lucide-react"
 
 import {
     Sidebar,
@@ -29,6 +29,11 @@ const navigationData = {
             title: "Guru",
             url: "/admin/guru",
             icon: <UserLock />,
+        },
+        {
+            title: "Ketua Kelas",
+            url: "/admin/ketua-kelas",
+            icon: <User />,
         },
         {
             title: "Kelas",
@@ -62,8 +67,8 @@ export function AppSidebar() {
     return (
         <Sidebar>
             <SidebarHeader className="border-b border-sidebar-border">
-                <div className="flex h-[2.8rem] items-center px-4">
-                    <span className="font-semibold">SMKN 02 Dashboard</span>
+                <div className="flex h-[2.7rem] items-center px-4">
+                    <span className="font-semibold">SMKN 02 SURABAYA</span>
                 </div>
             </SidebarHeader>
             <SidebarContent>
