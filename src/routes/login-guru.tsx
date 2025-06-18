@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAuthStore } from '@/store/auth/useAuth'
+// import { useAuthStore } from '@/store/auth/useAuth'
 import { useAuth } from '@/auth'
 
 export const Route = createFileRoute('/login-guru')({
@@ -28,7 +28,7 @@ function LoginPage() {
     try {
       auth.loading = true
       // const result = await login({ nip: nip, password });
-      const result = await auth.login({nip, password})
+      const result = await auth.login({nip, password, type: 'guru'})
       if (result.success && result.token) {
         console.log('Login successful:', result);
         toast.success('Login successful')

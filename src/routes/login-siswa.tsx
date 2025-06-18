@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAuthStore } from '@/store/auth/useAuth'
+// import { useAuthStore } from '@/store/auth/useAuth'
 import { useAuth } from '@/auth'
 
 export const Route = createFileRoute('/login-siswa')({
@@ -14,10 +14,11 @@ export const Route = createFileRoute('/login-siswa')({
 
 function LoginPage() {
   const auth = useAuth()
-  const {loading, setLoading, login} = useAuthStore()
+  const loading = auth.loading
+  // const {loading, setLoading, login} = useAuthStore()
   const navigate = useNavigate()
 
-  const [nip, setNip] = useState<string>('');
+  const [nisn, setNisn] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
@@ -25,17 +26,15 @@ function LoginPage() {
     e.preventDefault();
     setError(null);
     try {
-      setLoading(true)
-      const result = await login({ nip: nip, password });
+      auth.loading = true
+      // const result = await login({ nip: nip, password });
+      const result = await auth.login({nisn, password, type: 'ketua-kelas'})
       if (result.token) {
-        auth.login(result.user_data.id)
         console.log('Login successful:', result);
         toast.success('Login successful')
-        if (result.user_data.jabatan === 'guru') {
-          await navigate({ to: '/guru' })
-        } else if (result.user_data.jabatan === 'kepala_sekolah') {
-          await navigate({ to: '/admin' })
-        }
+        
+        await navigate({ to: '/siswa' })
+
       } else {
         toast.error(result.error)
       }
@@ -43,7 +42,7 @@ function LoginPage() {
     } catch (err: any) {
       setError(err.message || 'Login failed');
     } finally {
-      setLoading(false)
+      auth.loading = false
     }
   };
 
@@ -113,15 +112,15 @@ function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="nip">NIP</Label>
+              <Label htmlFor="nisn">NISN</Label>
               <Input
-                id="nip"
+                id="nisn"
                 type="text"
-                value={nip}
-                onChange={(e) => setNip(e.target.value)}
-                placeholder="Enter your NIP"
+                value={nisn}
+                onChange={(e) => setNisn(e.target.value)}
+                placeholder="Enter your NISN"
                 required
-                autoComplete="nip"
+                autoComplete="nisn"
                 autoFocus
               />
             </div>

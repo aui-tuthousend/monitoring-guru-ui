@@ -2,9 +2,17 @@ import * as React from 'react'
 import { useCookies } from 'react-cookie'
 import { useAuthStore } from '@/store/auth/useAuth'
 
+type credentials = {
+  nip?: string;
+  nisn?: string;
+  password: string;
+  type: 'guru' | 'ketua-kelas'
+}
+
+
 export interface AuthContext {
   isAuthenticated: boolean
-  login: (credentials: { nip: string; password: string }) => Promise<{ 
+  login: (credentials: credentials) => Promise<{ 
     success: boolean
     token?: string
     user_data?: any
@@ -47,13 +55,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cookies.userData, cookies.authToken, initialized])
 
-  const login = React.useCallback(async (credentials: { nip: string; password: string }) => {
+  const login = React.useCallback(async (credentials: credentials) => {
     setLoading(true)
     try {
       const response = await authStore.login({
         nip: credentials.nip,
+        nisn: credentials.nisn,
         password: credentials.password
-      })
+      }, credentials.type)
 
       if (response.token) {
         const userData = response.user_data || {

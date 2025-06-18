@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 
 export interface LoginRequest {
-  nip: string;
+  nip?: string;
+  nisn?: string;
   password: string;
 }
 
@@ -11,9 +12,9 @@ export const useAuthStore = () => {
   const [, setCookie, removeCookie] = useCookies(['authToken', 'userData']);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const login = async (payload: LoginRequest) => {
+  const login = async (payload: LoginRequest, type: 'guru' | 'ketua-kelas') => {
     try {
-      const response = await fetch(urlBuilder('/auth/login-guru'), {
+      const response = await fetch(urlBuilder(`/auth/login-${type}`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
