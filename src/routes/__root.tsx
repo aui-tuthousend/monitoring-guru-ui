@@ -14,10 +14,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <>
       {/* <Header /> */}
-      <CookiesProvider>
+      {/* <CookiesProvider> */}
         <Toaster position='top-center'/>
         <Outlet />
-      </CookiesProvider>
+      {/* </CookiesProvider> */}
       <TanStackRouterDevtools />
     </>
   ),

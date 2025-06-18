@@ -106,7 +106,7 @@ function LoginPage() {
             />
           </div>
           <CardTitle className="text-2xl font-bold text-center text-gray-800">
-            Teacher Monitoring System
+            Login Siswa
           </CardTitle>
         </CardHeader>
 
