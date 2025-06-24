@@ -1,5 +1,3 @@
-"use client"
-
 import {
   Dialog,
   DialogContent,
@@ -25,7 +23,7 @@ export function ViewProfile({ profile }: ViewProfileProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default" className="flex items-center gap-2">
+        <Button variant="default" size="sm" className="flex items-center gap-2">
           Lihat Profil
         </Button>
       </DialogTrigger>

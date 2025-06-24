@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import PasswordInput from '@/components/ui/input-password'
 import { toast } from 'sonner'
 import { useCookies } from 'react-cookie'
+import { ImportButton } from '@/components/import-button'
 
 export const Route = createFileRoute('/_auth_guru/admin/guru')({
   component: RouteComponent,
@@ -94,84 +95,86 @@ function RouteComponent() {
               <p className="text-muted-foreground">Manage data guru</p>
             </div>
 
-
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button 
-                disabled={store.loading}
-                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90">
-                  {store.loading ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ):(
-                    <Plus className="mr-2 h-4 w-4" />
-                  )}
-                Tambah Guru
-              </Button>
-            </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
-                <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
-                  <DialogTitle>{store.model.id ? 'Update' : 'Tambah'} Guru</DialogTitle>
-                  <DialogDescription>{store.model.id ? 'Update' : 'Tambah'} Data Guru</DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label>NIP</Label>
-                    <Input 
-                      value={store.model.nip}
-                      onChange={(e) => store.setModel({ ...store.model, nip: e.target.value })}
-                      required className="col-span-3 border-primary/20 focus:border-primary" 
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label>Nama</Label>
-                    <Input 
-                      value={store.model.name}
-                      onChange={(e) => store.setModel({ ...store.model, name: e.target.value })}
-                      required className="col-span-3 border-primary/20 focus:border-primary" 
-                    />
-                  </div>
-                  {!store.model.id && (
+            <div className="flex gap-1 items-center">
+              <ImportButton endpoint='guru'/>
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  disabled={store.loading}
+                  className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90">
+                    {store.loading ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ):(
+                      <Plus className="mr-2 h-4 w-4" />
+                    )}
+                  Tambah Guru
+                </Button>
+              </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px] border border-primary/20 shadow-lg">
+                  <DialogHeader className="bg-gradient-to-r from-primary/10 to-accent/10 -mx-6 -mt-6 px-6 pt-6 pb-4 border-b">
+                    <DialogTitle>{store.model.id ? 'Update' : 'Tambah'} Guru</DialogTitle>
+                    <DialogDescription>{store.model.id ? 'Update' : 'Tambah'} Data Guru</DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label>Password</Label>
-                      <PasswordInput 
-                        value={store.model.password}
-                        onChange={(e) => store.setModel({ ...store.model, password: e.target.value })}
+                      <Label>NIP</Label>
+                      <Input 
+                        value={store.model.nip}
+                        onChange={(e) => store.setModel({ ...store.model, nip: e.target.value })}
                         required className="col-span-3 border-primary/20 focus:border-primary" 
                       />
                     </div>
-                  )}
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label>Jabatan</Label>
-                    <Select onValueChange={(value) => store.setModel({ ...store.model, jabatan: value })} defaultValue={store.model.jabatan}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Pilih Jabatan" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="guru">Guru</SelectItem>
-                        <SelectItem value="kepala_sekolah">Kepala Sekolah</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label>Nama</Label>
+                      <Input 
+                        value={store.model.name}
+                        onChange={(e) => store.setModel({ ...store.model, name: e.target.value })}
+                        required className="col-span-3 border-primary/20 focus:border-primary" 
+                      />
+                    </div>
+                    {!store.model.id && (
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label>Password</Label>
+                        <PasswordInput 
+                          value={store.model.password}
+                          onChange={(e) => store.setModel({ ...store.model, password: e.target.value })}
+                          required className="col-span-3 border-primary/20 focus:border-primary" 
+                        />
+                      </div>
+                    )}
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label>Jabatan</Label>
+                      <Select onValueChange={(value) => store.setModel({ ...store.model, jabatan: value })} defaultValue={store.model.jabatan}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih Jabatan" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="guru">Guru</SelectItem>
+                          <SelectItem value="kepala_sekolah">Kepala Sekolah</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                </div>
-                <DialogFooter>
-                <Button 
-                    onClick={() => store.setModel()}
-                    disabled={store.loading}
-                    size="icon" 
-                    className="bg-red-500 hover:bg-red-600">
-                    <CircleX />
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={handleSubmit}
-                    disabled={store.loading}
-                    className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90 transition-opacity"
-                  >
-                    Submit
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                  <DialogFooter>
+                  <Button 
+                      onClick={() => store.setModel()}
+                      disabled={store.loading}
+                      size="icon" 
+                      className="bg-red-500 hover:bg-red-600">
+                      <CircleX />
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={store.loading}
+                      className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-90 transition-opacity"
+                    >
+                      Submit
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
 
           <DataTable 
