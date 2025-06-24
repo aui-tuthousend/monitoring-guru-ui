@@ -67,23 +67,23 @@ export const useGuruStore = create<GuruStore>((set, get) => ({
             set({loading: false});
         }
     },
-    GetProfileGuru: async (token) => {
-        try {
-            set({ loading: true });
-            const response = await fetchServer(token, urlBuilder('/guru/profile'), {
-                method: 'GET',
-            });
+    // GetProfileGuru: async (token) => {
+    //     try {
+    //         set({ loading: true });
+    //         const response = await fetchServer(token, urlBuilder('/guru/profile'), {
+    //             method: 'GET',
+    //         });
     
-            const data = await response.data;
-            console.log("GetMe response:", data);
+    //         const data = await response.data;
+    //         console.log("GetMe response:", data);
 
-            set({ model: data.data });
-            return data;
-        } catch (error) {
-            console.error('Error getting profile:', error);
-            return error;
-        } finally {
-            set({ loading: false });
-        }   
-    }
+    //         set({ model: data.data });
+    //         return data;
+    //     } catch (error) {
+    //         console.error('Error getting profile:', error);
+    //         return error;
+    //     } finally {
+    //         set({ loading: false });
+    //     }   
+    // }
 }));

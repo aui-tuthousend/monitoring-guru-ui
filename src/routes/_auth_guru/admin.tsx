@@ -17,9 +17,9 @@ function RouteComponent() {
 
   const store = useGuruStore()
 
-  useEffect(() => {
-    store.GetProfileGuru(token)
-  }, [token])
+  // useEffect(() => {
+  //   store.GetProfileGuru(token)
+  // }, [token])
 
   const profile = {
     name: store.model.name,
