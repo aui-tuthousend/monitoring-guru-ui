@@ -5,6 +5,7 @@ import type { KelasStore } from "./types";
 
 export const useKelasStore = create<KelasStore>((set, get) => ({
     list: [],
+    classStatus: [],
     default: {
         name: "",
         ketua_kelas_id: "",
@@ -83,4 +84,22 @@ export const useKelasStore = create<KelasStore>((set, get) => ({
             set({ loading: false });
         }
     },
+
+    GetAllClassStatus: async (token) => {
+        set({ loading: true });
+      
+        try {
+          const response = await fetchServer(token, urlBuilder('/statuskelas'), {
+            method: 'GET',
+          });
+      
+          return response.data.data;
+        } catch (error) {
+          console.error('Error getting list of class status:', error);
+          return [];
+        } finally {
+          set({ loading: false });
+        }
+      },
+      
 }));

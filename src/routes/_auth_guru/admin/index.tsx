@@ -4,8 +4,11 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Cable, Loader, Unplug } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useDashboard } from '@/store/dashboard/useDashboard';
+import { useWebsocket } from '@/store/websocket/useWebsocket';
 import { useCookies } from 'react-cookie';
+import { useKelasStore } from '@/store/kelas/useKelas';
+import type { StatusKelas } from '@/store/kelas/types';
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/_auth_guru/admin/')({
   component: RouteComponent,
@@ -18,34 +21,82 @@ function RouteComponent() {
     loading,
     connectWebSocket,
     closeConnection,
-    kelasList,
-    sendToggleKelas,
+    sendMessage,
+    addMessageListener,
+    removeMessageListener,
     isConnected,
-    GetAllClass,
-    connectionStatus
-  } = useDashboard();
+  } = useWebsocket();
+
+  const { GetAllClassStatus } = useKelasStore();
   
   const [cookies] = useCookies(['authToken']);
   const token = cookies.authToken;
 
+  const [classStatus, setClassStatus] = useState<StatusKelas[]>([]);
+  
   useEffect(() => {
     connectWebSocket();
-    // return () => {
-    //   closeConnection();
-    // };
+
+    const handleMessage = (data: string) => {
+      const { type, payload } = JSON.parse(data);
+  
+      if (type === 'notification') {
+        toast(payload.message); // atau showNotification(payload.message)
+      }
+      if (type === 'update-kelas') {
+        setClassStatus((prev) =>
+          prev.map((kls) =>
+            kls.id === payload.id
+              ? {
+                  ...kls,
+                  is_active: payload.is_active,
+                  mapel: payload.mapel,
+                  pengajar: payload.pengajar,
+                  ruangan: payload.ruangan,
+                }
+              : kls
+          )
+        );
+      }
+    };
+
+    addMessageListener(handleMessage);
+
+    return () => {
+      removeMessageListener(handleMessage);
+      closeConnection();
+    };
   }, []);
+
+  const handleSendMessages = (kelasId: string, isActive: boolean) => {
+    const payload = {
+      type: "update-kelas",
+      payload: {
+        id: kelasId,
+        is_active: isActive,
+        mapel: "Basis Data",
+        pengajar: "Aui",
+        ruangan: "Lab Komputer",
+      },
+    };
+  
+    if (isConnected && sendMessage) {
+      sendMessage(JSON.stringify(payload));
+    }
+  };
 
   useEffect(() => {
-
-    const fetchData = async () => {
-      await GetAllClass(token)
+    if(isConnected){
+      GetAllClassStatus(token).then(setClassStatus);
+      toast.success("Connected to WebSocket");
+    }else{
+      toast.error("Disconnected from WebSocket, Reconnecting...");
     }
-    fetchData()
-  }, []);
+  }, [isConnected]);
 
   const [sortBy, setSortBy] = useState<string>("default")
 
-  const sortedClasses = [...kelasList].sort((a, b) => {
+  const sortedClasses = [...classStatus].sort((a, b) => {
     switch (sortBy) {
       case "default":
         return 0;
@@ -56,7 +107,7 @@ function RouteComponent() {
       case "name":
         return a.kelas.name.localeCompare(b.kelas.name);
       case "status":
-        return a.isActive === b.isActive ? 0 : a.isActive ? -1 : 1;
+        return a.is_active === b.is_active ? 0 : a.is_active ? -1 : 1;
       default:
         return 0;
     }
@@ -103,11 +154,11 @@ function RouteComponent() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedClasses.map((classData, index) => (
-              <div key={index} onClick={() => sendToggleKelas(classData.id, !classData.isActive)}>
+              <div key={index} onClick={() => handleSendMessages(classData.id, !classData.is_active)}>
                 <ClassCard
                   className={classData.kelas.name}
                   grade={classData.kelas.grade}
-                  isActive={classData.isActive}
+                  isActive={classData.is_active}
                   teacher={classData.pengajar}
                   major={classData.kelas.jurusan}
                   subject={classData.mapel}
