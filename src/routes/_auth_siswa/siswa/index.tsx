@@ -21,7 +21,7 @@ interface UpcomingClass {
   room: string
 }
 
-export const Route = createFileRoute('/_auth_guru/siswa/')({
+export const Route = createFileRoute('/_auth_siswa/siswa/')({
   component: RouteComponent,
 })
 

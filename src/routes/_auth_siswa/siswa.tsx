@@ -1,35 +1,53 @@
-import { Link, Outlet,createFileRoute } from '@tanstack/react-router'
+import { Link, Outlet, createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useState, useEffect } from "react"
 import { Bell, LogOut, GraduationCap } from "lucide-react"
 import Kawai from '/IMG_3661.jpeg';
+import { useAuth } from '@/auth'
+import { useCookies } from 'react-cookie'
 
-export const Route = createFileRoute('/_auth_guru/siswa')({
+export const Route = createFileRoute('/_auth_siswa/siswa')({
   component: RouteComponent,
 })
 
-interface StudentProfile {
-  id: string
-  name: string
-  grade: string
-  studentId: string
-  email: string
-  gpa: number
-  avatar: string
-}
+// interface StudentProfile {
+//   id: string
+//   name: string
+//   grade: string
+//   studentId: string
+//   email: string
+//   gpa: number
+//   avatar: string
+// }
 
 function RouteComponent() {
-  const [studentProfile] = useState<StudentProfile>({
-    id: "student-001",
-    name: "Alex Chen",
-    grade: "Grade 11",
-    studentId: "STU-2024-001",
-    email: "alex.chen@school.edu",
-    gpa: 3.85,
-    avatar: "/placeholder.svg?height=80&width=80",
-  })
+  const auth = useAuth()
+  const navigate = useNavigate()
+  const [cookies] = useCookies(['userData']);
+
+  // const [studentProfile] = useState<StudentProfile>({
+  //   id: "student-001",
+  //   name: "Alex Chen",
+  //   grade: "Grade 11",
+  //   studentId: "STU-2024-001",
+  //   email: "alex.chen@school.edu",
+  //   gpa: 3.85,
+  //   avatar: "/placeholder.svg?height=80&width=80",
+  // })
+
+  const [studentProfile, setStudentProfile] = useState<{
+    nama: string;
+    // kelas: string;
+    nisn: string;
+    // attendanceMarked: boolean;
+  }>({
+    nama: "Loading...",
+    // kelas: "Loading...",
+    nisn: "Loading...",
+    // attendanceMarked: false,
+  });
 
   const [currentTime, setCurrentTime] = useState<{
     date: string
@@ -40,13 +58,13 @@ function RouteComponent() {
     const updateTime = () => {
       const now = new Date()
       setCurrentTime({
-        date: now.toLocaleDateString("en-US", {
+        date: now.toLocaleDateString("id-ID", {
           weekday: "long",
           year: "numeric",
           month: "long",
           day: "numeric",
         }),
-        time: now.toLocaleTimeString("en-US", {
+        time: now.toLocaleTimeString("id-ID", {
           hour: "2-digit",
           minute: "2-digit",
         }),
@@ -57,6 +75,37 @@ function RouteComponent() {
     const interval = setInterval(updateTime, 1000)
     return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+      if (cookies.userData) {
+        try {
+          const dataSiswa = cookies.userData;
+          setStudentProfile({
+            nama: dataSiswa.name,
+            // kelas: dataSiswa.kelas_id,
+            nisn: dataSiswa.nisn,
+            // attendanceMarked: false, // add attendance logic if needed
+          });
+          console.log(dataSiswa)
+        } catch (err) {
+          console.error("Failed to parse userData cookie", err);
+        }
+      }
+    }, [cookies.userData]);
+
+  const handleLogout = async () => {
+    try {
+      const result = await auth.logout()
+      console.log("Logout result:", result)
+      if (result.success) {
+        navigate({ to: '/login-siswa' })
+      } else {
+        console.error("Logout failed:", result.error)
+      }
+    } catch (error) {
+      console.error("Logout error:", error)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -75,7 +124,7 @@ function RouteComponent() {
               <Button variant="ghost" size="sm">
                 <Bell className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="sm">
+              <Button onClick={handleLogout} variant="ghost" size="sm">
                 <LogOut className="h-4 w-4" />
               </Button>
             </div>
@@ -95,16 +144,16 @@ function RouteComponent() {
               />
             </div>
             <div className="flex-1">
-              <CardTitle className="text-xl">{studentProfile.name}</CardTitle>
-              <p className="text-green-100">{studentProfile.grade}</p>
-              <p className="text-xs text-green-200">ID: {studentProfile.studentId}</p>
+              <CardTitle className="text-xl">{studentProfile.nama}</CardTitle>
+              {/* <p className="text-green-100">{studentProfile.kelas}</p> */}
+              <p className="text-xs text-green-200">NISN: {studentProfile.nisn}</p>
             </div>
             <div className="text-right">
               <p className="text-sm text-green-100">{currentTime.date}</p>
-              <div className="flex items-center gap-2 mt-2">
+              {/* <div className="flex items-center gap-2 mt-2">
                 <GraduationCap className="h-4 w-4" />
                 <span className="text-sm">GPA: {studentProfile.gpa}</span>
-              </div>
+              </div> */}
             </div>
           </CardHeader>
         </Card>
