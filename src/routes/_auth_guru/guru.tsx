@@ -7,6 +7,8 @@ import KawaiGura from '/IMG_3167.jpeg';
 import { Bell, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/auth';
+import { useNavigate } from '@tanstack/react-router';
 
 // untuk masuk ke scan qr code guru tergantung jam, jadi nanti kalau jamnya sesuai bakalan bisa di klik
 
@@ -24,6 +26,9 @@ export const Route = createFileRoute('/_auth_guru/guru')({
 });
 
 function RouteComponent() {
+  const auth = useAuth()
+  const navigate = useNavigate()
+
   const [cookies] = useCookies(['userData']);
   const [teacherProfile, setTeacherProfile] = useState<{
     name: string;
@@ -60,7 +65,7 @@ function RouteComponent() {
     const updateTime = () => {
       const now = new Date()
       setCurrentTime({
-        date: now.toLocaleDateString("en-US", {
+        date: now.toLocaleDateString("id-ID", {
           weekday: "long",
           year: "numeric",
           month: "long",
@@ -77,6 +82,20 @@ function RouteComponent() {
     const interval = setInterval(updateTime, 1000)
     return () => clearInterval(interval)
   }, [])
+
+  const handleLogout = async () => {
+    try {
+      const result = await auth.logout()
+      console.log("Logout result:", result)
+      if (result.success) {
+        navigate({ to: '/login-guru' })
+      } else {
+        console.error("Logout failed:", result.error)
+      }
+    } catch (error) {
+      console.error("Logout error:", error)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -95,7 +114,7 @@ function RouteComponent() {
               <Button variant="ghost" size="sm">
                 <Bell className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="sm">
+              <Button onClick={handleLogout} variant="ghost" size="sm">
                 <LogOut className="h-4 w-4" />
               </Button>
             </div>
