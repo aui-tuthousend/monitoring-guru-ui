@@ -9,30 +9,32 @@ type credentials = {
   type: 'guru' | 'ketua-kelas'
 }
 
-
 export interface AuthContext {
   isAuthenticated: boolean
-  login: (credentials: credentials) => Promise<{ 
+  login: (credentials: credentials) => Promise<{
     success: boolean
     token?: string
     user_data?: any
-    error?: string 
+    error?: string
   }>
-  logout: () => Promise<void>
+  logout: () => Promise<{
+    success: boolean
+    error?: string
+  }>
   user: any | null
   token: string | null
   loading: boolean
-  initialized: boolean // Add this to track initialization
+  initialized: boolean
 }
 
 const AuthContext = React.createContext<AuthContext | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [cookies] = useCookies(['userData', 'authToken'])
+  const [cookies, , removeCookie] = useCookies(['userData', 'authToken'])
   const [user, setUser] = React.useState<any | null>(null)
   const [token, setToken] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState<boolean>(false)
-  const [initialized, setInitialized] = React.useState<boolean>(false) // Track initialization
+  const [initialized, setInitialized] = React.useState<boolean>(false)
   const isAuthenticated = !!token
   const authStore = useAuthStore()
 
@@ -40,10 +42,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     if (cookies.userData && cookies.authToken && !initialized) {
       try {
-        const userData = typeof cookies.userData === 'string' 
-          ? JSON.parse(cookies.userData) 
+        const userData = typeof cookies.userData === 'string'
+          ? JSON.parse(cookies.userData)
           : cookies.userData
-        
+
         setUser(userData)
         setToken(cookies.authToken)
       } catch (error) {
@@ -51,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       setInitialized(true)
     } else if (!cookies.userData || !cookies.authToken) {
-      setInitialized(true) // Mark as initialized even if no cookies
+      setInitialized(true)
     }
   }, [cookies.userData, cookies.authToken, initialized])
 
@@ -66,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (response.token) {
         const userData = response.user_data || {
-          nip: credentials.nip,
+          [credentials.type === 'guru' ? 'nisn' : 'nip']: credentials[credentials.type === 'guru' ? 'nisn' : 'nip'],
           name: `User ${credentials.nip}`
         }
 
@@ -98,22 +100,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await authStore.logout()
       setUser(null)
       setToken(null)
+      removeCookie('userData')
+      removeCookie('authToken')
+      return {
+        success: true
+      }
     } catch (error) {
       console.error('Logout failed:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Logout failed'
+      }
     } finally {
       setLoading(false)
     }
-  }, [authStore])
+  }, [authStore, removeCookie])
 
   return (
-    <AuthContext.Provider value={{ 
-      isAuthenticated, 
-      user, 
-      token, 
-      login, 
+    <AuthContext.Provider value={{
+      isAuthenticated,
+      user,
+      token,
+      login,
       logout,
       loading,
-      initialized // Expose initialized state
+      initialized
     }}>
       {children}
     </AuthContext.Provider>
