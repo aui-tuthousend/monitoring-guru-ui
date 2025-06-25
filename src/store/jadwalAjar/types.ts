@@ -12,7 +12,7 @@ export interface Jadwalajar {
 }
 
 export interface GetJadwalajarParams {
-    uuid: string,
+    id: string,
     hari?: string
 }
 

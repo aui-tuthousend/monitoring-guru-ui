@@ -1,8 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
 import { BookOpen, Clock, AlertCircle, CheckCircle, TrendingUp } from "lucide-react"
+import { useJadwalajarStore } from '@/store/jadwalAjar/useJadwalAjar'
+import { useCookies } from 'react-cookie'
+import { useEffect } from 'react'
 
 interface Assignment {
   id: string
@@ -26,56 +28,11 @@ export const Route = createFileRoute('/_auth_siswa/siswa/')({
 })
 
 function RouteComponent() {
-  const assignments: Assignment[] = [
-    {
-      id: "1",
-      title: "Calculus Problem Set 5",
-      subject: "Mathematics",
-      dueDate: "2024-12-20",
-      status: "pending",
-      progress: 60,
-    },
-    {
-      id: "2",
-      title: "Physics Lab Report",
-      subject: "Physics",
-      dueDate: "2024-12-18",
-      status: "submitted",
-      progress: 100,
-    },
-    {
-      id: "3",
-      title: "History Essay",
-      subject: "History",
-      dueDate: "2024-12-15",
-      status: "overdue",
-      progress: 30,
-    },
-  ]
+  const [cookies] = useCookies(['userData', 'authToken'])
+    const userData = cookies.userData
+    const token = cookies.authToken
 
-  const upcomingClasses: UpcomingClass[] = [
-    {
-      id: "1",
-      subject: "Advanced Mathematics",
-      teacher: "Dr. Sarah Johnson",
-      time: "10:00 - 11:30",
-      room: "Room 201",
-    },
-    {
-      id: "2",
-      subject: "Physics",
-      teacher: "Prof. Michael Brown",
-      time: "13:00 - 14:30",
-      room: "Lab 105",
-    },
-    {
-      id: "3",
-      subject: "English Literature",
-      teacher: "Ms. Emily Davis",
-      time: "15:00 - 16:30",
-      room: "Room 301",
-    },
-  ]
+  const store = useJadwalajarStore()
 
   const stats = {
     completedAssignments: 12,
@@ -84,31 +41,12 @@ function RouteComponent() {
     attendanceRate: 96,
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "submitted":
-        return "bg-green-100 text-green-800"
-      case "pending":
-        return "bg-yellow-100 text-yellow-800"
-      case "overdue":
-        return "bg-red-100 text-red-800"
-      default:
-        return "bg-gray-100 text-gray-800"
+  useEffect(() => {
+    const fetchData = async () => {
+      await store.GetListJadwalajarKelas(token, {id: userData.kelas_id, hari: "senin"})
     }
-  }
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "submitted":
-        return <CheckCircle className="h-4 w-4" />
-      case "pending":
-        return <Clock className="h-4 w-4" />
-      case "overdue":
-        return <AlertCircle className="h-4 w-4" />
-      default:
-        return null
-    }
-  }
+    fetchData()
+  }, [])
 
   return (
     <>
@@ -192,20 +130,22 @@ function RouteComponent() {
         {/* Today's Classes */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Today's Classes</h3>
-          <div className="space-y-3">
-            {upcomingClasses.map((classItem) => (
-              <div key={classItem.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <h4 className="font-medium">{classItem.subject}</h4>
-                    <p className="text-sm text-gray-600">{classItem.teacher}</p>
-                    <p className="text-xs text-gray-500">{classItem.room}</p>
-                  </div>
-                  <div className="text-right">
-                    <Badge variant="outline">{classItem.time}</Badge>
+          <div className="space-y-3 flex flex-col gap-2">
+            {store.list.map((item, index) => (
+              <Link to={`/siswa/${item.id}`} key={index}>
+                <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <h4 className="font-medium">{item.mapel.name}</h4>
+                      <p className="text-sm text-gray-600">{item.guru.name}</p>
+                      <p className="text-xs text-gray-500">{item.ruangan.name}</p>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant="outline">{item.jam_mulai} - {item.jam_selesai}</Badge>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

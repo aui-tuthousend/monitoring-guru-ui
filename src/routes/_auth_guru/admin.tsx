@@ -3,28 +3,21 @@ import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import LogoutButton from '@/components/logout-button'
 import { ViewProfile } from '@/components/view-profile'
-import { useGuruStore } from '@/store/guru/useGuru'
 import { useCookies } from 'react-cookie'
-import { useEffect } from 'react'
+import Notifications from '@/components/notifications'
 
 export const Route = createFileRoute('/_auth_guru/admin')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const [cookies] = useCookies(['authToken'])
-  const token = cookies.authToken
-
-  const store = useGuruStore()
-
-  // useEffect(() => {
-  //   store.GetProfileGuru(token)
-  // }, [token])
+  const [cookies] = useCookies(['userData'])
+  const userData = cookies.userData
 
   const profile = {
-    name: store.model.name,
-    nip: store.model.nip,
-    jabatan: store.model.jabatan,
+    name: userData.name,
+    nip: userData.nip,
+    jabatan: userData.jabatan,
     avatarUrl: "https://i.pravatar.cc/150?u=budi.santoso"
   }
 
@@ -39,6 +32,7 @@ function RouteComponent() {
           </div>
           <div className="flex items-center gap-2">
             {/* <Button size="sm">View Profile</Button> */}
+            <Notifications />
             <ViewProfile profile={profile} />
             <LogoutButton />
           </div>

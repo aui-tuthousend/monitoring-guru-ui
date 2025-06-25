@@ -89,8 +89,6 @@ function RouteComponent() {
     if(isConnected){
       GetAllClassStatus(token).then(setClassStatus);
       toast.success("Connected to WebSocket");
-    }else{
-      toast.error("Disconnected from WebSocket, Reconnecting...");
     }
   }, [isConnected]);
 

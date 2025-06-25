@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/popover";
 import { useAuthStore } from "@/store/auth/useAuth";
 import { useNavigate } from "@tanstack/react-router";
+import { LogOut } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -25,8 +26,8 @@ export default function LogoutButton() {
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button variant="destructive" size="sm">
-                    Log out
+                <Button variant="destructive" size="icon" className="relative rounded-full">
+                    <LogOut />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-64">

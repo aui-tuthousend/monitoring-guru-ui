@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
+import { CircleUserRound } from "lucide-react"
 
 type ViewProfileProps = {
   profile: {
@@ -23,8 +24,8 @@ export function ViewProfile({ profile }: ViewProfileProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default" size="sm" className="flex items-center gap-2">
-          Lihat Profil
+        <Button variant="default" size="icon" className="relative rounded-full">
+          <CircleUserRound className="w-4 h-4"/>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[400px]">
