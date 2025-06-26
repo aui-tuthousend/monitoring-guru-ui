@@ -11,6 +11,7 @@ export const Route = createFileRoute('/_auth_siswa/siswa/$mapelid')({
 })
 
 interface QrValue {
+  type: string
   mapel_id: string
   time: string
   kelas_id: string
@@ -55,6 +56,7 @@ function RouteComponent() {
     const currentMinuteKey = now.getHours() + ":" + now.getMinutes()
 
     const newQrValue: QrValue = {
+      type: "clock-in",
       mapel_id: mapelid,
       time: currentMinuteKey,
       kelas_id: userData.kelas_id

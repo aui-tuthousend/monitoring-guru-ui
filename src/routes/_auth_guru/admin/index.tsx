@@ -16,6 +16,12 @@ export const Route = createFileRoute('/_auth_guru/admin/')({
 
 
 function RouteComponent() {
+  const { GetAllClassStatus } = useKelasStore();
+  
+  const [cookies] = useCookies(['authToken']);
+  const token = cookies.authToken;
+
+  const [classStatus, setClassStatus] = useState<StatusKelas[]>([]);
 
   const {
     loading,
@@ -26,13 +32,6 @@ function RouteComponent() {
     removeMessageListener,
     isConnected,
   } = useWebsocket();
-
-  const { GetAllClassStatus } = useKelasStore();
-  
-  const [cookies] = useCookies(['authToken']);
-  const token = cookies.authToken;
-
-  const [classStatus, setClassStatus] = useState<StatusKelas[]>([]);
   
   useEffect(() => {
     connectWebSocket();
@@ -46,7 +45,7 @@ function RouteComponent() {
       if (type === 'update-kelas') {
         setClassStatus((prev) =>
           prev.map((kls) =>
-            kls.id === payload.id
+            kls.kelas.id === payload.id
               ? {
                   ...kls,
                   is_active: payload.is_active,
@@ -74,9 +73,6 @@ function RouteComponent() {
       payload: {
         id: kelasId,
         is_active: isActive,
-        mapel: "Basis Data",
-        pengajar: "Aui",
-        ruangan: "Lab Komputer",
       },
     };
   
@@ -152,7 +148,7 @@ function RouteComponent() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedClasses.map((classData, index) => (
-              <div key={index} onClick={() => handleSendMessages(classData.id, !classData.is_active)}>
+              <div key={index} onClick={() => handleSendMessages(classData.kelas.id, !classData.is_active)}>
                 <ClassCard
                   className={classData.kelas.name}
                   grade={classData.kelas.grade}

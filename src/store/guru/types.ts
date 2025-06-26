@@ -9,7 +9,7 @@ interface Guru {
 }
 
 export interface GuruStore {
-    list: Guru[];
+    list: any[];
     default: Guru;
     model: Guru;
     loading: boolean;

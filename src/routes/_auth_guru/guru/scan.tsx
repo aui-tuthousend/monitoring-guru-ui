@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { CardHeader, CardContent } from '@/components/ui/card';
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import QRScanner from "@/components/QrScan";
+import { useWebsocket } from '@/store/websocket/useWebsocket';
+import { useCookies } from 'react-cookie';
 
 export const Route = createFileRoute('/_auth_guru/guru/scan')({
   component: RouteComponent,
@@ -25,6 +27,11 @@ export const Route = createFileRoute('/_auth_guru/guru/scan')({
 })
 
 function RouteComponent() {
+    const [cookies] = useCookies(['userData']);
+    const userData = cookies.userData;
+
+    // console.log(userData)
+  
   const { date, time } = Route.useLoaderData();
   const [result, setResult] = useState<string | null>(null);
   const [torchOn, setTorchOn] = useState(false);
@@ -58,6 +65,59 @@ function RouteComponent() {
     }
   };
 
+  const {
+    loading,
+    connectWebSocket,
+    closeConnection,
+    sendMessage,
+    addMessageListener,
+    removeMessageListener,
+    isConnected,
+  } = useWebsocket();
+
+  useEffect(() => {
+    connectWebSocket();
+
+    return () => {
+      closeConnection();
+    };
+  }, []);
+
+  const handleSendMessages = (kelasId: string, mapel: string, pengajar: string, isActive: boolean) => {
+    const payload = {
+      type: "update-kelas",
+      payload: {
+        id: kelasId,
+        is_active: isActive,
+        mapel: mapel,
+        pengajar: pengajar,
+        ruangan: "Lab Komputer",
+      },
+    };
+
+
+    if (isConnected && sendMessage) {
+      console.log(payload)
+      sendMessage(JSON.stringify(payload));
+    }
+  };
+
+  const handleScanSuccess = (text: string) => {
+    console.log("Scan result:", text);
+    const parsed = JSON.parse(text);
+    console.log(parsed);
+
+    handleSendMessages(parsed.kelas_id, parsed.mapel_id, userData.name, true);
+
+    navigate({ to: '/guru', from: '/guru/scan' })
+    toast.success("Check-in Complete");
+    // setResult(text);
+  };
+
+  const handleScanError = (err: any) => {
+    console.log(err)
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <CardHeader className="flex flex-col items-center space-y-4 py-6">
@@ -68,7 +128,8 @@ function RouteComponent() {
       <CardContent className="flex flex-col items-center flex-grow">
         <div className="w-full max-w-md mb-6">
           <QRScanner
-            onScanSuccess={(text) => setResult(text)}
+            onScanSuccess={handleScanSuccess}
+            onScanError={handleScanError}
             enableTorch={torchOn}
             scanDelay={200}
           />

@@ -124,7 +124,7 @@ function RouteComponent() {
     });
 
     if (cookies.authToken && cookies.userData?.id) {
-      jadwalStore.GetListJadwalajarGuru(cookies.authToken, { uuid: cookies.userData.id, hari: 'senin' });
+      jadwalStore.GetListJadwalajarGuru(cookies.authToken, { id: cookies.userData.id, hari: 'senin' });
     }
   }, [cookies.authToken, cookies.userData?.id]);
 
