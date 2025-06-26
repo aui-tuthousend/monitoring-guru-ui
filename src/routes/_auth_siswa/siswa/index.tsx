@@ -1,10 +1,12 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { BookOpen, Clock, AlertCircle, CheckCircle, TrendingUp } from "lucide-react"
 import { useJadwalajarStore } from '@/store/jadwalAjar/useJadwalAjar'
 import { useCookies } from 'react-cookie'
 import { useEffect } from 'react'
+import { timeStringToDate } from '@/lib/utils'
+import { toast } from 'sonner'
 
 interface Assignment {
   id: string
@@ -29,10 +31,11 @@ export const Route = createFileRoute('/_auth_siswa/siswa/')({
 
 function RouteComponent() {
   const [cookies] = useCookies(['userData', 'authToken'])
-    const userData = cookies.userData
-    const token = cookies.authToken
+  const userData = cookies.userData
+  const token = cookies.authToken
 
   const store = useJadwalajarStore()
+  const navigate = useNavigate()
 
   const stats = {
     completedAssignments: 12,
@@ -43,10 +46,28 @@ function RouteComponent() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await store.GetListJadwalajarKelas(token, {id: userData.kelas_id, hari: "senin"})
+      await store.GetListJadwalajarKelas(token, { id: userData.kelas_id, hari: "senin" })
     }
     fetchData()
   }, [])
+
+  const isOnTime = (jam_mulai: string, jam_selesai: string) => {
+    const now = new Date()
+    const start = timeStringToDate(jam_mulai)
+    const end = timeStringToDate(jam_selesai)
+    return now >= start && now <= end
+  }
+
+  const handleNavigate = (mapel: any) => {
+    console.log(mapel)
+    if (!isOnTime(mapel.jam_mulai, mapel.jam_selesai)) {
+      toast.error('Kelas belum dimulai!')
+      return
+    }
+    navigate({ 
+      to: `/siswa/${mapel.id}` 
+    })
+  }
 
   return (
     <>
@@ -132,7 +153,7 @@ function RouteComponent() {
           <h3 className="text-lg font-semibold mb-4">Today's Classes</h3>
           <div className="space-y-3 flex flex-col gap-2">
             {store.list.map((item, index) => (
-              <Link to={`/siswa/${item.id}`} key={index}>
+              <div key={index} onClick={() => handleNavigate(item)} className="cursor-pointer">
                 <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
@@ -141,11 +162,11 @@ function RouteComponent() {
                       <p className="text-xs text-gray-500">{item.ruangan.name}</p>
                     </div>
                     <div className="text-right">
-                      <Badge variant="outline">{item.jam_mulai} - {item.jam_selesai}</Badge>
+                      <Badge variant={isOnTime(item.jam_mulai, item.jam_selesai) ? "default" : "destructive"}>{item.jam_mulai} - {item.jam_selesai}</Badge>
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </div>

@@ -23,3 +23,10 @@ export const urlBuilder = (path: string, params?: FetchParams): string => {
 export async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
+
+export function timeStringToDate(timeStr: string): Date {
+  const [hours, minutes] = timeStr.split(":").map(Number)
+  const date = new Date()
+  date.setHours(hours, minutes, 0, 0)
+  return date
+}
