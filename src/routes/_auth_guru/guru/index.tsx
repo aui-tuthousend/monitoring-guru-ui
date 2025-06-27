@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -14,16 +14,6 @@ export const Route = createFileRoute('/_auth_guru/guru/')({
 
 // untuk masuk ke scan qr code guru tergantung jam, jadi nanti kalau jamnya sesuai bakalan bisa di klik
 
-interface ClassSchedule {
-  id: string
-  subject: string
-  class: string
-  time: string
-  duration: string
-  room: string
-  students: number
-  status: "upcoming" | "ongoing" | "completed"
-}
 
 function RouteComponent() {
   const navigate = useNavigate();
@@ -31,55 +21,12 @@ function RouteComponent() {
   // logic fetch data jadwal ajar
   const jadwalStore = useJadwalajarStore();
   const [timestamp, setTimestamp] = useState<{ date: string, time: string } | null>(null);
-  const [todaySchedule, setTodaySchedule] = useState<ClassSchedule[]>([
-    {
-      id: "1",
-      subject: "Advanced Mathematics",
-      class: "Grade 12A",
-      time: "08:00 - 09:30",
-      duration: "90 min",
-      room: "Room 201",
-      students: 28,
-      status: "completed",
-    },
-    {
-      id: "2",
-      subject: "Calculus",
-      class: "Grade 11B",
-      time: "10:00 - 11:30",
-      duration: "90 min",
-      room: "Room 203",
-      students: 25,
-      status: "ongoing",
-    },
-    {
-      id: "3",
-      subject: "Statistics",
-      class: "Grade 10C",
-      time: "13:00 - 14:30",
-      duration: "90 min",
-      room: "Room 201",
-      students: 30,
-      status: "upcoming",
-    },
-    {
-      id: "4",
-      subject: "Algebra",
-      class: "Grade 9A",
-      time: "15:00 - 16:30",
-      duration: "90 min",
-      room: "Room 205",
-      students: 26,
-      status: "upcoming",
-    },
-  ])
-
-  const [stats, setStats] = useState({
+  const stats = {
     totalStudents: 109,
     classesCompleted: 1,
     classesRemaining: 3,
     attendanceRate: 94,
-  })
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {

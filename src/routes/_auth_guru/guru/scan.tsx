@@ -6,6 +6,10 @@ import { toast } from 'sonner';
 import QRScanner from "@/components/QrScan";
 import { useWebsocket } from '@/store/websocket/useWebsocket';
 import { useCookies } from 'react-cookie';
+import { SECRET_KEY } from '@/lib/utils';
+import SHA256 from "crypto-js/sha256";
+
+
 
 export const Route = createFileRoute('/_auth_guru/guru/scan')({
   component: RouteComponent,
@@ -27,14 +31,15 @@ export const Route = createFileRoute('/_auth_guru/guru/scan')({
 })
 
 function RouteComponent() {
-    const [cookies] = useCookies(['userData']);
-    const userData = cookies.userData;
+  const [cookies] = useCookies(['userData']);
+  const userData = cookies.userData;
 
-    // console.log(userData)
-  
+  // console.log(userData)
+
   const { date, time } = Route.useLoaderData();
   const [result, setResult] = useState<string | null>(null);
   const [torchOn, setTorchOn] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
@@ -97,22 +102,61 @@ function RouteComponent() {
 
 
     if (isConnected && sendMessage) {
-      console.log(payload)
+      // console.log(payload)
       sendMessage(JSON.stringify(payload));
     }
   };
 
   const handleScanSuccess = (text: string) => {
-    console.log("Scan result:", text);
-    const parsed = JSON.parse(text);
-    console.log(parsed);
+    console.log("Scan result:", text)
 
-    handleSendMessages(parsed.kelas_id, parsed.mapel_id, userData.name, true);
+    let parsed: any
 
-    navigate({ to: '/guru', from: '/guru/scan' })
-    toast.success("Check-in Complete");
-    // setResult(text);
-  };
+    try {
+      parsed = JSON.parse(text)
+    } catch (err) {
+      toast.error("Invalid QR Code")
+      return
+    }
+
+    console.log(parsed)
+    const { payload, signature } = parsed;
+    const expectedSignature = SHA256(JSON.stringify(payload) + SECRET_KEY).toString();
+
+    if (signature !== expectedSignature) {
+      toast.error("QR telah dimodifikasi atau tidak valid");
+      return;
+    }
+
+    if (
+      typeof payload !== 'object' ||
+      payload.type !== 'clock-in' ||
+      !payload.kelas_id ||
+      !payload.mapel_id
+    ) {
+      toast.error("QR Code tidak dikenali");
+      return;
+    }
+
+    const { date, time } = payload
+    const parsedDateTime = new Date(`${date}T${time}:00`)
+    const now = new Date()
+
+    const diffMinutes = (now.getTime() - parsedDateTime.getTime()) / 1000 / 60
+
+    if (diffMinutes > 1) {
+      toast.error("QR Code sudah kadaluarsa")
+      return
+    }
+
+    const { kelas_id, mapel_id } = payload;
+
+    handleSendMessages(kelas_id, mapel_id, userData.name, true);
+    toast.success("Check-in berhasil");
+    navigate({ to: '/guru', from: '/guru/scan' });
+
+  }
+
 
   const handleScanError = (err: any) => {
     console.log(err)
