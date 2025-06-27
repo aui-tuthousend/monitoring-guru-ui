@@ -1,29 +1,13 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { BookOpen, Clock, AlertCircle, CheckCircle, TrendingUp } from "lucide-react"
+import { BookOpen, Clock, CheckCircle, TrendingUp } from "lucide-react"
 import { useJadwalajarStore } from '@/store/jadwalAjar/useJadwalAjar'
 import { useCookies } from 'react-cookie'
-import { useEffect } from 'react'
 import { timeStringToDate } from '@/lib/utils'
 import { toast } from 'sonner'
-
-interface Assignment {
-  id: string
-  title: string
-  subject: string
-  dueDate: string
-  status: "pending" | "submitted" | "overdue"
-  progress: number
-}
-
-interface UpcomingClass {
-  id: string
-  subject: string
-  teacher: string
-  time: string
-  room: string
-}
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/_auth_siswa/siswa/')({
   component: RouteComponent,
@@ -33,8 +17,7 @@ function RouteComponent() {
   const [cookies] = useCookies(['userData', 'authToken'])
   const userData = cookies.userData
   const token = cookies.authToken
-
-  const store = useJadwalajarStore()
+  const {GetListJadwalajarKelas} = useJadwalajarStore()
   const navigate = useNavigate()
 
   const stats = {
@@ -44,28 +27,44 @@ function RouteComponent() {
     attendanceRate: 96,
   }
 
+  const [currentTime, setCurrentTime] = useState(new Date())
+
   useEffect(() => {
-    const fetchData = async () => {
-      await store.GetListJadwalajarKelas(token, { id: userData.kelas_id, hari: "senin" })
-    }
-    fetchData()
+    const interval = setInterval(() => {
+      setCurrentTime(new Date())
+    }, 60000)
+
+    return () => clearInterval(interval)
   }, [])
 
-  const isOnTime = (jam_mulai: string, jam_selesai: string) => {
-    const now = new Date()
+
+  const {data, isPending, error} = useQuery({
+    queryKey: ["jadwal-kelas", userData.kelas_id],
+    queryFn: () => GetListJadwalajarKelas(token, { id: userData.kelas_id, hari: "senin" }),
+    // enabled: !!userData.kelas_id && !!token,
+  })
+
+  // console.log(data)
+
+  if (error){
+    toast.error('Gagal mengambil data jadwal kelas!')
+  }
+  
+  const isOnTime = (jam_mulai: string, jam_selesai: string, now: Date) => {
     const start = timeStringToDate(jam_mulai)
     const end = timeStringToDate(jam_selesai)
     return now >= start && now <= end
   }
 
   const handleNavigate = (mapel: any) => {
-    console.log(mapel)
-    if (!isOnTime(mapel.jam_mulai, mapel.jam_selesai)) {
+    if (isOnTime(mapel.jam_mulai, mapel.jam_selesai, currentTime)) {
       toast.error('Kelas belum dimulai!')
       return
     }
     navigate({ 
-      to: `/siswa/${mapel.id}` 
+      to: `/siswa/${mapel.mapel.id}`, 
+      from: "/siswa",
+      state: true
     })
   }
 
@@ -152,7 +151,8 @@ function RouteComponent() {
         <div>
           <h3 className="text-lg font-semibold mb-4">Today's Classes</h3>
           <div className="space-y-3 flex flex-col gap-2">
-            {store.list.map((item, index) => (
+            {isPending && <p>Loading...</p>}
+            {data?.map((item: any, index: number) => (
               <div key={index} onClick={() => handleNavigate(item)} className="cursor-pointer">
                 <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex items-center justify-between">
@@ -162,7 +162,7 @@ function RouteComponent() {
                       <p className="text-xs text-gray-500">{item.ruangan.name}</p>
                     </div>
                     <div className="text-right">
-                      <Badge variant={isOnTime(item.jam_mulai, item.jam_selesai) ? "default" : "destructive"}>{item.jam_mulai} - {item.jam_selesai}</Badge>
+                      <Badge variant={isOnTime(item.jam_mulai, item.jam_selesai, currentTime) ? "default" : "destructive"}>{item.jam_mulai} - {item.jam_selesai}</Badge>
                     </div>
                   </div>
                 </div>

@@ -9,6 +9,7 @@ import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
 import { AuthProvider, useAuth } from './auth.tsx'
 import { CookiesProvider } from 'react-cookie'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 // Create a new router instance
 const router = createRouter({
@@ -50,13 +51,16 @@ function App() {
   )
 }
 
+const queryClient = new QueryClient()
 // Mount the app to DOM
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </StrictMode>
   )
 }

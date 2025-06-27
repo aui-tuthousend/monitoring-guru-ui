@@ -1,18 +1,15 @@
 import { Separator } from '@/components/ui/separator';
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { ClockArrowDown, ClockArrowUp, ClockFading } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import QRCode from "react-qr-code";
-import SHA256 from "crypto-js/sha256"
-import { SECRET_KEY } from '@/lib/utils';
-
-
-
+import { HashString } from '@/lib/utils';
+import { useMapelStore } from '@/store/mapel/useMapel';
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/_auth_siswa/siswa/$mapelid')({
   component: RouteComponent,
-
 })
 
 interface QrValue {
@@ -25,15 +22,37 @@ interface QrValue {
 
 function RouteComponent() {
   const { mapelid } = Route.useParams()
-  const [cookies] = useCookies(['userData'])
+  const [cookies] = useCookies(['userData', 'authToken'])
   const userData = cookies.userData
+  const token = cookies.authToken
+  const navigate = useNavigate()
+  
+
+  const {GetMapelById} = useMapelStore()
 
   const [qrCode, setQrCode] = useState<React.ReactNode>("")
+  const [isDoneFetching, setIsDoneFetching] = useState(false)
 
   const [currentTime, setCurrentTime] = useState<{
     date: string
     time: string
   }>({ date: "", time: "" })
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      const response = await GetMapelById(token, mapelid)
+      if (!response.data) {
+        console.log(response)
+        toast.error("Mapel tidak ditemukan")
+        navigate({ to: '/siswa' })
+      } else {
+        setIsDoneFetching(true)
+      }
+    }
+    fetchData()
+
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,6 +77,7 @@ function RouteComponent() {
   }, [])
 
   useEffect(() => {
+    if (!isDoneFetching) return
     const now = new Date()
 
     const payload: QrValue = {
@@ -68,7 +88,7 @@ function RouteComponent() {
       kelas_id: userData.kelas_id,
     }
     
-    const signature = SHA256(JSON.stringify(payload) + SECRET_KEY).toString()
+    const signature = HashString(JSON.stringify(payload))
     
     const qrContent = {
       payload,
@@ -84,7 +104,7 @@ function RouteComponent() {
       />
     )
 
-  }, [currentTime.time])
+  }, [currentTime.time, isDoneFetching])
 
 
 

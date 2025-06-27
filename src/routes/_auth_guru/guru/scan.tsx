@@ -6,8 +6,7 @@ import { toast } from 'sonner';
 import QRScanner from "@/components/QrScan";
 import { useWebsocket } from '@/store/websocket/useWebsocket';
 import { useCookies } from 'react-cookie';
-import { SECRET_KEY } from '@/lib/utils';
-import SHA256 from "crypto-js/sha256";
+import { HashString } from '@/lib/utils';
 
 
 
@@ -71,7 +70,6 @@ function RouteComponent() {
   };
 
   const {
-    loading,
     connectWebSocket,
     closeConnection,
     sendMessage,
@@ -121,7 +119,7 @@ function RouteComponent() {
 
     console.log(parsed)
     const { payload, signature } = parsed;
-    const expectedSignature = SHA256(JSON.stringify(payload) + SECRET_KEY).toString();
+    const expectedSignature = HashString(JSON.stringify(payload)) 
 
     if (signature !== expectedSignature) {
       toast.error("QR telah dimodifikasi atau tidak valid");

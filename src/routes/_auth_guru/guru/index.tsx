@@ -7,6 +7,7 @@ import { Clock, Users, BookOpen, QrCode, CheckCircle } from "lucide-react"
 import { useCookies } from "react-cookie"
 import { useJadwalajarStore } from "@/store/jadwalAjar/useJadwalAjar"
 import { toast } from "sonner"
+import { useQuery } from "@tanstack/react-query"
 
 export const Route = createFileRoute('/_auth_guru/guru/')({
   component: RouteComponent,
@@ -17,15 +18,29 @@ export const Route = createFileRoute('/_auth_guru/guru/')({
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const [cookies] = useCookies(['userData', 'authToken']);
-  // logic fetch data jadwal ajar
-  const jadwalStore = useJadwalajarStore();
+  const [cookies] = useCookies(['userData', 'authToken'])
+  const userData = cookies.userData
+  const token = cookies.authToken
+
+  const {GetListJadwalajarGuru} = useJadwalajarStore();
   const [timestamp, setTimestamp] = useState<{ date: string, time: string } | null>(null);
   const stats = {
     totalStudents: 109,
     classesCompleted: 1,
     classesRemaining: 3,
     attendanceRate: 94,
+  }
+
+  const {data, isPending, error} = useQuery({
+    queryKey: ["jadwal-guru", userData.id],
+    queryFn: () => GetListJadwalajarGuru(token, { id: userData.id, hari: "senin" }),
+    // enabled: !!userData.kelas_id && !!token,
+  })
+
+  // console.log(data)
+
+  if (error){
+    toast.error('Gagal mengambil data jadwal guru!')
   }
 
   const getStatusColor = (status: string) => {
@@ -70,10 +85,7 @@ function RouteComponent() {
       }),
     });
 
-    if (cookies.authToken && cookies.userData?.id) {
-      jadwalStore.GetListJadwalajarGuru(cookies.authToken, { id: cookies.userData.id, hari: 'senin' });
-    }
-  }, [cookies.authToken, cookies.userData?.id]);
+  }, []);
 
   const handleScanClick = (mataPelajaran: string) => {
     navigate({ to: '/guru/scan', from: '/guru' });
@@ -187,7 +199,7 @@ function RouteComponent() {
                 </div>
               </div>
             ))} */}
-            {jadwalStore.list.map((jadwal, index) => (
+            {data?.map((jadwal: any, index: number) => (
               <div key={index} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">

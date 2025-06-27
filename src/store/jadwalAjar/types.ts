@@ -18,7 +18,6 @@ export interface GetJadwalajarParams {
 
 export interface JadwalajarStore {
     list: any[];
-    hari: any[];
     tableAttributes: DataTableAttributes[];
     default: Jadwalajar;
     model: Jadwalajar;
@@ -26,6 +25,6 @@ export interface JadwalajarStore {
     setModel: (model?: any) => void;
     RegisterJadwalajar: (token: string, payload: Jadwalajar) => Promise<void>;
     GetAllJadwalajar: (token: string) => Promise<void>;
-    GetListJadwalajarGuru: (token: string, params: GetJadwalajarParams) => Promise<void>;
-    GetListJadwalajarKelas: (token: string, params: GetJadwalajarParams) => Promise<void>;
+    GetListJadwalajarGuru: (token: string, params: GetJadwalajarParams) => Promise<any>;
+    GetListJadwalajarKelas: (token: string, params: GetJadwalajarParams) => Promise<any>;
 }

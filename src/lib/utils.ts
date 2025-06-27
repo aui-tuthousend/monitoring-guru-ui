@@ -1,12 +1,15 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+// import crypto from "crypto";
+import SHA256 from "crypto-js/sha256"
+
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-export const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
+const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
 
 export interface FetchParams {
   [key: string]: any
@@ -30,4 +33,8 @@ export function timeStringToDate(timeStr: string): Date {
   const date = new Date()
   date.setHours(hours, minutes, 0, 0)
   return date
+}
+
+export function HashString(str: string): string {
+  return SHA256(str + SECRET_KEY).toString()
 }

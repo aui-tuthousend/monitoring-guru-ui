@@ -5,7 +5,6 @@ import type { GetJadwalajarParams, JadwalajarStore } from "./types";
 
 export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
     list: [],
-    hari: [{value: "senin", label: "Senin"}, {value: "selasa", label: "Selasa"}, {value: "rabu", label: "Rabu"}, {value: "kamis", label: "Kamis"}, {value: "jumat", label: "Jumat"}, {value: "sabtu", label: "Sabtu"}],
     default: { guru_id: "", hari: "", jam_mulai: "", jam_selesai: "", kelas_id: "", mapel_id: "", ruangan_id: "" },
     model: { guru_id: "", hari: "", jam_mulai: "", jam_selesai: "", kelas_id: "", mapel_id: "", ruangan_id: "" },
     loading: false,
@@ -97,7 +96,7 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
             const data = await response.data;
             set({ list: data.data });
 
-            return data;
+            return data.data;
         } catch (error) {
             console.error('Error getting jadwal guru:', error);
             set({ list: [] }); // fallback to empty list
@@ -113,9 +112,9 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
             });
 
             const data = await response.data;
-            set({ list: data.data });
+            // set({ list: data.data });
 
-            return data;
+            return data.data;
         } catch (error) {
             console.error('Error getting list of users:', error);
             return error;

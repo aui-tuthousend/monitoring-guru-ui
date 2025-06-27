@@ -65,4 +65,22 @@ export const useMapelStore = create<MapelStore>((set, get) => ({
             set({ loading: false });
         }
     },
+
+    GetMapelById: async (token, id) => {
+        set({ loading: true });
+        try {
+            const response = await fetchServer(token, urlBuilder(`/mapel/${id}`), {
+                method: 'GET',
+            });
+
+            const data = await response.data;
+
+            return data;
+        } catch (error) {
+            console.error('Error getting list of mapel:', error);
+            return error;
+        } finally {
+            set({ loading: false });
+        }
+    },
 }));

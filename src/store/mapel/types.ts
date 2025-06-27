@@ -15,4 +15,5 @@ export interface MapelStore {
     setModel: (model?: any) => void;
     RegisterMapel: (token: string, payload: Mapel) => Promise<void>;
     GetAllMapel: (token: string) => Promise<void>;
+    GetMapelById: (token: string, id: string) => Promise<any>;
 }
