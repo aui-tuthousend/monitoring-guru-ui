@@ -142,10 +142,10 @@ function RouteComponent() {
 
     const diffMinutes = (now.getTime() - parsedDateTime.getTime()) / 1000 / 60
 
-    if (diffMinutes > 1) {
-      toast.error("QR Code sudah kadaluarsa")
-      return
-    }
+    // if (diffMinutes > 1) {
+    //   toast.error("QR Code sudah kadaluarsa")
+    //   return
+    // }
 
     const { kelas_id, mapel_id, ruangan_id } = payload;
 

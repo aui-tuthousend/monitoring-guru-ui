@@ -40,7 +40,7 @@ function RouteComponent() {
       const { type, payload } = JSON.parse(data);
   
       if (type === 'notification') {
-        toast(payload.message); // atau showNotification(payload.message)
+        toast(payload.message);
       }
       if (type === 'update-kelas') {
         setClassStatus((prev) =>
@@ -156,6 +156,7 @@ function RouteComponent() {
                   teacher={classData.pengajar}
                   major={classData.kelas.jurusan}
                   subject={classData.mapel}
+                  room={classData.ruangan}
                 />
               </div>
             ))}

@@ -10,6 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
+// export const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL;
 
 export interface FetchParams {
   [key: string]: any

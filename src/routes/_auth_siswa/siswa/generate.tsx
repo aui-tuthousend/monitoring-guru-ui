@@ -101,7 +101,7 @@ function RouteComponent() {
 
   return (
     <main className='px-6'>
-      {/* {mapelid} */}
+      {internalNav.ruangan}
       <div className='flex flex-col gap-6 items-center'>
         <h1 className="scroll-m-20 text-center text-5xl font-extrabold tracking-tight text-balance">
           {currentTime.time}

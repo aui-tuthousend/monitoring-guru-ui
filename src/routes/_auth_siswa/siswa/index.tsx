@@ -32,7 +32,7 @@ function RouteComponent() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date())
-    }, 60000)
+    }, 1000)
 
     return () => clearInterval(interval)
   }, [])
