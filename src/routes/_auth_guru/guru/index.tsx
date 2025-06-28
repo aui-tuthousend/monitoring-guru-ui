@@ -166,6 +166,7 @@ function RouteComponent() {
                             {status}
                           </div>
                         </Badge>
+                        {jadwal.absen_masuk.id && <Badge className="bg-green-500 text-white">{jadwal.absen_masuk.jam_masuk}</Badge>}
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
                         <div className="flex items-center gap-1">
