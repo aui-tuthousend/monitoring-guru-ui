@@ -101,16 +101,21 @@ function RouteComponent() {
   }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!izinForm.alasan || !izinForm.nama || !izinForm.npm) {
-      toast.error("Semua field wajib diisi.")
-      return
+      toast.error("Semua field wajib diisi.");
+      return;
     }
 
-    toast.success(`Izin diajukan oleh ${izinForm.nama}`)
-    setIzinForm({ alasan: '', nama: '', npm: '' }) // Reset form
-  }
+    toast.success(`Izin diajukan oleh ${izinForm.nama}`);
+    setIzinForm({ alasan: '', nama: '', npm: '' });
+
+    // Programmatically close the dialog
+    document.querySelector('[data-radix-dialog-content]')?.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape' })
+    );
+  };
 
   return (
     <>
@@ -180,16 +185,14 @@ function RouteComponent() {
 
                     <div className="flex gap-2">
                       <Dialog>
-                        <form onSubmit={handleSubmit}>
-                          <DialogTrigger asChild>
-                            <Button>Izin Matkul</Button>
-                          </DialogTrigger>
-
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Formulir Pengajuan Izin</DialogTitle>
-                            </DialogHeader>
-
+                        <DialogTrigger asChild>
+                          <Button>Izin Matkul</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Formulir Pengajuan Izin</DialogTitle>
+                          </DialogHeader>
+                          <form onSubmit={handleSubmit}>
                             <div className="grid gap-4">
                               <div className="grid gap-3">
                                 <Label>Alasan Izin</Label>
@@ -216,17 +219,14 @@ function RouteComponent() {
                                 />
                               </div>
                             </div>
-
                             <DialogFooter>
                               <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
+                                <Button type="button" variant="outline">Cancel</Button>
                               </DialogClose>
-                              <DialogClose asChild>
-                                <Button type="submit">Submit</Button>
-                              </DialogClose>
+                              <Button type="submit">Submit</Button>
                             </DialogFooter>
-                          </DialogContent>
-                        </form>
+                          </form>
+                        </DialogContent>
                       </Dialog>
                     </div>
                   </div>
