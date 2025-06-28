@@ -87,18 +87,18 @@ function RouteComponent() {
 
   }, []);
 
-  const handleScanClick = (mataPelajaran: string) => {
-    navigate({ to: '/guru/scan', from: '/guru' });
-    toast.success(`Membuka scanner untuk ${mataPelajaran}`);
-  };
+  // const handleScanClick = (mataPelajaran: string) => {
+  //   navigate({ to: '/guru/scan', from: '/guru' });
+  //   toast.success(`Membuka scanner untuk ${mataPelajaran}`);
+  // };
 
-  const handleScanAttendance = (classId: string, subject: string) => {
-    // Simulate attendance scanning
-    console.log(`Scanning attendance for ${subject} (${classId})`)
-    // In a real app, this would navigate to a QR scanner or attendance page
-    navigate({ to: '/guru/scan', from: '/guru' });
-    toast.success(`Membuka scanner untuk ${classId} ${subject}`);
-  }
+  // const handleScanAttendance = (classId: string, subject: string) => {
+  //   // Simulate attendance scanning
+  //   console.log(`Scanning attendance for ${subject} (${classId})`)
+  //   // In a real app, this would navigate to a QR scanner or attendance page
+  //   navigate({ to: '/guru/scan', from: '/guru' });
+  //   toast.success(`Membuka scanner untuk ${classId} ${subject}`);
+  // }
 
   return (
     <>
@@ -231,7 +231,7 @@ function RouteComponent() {
 
                   <div className="flex gap-2">
                     <Button
-                      onClick={() => handleScanClick(jadwal.mapel.name)}
+                      // onClick={() => handleScanClick(jadwal.mapel.name)}
                       variant="default"
                       size="sm"
                       className="flex items-center gap-2"

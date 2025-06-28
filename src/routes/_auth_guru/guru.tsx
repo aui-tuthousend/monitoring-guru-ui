@@ -4,11 +4,12 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import KawaiGura from '/IMG_3167.jpeg';
-import { Bell, LogOut, User } from 'lucide-react';
+import { Bell, LogOut, ScanQrCodeIcon, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/auth';
 import { useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
 
 // untuk masuk ke scan qr code guru tergantung jam, jadi nanti kalau jamnya sesuai bakalan bisa di klik
 
@@ -97,6 +98,11 @@ function RouteComponent() {
     }
   }
 
+  const handleScan = async() => {
+    navigate({ to: '/guru/scan', from: '/guru' });
+    toast.success(`Membuka scanner`);
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -141,7 +147,8 @@ function RouteComponent() {
               {/* <p className="text-blue-100">{teacherProfile.subject} Teacher</p> */}
               {/* <p className="text-xs text-blue-200">ID: {teacherProfile.employeeId}</p> */}
               {!teacherProfile.attendanceMarked && (
-                <Button variant="secondary" size="sm" className="mt-2">
+                <Button onClick={handleScan} variant="secondary" size="sm" className="mt-2">
+                  <ScanQrCodeIcon />
                   Mark Attendance
                 </Button>
               )}
