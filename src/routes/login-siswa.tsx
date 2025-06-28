@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,6 +10,20 @@ import { useAuth } from '@/auth'
 
 export const Route = createFileRoute('/login-siswa')({
   component: LoginPage,
+  beforeLoad: ({ context }) => {
+    if (context.auth.isAuthenticated) {
+      console.log(context.auth.user)
+      if (context.auth.user.nip) {
+        if (context.auth.user.jabatan === 'guru') {
+          throw redirect({ to: '/guru' })
+        } else if (context.auth.user.jabatan === 'kepala_sekolah') {
+          throw redirect({ to: '/admin' })
+        }
+      } else if (context.auth.user.nip) {
+        throw redirect({ to: '/siswa' })
+      }
+    }
+  },
 })
 
 function LoginPage() {
@@ -28,11 +42,11 @@ function LoginPage() {
     try {
       auth.loading = true
       // const result = await login({ nip: nip, password });
-      const result = await auth.login({nisn, password, type: 'ketua-kelas'})
+      const result = await auth.login({ nisn, password, type: 'ketua-kelas' })
       if (result.token) {
         console.log('Login successful:', result);
         toast.success('Login successful')
-        
+
         await navigate({ to: '/siswa' })
 
       } else {
@@ -53,7 +67,7 @@ function LoginPage() {
   //   setIsLoading(true)
 
   //   try {
-      
+
   //     const data = await axios.post('/api/auth/login-guru', formData)
 
   //     setCookie('authToken', data.token, {
