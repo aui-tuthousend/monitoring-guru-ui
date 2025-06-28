@@ -1,30 +1,41 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
-import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
-import { Clock, Users, BookOpen, QrCode, CheckCircle, CalendarArrowUp } from "lucide-react"
 import { useCookies } from "react-cookie"
-import { useJadwalajarStore } from "@/store/jadwalAjar/useJadwalAjar"
-import { toast } from "sonner"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
-import { timeStringToDate } from "@/lib/utils"
+
+import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogTrigger, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogClose, } from "@/components/ui/dialog"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
+import {
+  BookOpen, Clock, Users,
+  QrCode, CheckCircle, CalendarArrowUp,
+} from "lucide-react"
+
+import { useJadwalajarStore } from "@/store/jadwalAjar/useJadwalAjar"
 
 export const Route = createFileRoute('/_auth_guru/guru/')({
   component: RouteComponent,
 });
 
-// untuk masuk ke scan qr code guru tergantung jam, jadi nanti kalau jamnya sesuai bakalan bisa di klik
-
-
 function RouteComponent() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [cookies] = useCookies(['userData', 'authToken'])
   const userData = cookies.userData
   const token = cookies.authToken
 
-  const { GetListJadwalajarGuru } = useJadwalajarStore();
-  const [timestamp, setTimestamp] = useState<{ date: string, time: string } | null>(null);
+  const { GetListJadwalajarGuru } = useJadwalajarStore()
+  const [izinForm, setIzinForm] = useState({
+    alasan: '',
+    nama: '',
+    npm: '',
+  })
+
+  const [timestamp, setTimestamp] = useState<{ date: string, time: string } | null>(null)
+
   const stats = {
     totalStudents: 109,
     classesCompleted: 1,
@@ -38,58 +49,8 @@ function RouteComponent() {
     enabled: !!userData.id && !!token,
   })
 
-  // console.log(data)
-
-  if (error) {
-    toast.error('Gagal mengambil data jadwal guru!')
-  }
-
-  const timeStringToDate = (time: string): Date => {
-    const [hours, minutes] = time.split(":").map(Number)
-    const date = new Date()
-    date.setHours(hours, minutes, 0, 0)
-    return date
-  }
-
-  const getStatus = (jam_mulai: string, jam_selesai: string, now: Date): string => {
-    const start = timeStringToDate(jam_mulai)
-    const end = timeStringToDate(jam_selesai)
-
-    if (now < start) return "upcoming"
-    if (now >= start && now <= end) return "ongoing"
-    return "completed"
-  }
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "bg-green-100 text-green-800"
-      case "ongoing":
-        return "bg-blue-100 text-blue-800"
-      case "upcoming":
-        return "bg-yellow-100 text-yellow-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
-  }
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "completed":
-        return <CheckCircle className="h-4 w-4" />
-      case "ongoing":
-        return <Clock className="h-4 w-4" />
-      case "upcoming":
-        // return <BookOpen className="h-4 w-4" />
-        return <CalendarArrowUp className="h-4 w-4" />
-      default:
-        return null
-    }
-  }
-
-  // logic fetch data ke be
   useEffect(() => {
-    const now = new Date();
+    const now = new Date()
     setTimestamp({
       date: now.toLocaleDateString("id-ID", {
         weekday: "long",
@@ -101,28 +62,55 @@ function RouteComponent() {
         hour: "2-digit",
         minute: "2-digit"
       }),
-    });
+    })
+  }, [])
 
-  }, []);
+  if (error) toast.error('Gagal mengambil data jadwal guru!')
 
-  const isOnTime = (jam_mulai: string, jam_selesai: string, now: Date) => {
-    const start = timeStringToDate(jam_mulai)
-    const end = timeStringToDate(jam_selesai)
-    return now >= start && now <= end
+  const timeStringToDate = (time: string): Date => {
+    const [hours, minutes] = time.split(":").map(Number)
+    const date = new Date()
+    date.setHours(hours, minutes, 0, 0)
+    return date
   }
 
-  // const handleScanClick = (mataPelajaran: string) => {
-  //   navigate({ to: '/guru/scan', from: '/guru' });
-  //   toast.success(`Membuka scanner untuk ${mataPelajaran}`);
-  // };
+  const getStatus = (jam_mulai: string, jam_selesai: string, now: Date): string => {
+    const start = timeStringToDate(jam_mulai)
+    const end = timeStringToDate(jam_selesai)
+    if (now < start) return "upcoming"
+    if (now >= start && now <= end) return "ongoing"
+    return "completed"
+  }
 
-  // const handleScanAttendance = (classId: string, subject: string) => {
-  //   // Simulate attendance scanning
-  //   console.log(`Scanning attendance for ${subject} (${classId})`)
-  //   // In a real app, this would navigate to a QR scanner or attendance page
-  //   navigate({ to: '/guru/scan', from: '/guru' });
-  //   toast.success(`Membuka scanner untuk ${classId} ${subject}`);
-  // }
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "completed": return "bg-green-100 text-green-800"
+      case "ongoing": return "bg-blue-100 text-blue-800"
+      case "upcoming": return "bg-yellow-100 text-yellow-800"
+      default: return "bg-gray-100 text-gray-800"
+    }
+  }
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "completed": return <CheckCircle className="h-4 w-4" />
+      case "ongoing": return <Clock className="h-4 w-4" />
+      case "upcoming": return <CalendarArrowUp className="h-4 w-4" />
+      default: return null
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!izinForm.alasan || !izinForm.nama || !izinForm.npm) {
+      toast.error("Semua field wajib diisi.")
+      return
+    }
+
+    toast.success(`Izin diajukan oleh ${izinForm.nama}`)
+    setIzinForm({ alasan: '', nama: '', npm: '' }) // Reset form
+  }
 
   return (
     <>
@@ -136,14 +124,6 @@ function RouteComponent() {
       <CardContent className="space-y-6">
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {/* <div className="bg-blue-50 p-4 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-blue-600" />
-              <span className="text-sm font-medium text-blue-600">Students</span>
-            </div>
-            <p className="text-2xl font-bold text-blue-900">{stats.totalStudents}</p>
-          </div> */}
-
           <div className="bg-green-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-600" />
@@ -159,116 +139,100 @@ function RouteComponent() {
             </div>
             <p className="text-2xl font-bold text-yellow-900">{stats.classesRemaining}</p>
           </div>
-
-          {/* <div className="bg-purple-50 p-4 rounded-lg">
-            <div className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-purple-600" />
-              <span className="text-sm font-medium text-purple-600">Attendance</span>
-            </div>
-            <p className="text-2xl font-bold text-purple-900">{stats.attendanceRate}%</p>
-          </div> */}
         </div>
 
-        {/* Today's Schedule */}
+        {/* Schedule */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Today's Classes</h3>
           <div className="space-y-3">
-            {/* {todaySchedule.map((schedule) => (
-              <div key={schedule.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h4 className="font-medium text-lg">{schedule.subject}</h4>
-                      <Badge className={getStatusColor(schedule.status)}>
+            {data?.map((jadwal: any, index: number) => {
+              const now = new Date()
+              const status = getStatus(jadwal.jam_mulai, jadwal.jam_selesai, now)
+
+              return (
+                <div key={index} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h4 className="font-medium text-lg">{jadwal.mapel.name}</h4>
+                        <Badge className={getStatusColor(status)}>
+                          <div className="flex items-center gap-1">
+                            {getStatusIcon(status)}
+                            {status}
+                          </div>
+                        </Badge>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
                         <div className="flex items-center gap-1">
-                          {getStatusIcon(schedule.status)}
-                          {schedule.status}
+                          <Clock className="h-4 w-4" />
+                          {jadwal.jam_mulai} - {jadwal.jam_selesai}
                         </div>
-                      </Badge>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
-                      <div className="flex items-center gap-1">
-                        <Users className="h-4 w-4" />
-                        {schedule.class}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-4 w-4" />
-                        {schedule.time}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <BookOpen className="h-4 w-4" />
-                        {schedule.room}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users className="h-4 w-4" />
-                        {schedule.students} students
+                        <div className="flex items-center gap-1">
+                          <BookOpen className="h-4 w-4" />
+                          Room {jadwal.ruangan?.name || 'N/A'}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Users className="h-4 w-4" />
+                          {jadwal.hari}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex gap-2">
-                    {schedule.status !== "completed" && (
-                      <Button
-                        onClick={() => handleScanAttendance(schedule.id, schedule.subject)}
-                        variant={schedule.status === "ongoing" ? "default" : "outline"}
-                        size="sm"
-                        className="flex items-center gap-2"
-                      >
-                        <QrCode className="h-4 w-4" />
-                        {schedule.status === "ongoing" ? "Take Attendance" : "Prepare"}
-                      </Button>
-                    )}
+                    <div className="flex gap-2">
+                      <Dialog>
+                        <form onSubmit={handleSubmit}>
+                          <DialogTrigger asChild>
+                            <Button>Izin Matkul</Button>
+                          </DialogTrigger>
+
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Formulir Pengajuan Izin</DialogTitle>
+                            </DialogHeader>
+
+                            <div className="grid gap-4">
+                              <div className="grid gap-3">
+                                <Label>Alasan Izin</Label>
+                                <Input
+                                  name="alasan"
+                                  value={izinForm.alasan}
+                                  onChange={(e) => setIzinForm({ ...izinForm, alasan: e.target.value })}
+                                />
+                              </div>
+                              <div className="grid gap-3">
+                                <Label>Nama Guru Pengganti</Label>
+                                <Input
+                                  name="nama"
+                                  value={izinForm.nama}
+                                  onChange={(e) => setIzinForm({ ...izinForm, nama: e.target.value })}
+                                />
+                              </div>
+                              <div className="grid gap-3">
+                                <Label>NPM Guru Pengganti</Label>
+                                <Input
+                                  name="npm"
+                                  value={izinForm.npm}
+                                  onChange={(e) => setIzinForm({ ...izinForm, npm: e.target.value })}
+                                />
+                              </div>
+                            </div>
+
+                            <DialogFooter>
+                              <DialogClose asChild>
+                                <Button variant="outline">Cancel</Button>
+                              </DialogClose>
+                              <DialogClose asChild>
+                                <Button type="submit">Submit</Button>
+                              </DialogClose>
+                            </DialogFooter>
+                          </DialogContent>
+                        </form>
+                      </Dialog>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))} */}
-            {data?.map((jadwal: any, index: number) => (
-              <div key={index} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h4 className="font-medium text-lg">{jadwal.mapel.name}</h4>
-                      <Badge className={getStatusColor(getStatus(jadwal.jam_mulai,jadwal.jam_selesai, new Date()))}>
-                        <div className="flex items-center gap-1">
-                          {/* <BookOpen className="h-4 w-4" /> */}
-                          {getStatusIcon(getStatus(jadwal.jam_mulai,jadwal.jam_selesai, new Date()))}
-                          {/* {jadwal.kelas.name} */}
-                          {getStatus(jadwal.jam_mulai, jadwal.jam_selesai, new Date())}
-                        </div>
-                      </Badge>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-4 w-4" />
-                        {jadwal.jam_mulai} - {jadwal.jam_selesai}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <BookOpen className="h-4 w-4" />
-                        Room {jadwal.ruangan.name || 'N/A'}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users className="h-4 w-4" />
-                        {jadwal.hari}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* <div className="flex gap-2">
-                    <Button
-                      // onClick={() => handleScanClick(jadwal.mapel.name)}
-                      variant="default"
-                      size="sm"
-                      className="flex items-center gap-2"
-                    >
-                      {/* <QrCode className="h-4 w-4" /> */}
-                      {/* 09:00 - 0000 */}
-                    {/* </Button>
-                  </div> */}
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </CardContent>
