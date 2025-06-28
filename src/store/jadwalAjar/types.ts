@@ -18,6 +18,7 @@ export interface GetJadwalajarParams {
 
 export interface JadwalajarStore {
     list: any[];
+    hari: any[];
     tableAttributes: DataTableAttributes[];
     default: Jadwalajar;
     model: Jadwalajar;

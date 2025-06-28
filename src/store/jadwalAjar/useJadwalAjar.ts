@@ -5,6 +5,7 @@ import type { GetJadwalajarParams, JadwalajarStore } from "./types";
 
 export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
     list: [],
+    hari: [{ label: "Senin", value: "Senin" }, { label: "Selasa", value: "Selasa" }, { label: "Rabu", value: "Rabu" }, { label: "Kamis", value: "Kamis" }, { label: "Jumat", value: "Jumat" }, { label: "Sabtu", value: "Sabtu" }, { label: "Minggu", value: "Minggu" }],
     default: { guru_id: "", hari: "", jam_mulai: "", jam_selesai: "", kelas_id: "", mapel_id: "", ruangan_id: "" },
     model: { guru_id: "", hari: "", jam_mulai: "", jam_selesai: "", kelas_id: "", mapel_id: "", ruangan_id: "" },
     loading: false,

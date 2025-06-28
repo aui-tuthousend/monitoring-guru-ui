@@ -56,12 +56,12 @@ function RouteComponent() {
     return now >= start && now <= end
   }
 
-  const handleNavigate = (mapel: any) => {
-    if (!isOnTime(mapel.jam_mulai, mapel.jam_selesai, currentTime)) {
+  const handleNavigate = (jadwalajar: any) => {
+    if (!isOnTime(jadwalajar.jam_mulai, jadwalajar.jam_selesai, currentTime)) {
       toast.error('Kelas belum dimulai!')
       return
     }
-    setInternalNav(mapel.mapel.id)
+    setInternalNav(jadwalajar.mapel.id)
     navigate({ 
       to: `/siswa/generate`,
       from: "/siswa",
