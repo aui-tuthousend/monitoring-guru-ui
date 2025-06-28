@@ -15,6 +15,7 @@ export const Route = createFileRoute('/_auth_siswa/siswa/generate')({
 interface QrValue {
   type: string
   mapel_id: string
+  jadwalajar_id: string
   time: string
   date: string
   kelas_id: string
@@ -71,10 +72,11 @@ function RouteComponent() {
 
     const payload: QrValue = {
       type: "clock-in",
-      mapel_id: internalNav.jadwal,
+      kelas_id: userData.kelas_id,
+      mapel_id: internalNav.mapel,
+      jadwalajar_id: internalNav.jadwalajar,
       time: now.toTimeString().slice(0, 5),
       date: now.toISOString().slice(0, 10),
-      kelas_id: userData.kelas_id,
       ruangan_id: internalNav.ruangan,
     }
     
@@ -101,7 +103,6 @@ function RouteComponent() {
 
   return (
     <main className='px-6'>
-      {internalNav.ruangan}
       <div className='flex flex-col gap-6 items-center'>
         <h1 className="scroll-m-20 text-center text-5xl font-extrabold tracking-tight text-balance">
           {currentTime.time}

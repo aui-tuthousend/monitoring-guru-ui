@@ -86,21 +86,22 @@ function RouteComponent() {
     };
   }, []);
 
-  const handleSendMessages = (kelasId: string, mapel: string, ruangan: string, pengajar: string, isActive: boolean) => {
+  const handleSendMessages = (data: any) => {
     const payload = {
       type: "update-kelas",
       payload: {
-        id: kelasId,
-        is_active: isActive,
-        mapel: mapel,
-        pengajar: pengajar,
-        ruangan: ruangan,
+        id: data.kelas_id,
+        jadwalajar_id: data.jadwalajar_id,
+        is_active: true,
+        mapel: data.mapel_id,
+        pengajar: userData.id,
+        ruangan: data.ruangan_id,
       },
     };
 
 
+    console.log(payload)
     if (isConnected && sendMessage) {
-      // console.log(payload)
       sendMessage(JSON.stringify(payload));
     }
   };
@@ -142,14 +143,12 @@ function RouteComponent() {
 
     const diffMinutes = (now.getTime() - parsedDateTime.getTime()) / 1000 / 60
 
-    // if (diffMinutes > 1) {
-    //   toast.error("QR Code sudah kadaluarsa")
-    //   return
-    // }
+    if (diffMinutes > 1) {
+      toast.error("QR Code sudah kadaluarsa")
+      return
+    }
 
-    const { kelas_id, mapel_id, ruangan_id } = payload;
-
-    handleSendMessages(kelas_id, mapel_id, ruangan_id, userData.name, true);
+    handleSendMessages(payload);
     toast.success("Check-in berhasil");
     navigate({ to: '/guru', from: '/guru/scan' });
 
