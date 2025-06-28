@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,6 +10,20 @@ import { useAuth } from '@/auth'
 
 export const Route = createFileRoute('/login-guru')({
   component: LoginPage,
+  beforeLoad: ({ context }) => {
+    if (context.auth.isAuthenticated) {
+      console.log(context.auth.user)
+      if (context.auth.user.nip) {
+        if (context.auth.user.jabatan === 'guru') {
+          throw redirect({ to: '/guru' })
+        } else if (context.auth.user.jabatan === 'kepala_sekolah') {
+          throw redirect({ to: '/admin' })
+        }
+      } else if (context.auth.user.nip) {
+        throw redirect({ to: '/siswa' })
+      }
+    }
+  },
 })
 
 function LoginPage() {
