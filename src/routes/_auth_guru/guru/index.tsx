@@ -3,11 +3,12 @@ import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useEffect, useState } from "react"
-import { Clock, Users, BookOpen, QrCode, CheckCircle } from "lucide-react"
+import { Clock, Users, BookOpen, QrCode, CheckCircle, CalendarArrowUp } from "lucide-react"
 import { useCookies } from "react-cookie"
 import { useJadwalajarStore } from "@/store/jadwalAjar/useJadwalAjar"
 import { toast } from "sonner"
 import { useQuery } from "@tanstack/react-query"
+import { timeStringToDate } from "@/lib/utils"
 
 export const Route = createFileRoute('/_auth_guru/guru/')({
   component: RouteComponent,
@@ -22,7 +23,7 @@ function RouteComponent() {
   const userData = cookies.userData
   const token = cookies.authToken
 
-  const {GetListJadwalajarGuru} = useJadwalajarStore();
+  const { GetListJadwalajarGuru } = useJadwalajarStore();
   const [timestamp, setTimestamp] = useState<{ date: string, time: string } | null>(null);
   const stats = {
     totalStudents: 109,
@@ -31,7 +32,7 @@ function RouteComponent() {
     attendanceRate: 94,
   }
 
-  const {data, isPending, error} = useQuery({
+  const { data, isPending, error } = useQuery({
     queryKey: ["jadwal-guru", userData.id],
     queryFn: () => GetListJadwalajarGuru(token, { id: userData.id, hari: "senin" }),
     enabled: !!userData.id && !!token,
@@ -39,8 +40,24 @@ function RouteComponent() {
 
   // console.log(data)
 
-  if (error){
+  if (error) {
     toast.error('Gagal mengambil data jadwal guru!')
+  }
+
+  const timeStringToDate = (time: string): Date => {
+    const [hours, minutes] = time.split(":").map(Number)
+    const date = new Date()
+    date.setHours(hours, minutes, 0, 0)
+    return date
+  }
+
+  const getStatus = (jam_mulai: string, jam_selesai: string, now: Date): string => {
+    const start = timeStringToDate(jam_mulai)
+    const end = timeStringToDate(jam_selesai)
+
+    if (now < start) return "upcoming"
+    if (now >= start && now <= end) return "ongoing"
+    return "completed"
   }
 
   const getStatusColor = (status: string) => {
@@ -63,7 +80,8 @@ function RouteComponent() {
       case "ongoing":
         return <Clock className="h-4 w-4" />
       case "upcoming":
-        return <BookOpen className="h-4 w-4" />
+        // return <BookOpen className="h-4 w-4" />
+        return <CalendarArrowUp className="h-4 w-4" />
       default:
         return null
     }
@@ -86,6 +104,12 @@ function RouteComponent() {
     });
 
   }, []);
+
+  const isOnTime = (jam_mulai: string, jam_selesai: string, now: Date) => {
+    const start = timeStringToDate(jam_mulai)
+    const end = timeStringToDate(jam_selesai)
+    return now >= start && now <= end
+  }
 
   // const handleScanClick = (mataPelajaran: string) => {
   //   navigate({ to: '/guru/scan', from: '/guru' });
@@ -112,13 +136,13 @@ function RouteComponent() {
       <CardContent className="space-y-6">
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
+          {/* <div className="bg-blue-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-blue-600" />
               <span className="text-sm font-medium text-blue-600">Students</span>
             </div>
             <p className="text-2xl font-bold text-blue-900">{stats.totalStudents}</p>
-          </div>
+          </div> */}
 
           <div className="bg-green-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
@@ -136,13 +160,13 @@ function RouteComponent() {
             <p className="text-2xl font-bold text-yellow-900">{stats.classesRemaining}</p>
           </div>
 
-          <div className="bg-purple-50 p-4 rounded-lg">
+          {/* <div className="bg-purple-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
               <BookOpen className="h-5 w-5 text-purple-600" />
               <span className="text-sm font-medium text-purple-600">Attendance</span>
             </div>
             <p className="text-2xl font-bold text-purple-900">{stats.attendanceRate}%</p>
-          </div>
+          </div> */}
         </div>
 
         {/* Today's Schedule */}
@@ -205,10 +229,12 @@ function RouteComponent() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h4 className="font-medium text-lg">{jadwal.mapel.name}</h4>
-                      <Badge className="bg-blue-100 text-blue-800">
+                      <Badge className={getStatusColor(getStatus(jadwal.jam_mulai,jadwal.jam_selesai, new Date()))}>
                         <div className="flex items-center gap-1">
-                          <BookOpen className="h-4 w-4" />
-                          {jadwal.kelas.name}
+                          {/* <BookOpen className="h-4 w-4" /> */}
+                          {getStatusIcon(getStatus(jadwal.jam_mulai,jadwal.jam_selesai, new Date()))}
+                          {/* {jadwal.kelas.name} */}
+                          {getStatus(jadwal.jam_mulai, jadwal.jam_selesai, new Date())}
                         </div>
                       </Badge>
                     </div>
@@ -229,17 +255,17 @@ function RouteComponent() {
                     </div>
                   </div>
 
-                  <div className="flex gap-2">
+                  {/* <div className="flex gap-2">
                     <Button
                       // onClick={() => handleScanClick(jadwal.mapel.name)}
                       variant="default"
                       size="sm"
                       className="flex items-center gap-2"
                     >
-                      <QrCode className="h-4 w-4" />
-                      Take Attendance
-                    </Button>
-                  </div>
+                      {/* <QrCode className="h-4 w-4" /> */}
+                      {/* 09:00 - 0000 */}
+                    {/* </Button>
+                  </div> */}
                 </div>
               </div>
             ))}

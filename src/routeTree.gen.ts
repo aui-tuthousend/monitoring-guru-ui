@@ -139,6 +139,7 @@ const Auth_guruAdminGuruRoute = Auth_guruAdminGuruRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '': typeof Auth_siswaRouteWithChildren
   '/about': typeof AboutRoute
   '/login-guru': typeof LoginGuruRoute
   '/login-siswa': typeof LoginSiswaRoute
@@ -160,6 +161,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '': typeof Auth_siswaRouteWithChildren
   '/about': typeof AboutRoute
   '/login-guru': typeof LoginGuruRoute
   '/login-siswa': typeof LoginSiswaRoute
@@ -204,6 +206,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | ''
     | '/about'
     | '/login-guru'
     | '/login-siswa'
@@ -225,6 +228,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | ''
     | '/about'
     | '/login-guru'
     | '/login-siswa'
