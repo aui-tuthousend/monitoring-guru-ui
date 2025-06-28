@@ -21,6 +21,8 @@ export interface JadwalajarStore {
     tableAttributes: DataTableAttributes[];
     default: Jadwalajar;
     model: Jadwalajar;
+    internalNav: string;
+    setInternalNav: (internalNav: string) => void;
     loading: boolean;
     setModel: (model?: any) => void;
     RegisterJadwalajar: (token: string, payload: Jadwalajar) => Promise<void>;

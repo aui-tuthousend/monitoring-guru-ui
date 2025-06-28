@@ -5,11 +5,10 @@ import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import QRCode from "react-qr-code";
 import { HashString } from '@/lib/utils';
-import { useMapelStore } from '@/store/mapel/useMapel';
 import { toast } from 'sonner';
 import { useJadwalajarStore } from '@/store/jadwalAjar/useJadwalAjar';
 
-export const Route = createFileRoute('/_auth_siswa/siswa/$mapelid')({
+export const Route = createFileRoute('/_auth_siswa/siswa/generate')({
   component: RouteComponent,
 })
 
@@ -22,12 +21,11 @@ interface QrValue {
 }
 
 function RouteComponent() {
-  const { mapelid } = Route.useParams()
   const navigate = useNavigate()
   const [cookies] = useCookies(['userData'])
 
   const userData = cookies.userData
-  const {internalNav}= useJadwalajarStore()
+  const {internalNav: mapelid}= useJadwalajarStore()
   const [qrCode, setQrCode] = useState<React.ReactNode>("")
 
 
@@ -37,7 +35,7 @@ function RouteComponent() {
   }>({ date: "", time: "" })
 
   useEffect(() => {
-    if (!internalNav) {
+    if (!mapelid) {
       toast.error("Manual Routing tidak diizinkan!")
       navigate({ to: '/siswa' })
       return
@@ -67,7 +65,7 @@ function RouteComponent() {
   }, [])
 
   useEffect(() => {
-    if (!internalNav) return
+    if (!mapelid) return
     const now = new Date()
 
     const payload: QrValue = {
@@ -101,7 +99,7 @@ function RouteComponent() {
 
   return (
     <main className='px-6'>
-      {internalNav}
+      {/* {mapelid} */}
       <div className='flex flex-col gap-6 items-center'>
         <h1 className="scroll-m-20 text-center text-5xl font-extrabold tracking-tight text-balance">
           {currentTime.time}

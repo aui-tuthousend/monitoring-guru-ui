@@ -8,7 +8,11 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
     default: { guru_id: "", hari: "", jam_mulai: "", jam_selesai: "", kelas_id: "", mapel_id: "", ruangan_id: "" },
     model: { guru_id: "", hari: "", jam_mulai: "", jam_selesai: "", kelas_id: "", mapel_id: "", ruangan_id: "" },
     loading: false,
+    internalNav: "",
 
+    setInternalNav(internalNav) {
+        set({ internalNav });
+    },
     tableAttributes: [
         {
             accessorKey: "guru.name",

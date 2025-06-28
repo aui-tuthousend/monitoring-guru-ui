@@ -34,7 +34,7 @@ function RouteComponent() {
   const {data, isPending, error} = useQuery({
     queryKey: ["jadwal-guru", userData.id],
     queryFn: () => GetListJadwalajarGuru(token, { id: userData.id, hari: "senin" }),
-    // enabled: !!userData.kelas_id && !!token,
+    enabled: !!userData.id && !!token,
   })
 
   // console.log(data)

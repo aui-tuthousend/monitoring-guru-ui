@@ -21,6 +21,7 @@ import { Route as Auth_guruAdminRouteImport } from './routes/_auth_guru/admin'
 import { Route as Auth_siswaSiswaIndexRouteImport } from './routes/_auth_siswa/siswa/index'
 import { Route as Auth_guruGuruIndexRouteImport } from './routes/_auth_guru/guru/index'
 import { Route as Auth_guruAdminIndexRouteImport } from './routes/_auth_guru/admin/index'
+import { Route as Auth_siswaSiswaGenerateRouteImport } from './routes/_auth_siswa/siswa/generate'
 import { Route as Auth_siswaSiswaMapelidRouteImport } from './routes/_auth_siswa/siswa/$mapelid'
 import { Route as Auth_guruGuruScanRouteImport } from './routes/_auth_guru/guru/scan'
 import { Route as Auth_guruGuruJadwalRouteImport } from './routes/_auth_guru/guru/jadwal'
@@ -89,6 +90,11 @@ const Auth_guruAdminIndexRoute = Auth_guruAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => Auth_guruAdminRoute,
 } as any)
+const Auth_siswaSiswaGenerateRoute = Auth_siswaSiswaGenerateRouteImport.update({
+  id: '/generate',
+  path: '/generate',
+  getParentRoute: () => Auth_siswaSiswaRoute,
+} as any)
 const Auth_siswaSiswaMapelidRoute = Auth_siswaSiswaMapelidRouteImport.update({
   id: '/$mapelid',
   path: '/$mapelid',
@@ -154,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/guru/jadwal': typeof Auth_guruGuruJadwalRoute
   '/guru/scan': typeof Auth_guruGuruScanRoute
   '/siswa/$mapelid': typeof Auth_siswaSiswaMapelidRoute
+  '/siswa/generate': typeof Auth_siswaSiswaGenerateRoute
   '/admin/': typeof Auth_guruAdminIndexRoute
   '/guru/': typeof Auth_guruGuruIndexRoute
   '/siswa/': typeof Auth_siswaSiswaIndexRoute
@@ -172,6 +179,7 @@ export interface FileRoutesByTo {
   '/guru/jadwal': typeof Auth_guruGuruJadwalRoute
   '/guru/scan': typeof Auth_guruGuruScanRoute
   '/siswa/$mapelid': typeof Auth_siswaSiswaMapelidRoute
+  '/siswa/generate': typeof Auth_siswaSiswaGenerateRoute
   '/admin': typeof Auth_guruAdminIndexRoute
   '/guru': typeof Auth_guruGuruIndexRoute
   '/siswa': typeof Auth_siswaSiswaIndexRoute
@@ -196,6 +204,7 @@ export interface FileRoutesById {
   '/_auth_guru/guru/jadwal': typeof Auth_guruGuruJadwalRoute
   '/_auth_guru/guru/scan': typeof Auth_guruGuruScanRoute
   '/_auth_siswa/siswa/$mapelid': typeof Auth_siswaSiswaMapelidRoute
+  '/_auth_siswa/siswa/generate': typeof Auth_siswaSiswaGenerateRoute
   '/_auth_guru/admin/': typeof Auth_guruAdminIndexRoute
   '/_auth_guru/guru/': typeof Auth_guruGuruIndexRoute
   '/_auth_siswa/siswa/': typeof Auth_siswaSiswaIndexRoute
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/guru/jadwal'
     | '/guru/scan'
     | '/siswa/$mapelid'
+    | '/siswa/generate'
     | '/admin/'
     | '/guru/'
     | '/siswa/'
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/guru/jadwal'
     | '/guru/scan'
     | '/siswa/$mapelid'
+    | '/siswa/generate'
     | '/admin'
     | '/guru'
     | '/siswa'
@@ -260,6 +271,7 @@ export interface FileRouteTypes {
     | '/_auth_guru/guru/jadwal'
     | '/_auth_guru/guru/scan'
     | '/_auth_siswa/siswa/$mapelid'
+    | '/_auth_siswa/siswa/generate'
     | '/_auth_guru/admin/'
     | '/_auth_guru/guru/'
     | '/_auth_siswa/siswa/'
@@ -359,6 +371,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof Auth_guruAdminIndexRouteImport
       parentRoute: typeof Auth_guruAdminRoute
+    }
+    '/_auth_siswa/siswa/generate': {
+      id: '/_auth_siswa/siswa/generate'
+      path: '/generate'
+      fullPath: '/siswa/generate'
+      preLoaderRoute: typeof Auth_siswaSiswaGenerateRouteImport
+      parentRoute: typeof Auth_siswaSiswaRoute
     }
     '/_auth_siswa/siswa/$mapelid': {
       id: '/_auth_siswa/siswa/$mapelid'
@@ -482,11 +501,13 @@ const Auth_guruRouteWithChildren = Auth_guruRoute._addFileChildren(
 
 interface Auth_siswaSiswaRouteChildren {
   Auth_siswaSiswaMapelidRoute: typeof Auth_siswaSiswaMapelidRoute
+  Auth_siswaSiswaGenerateRoute: typeof Auth_siswaSiswaGenerateRoute
   Auth_siswaSiswaIndexRoute: typeof Auth_siswaSiswaIndexRoute
 }
 
 const Auth_siswaSiswaRouteChildren: Auth_siswaSiswaRouteChildren = {
   Auth_siswaSiswaMapelidRoute: Auth_siswaSiswaMapelidRoute,
+  Auth_siswaSiswaGenerateRoute: Auth_siswaSiswaGenerateRoute,
   Auth_siswaSiswaIndexRoute: Auth_siswaSiswaIndexRoute,
 }
 

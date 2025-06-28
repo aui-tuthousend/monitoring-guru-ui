@@ -17,7 +17,7 @@ function RouteComponent() {
   const [cookies] = useCookies(['userData', 'authToken'])
   const userData = cookies.userData
   const token = cookies.authToken
-  const {GetListJadwalajarKelas} = useJadwalajarStore()
+  const {GetListJadwalajarKelas, setInternalNav} = useJadwalajarStore()
   const navigate = useNavigate()
 
   const stats = {
@@ -41,7 +41,7 @@ function RouteComponent() {
   const {data, isPending, error} = useQuery({
     queryKey: ["jadwal-kelas", userData.kelas_id],
     queryFn: () => GetListJadwalajarKelas(token, { id: userData.kelas_id, hari: "senin" }),
-    // enabled: !!userData.kelas_id && !!token,
+    enabled: !!userData.kelas_id && !!token,
   })
 
   // console.log(data)
@@ -57,12 +57,13 @@ function RouteComponent() {
   }
 
   const handleNavigate = (mapel: any) => {
-    if (isOnTime(mapel.jam_mulai, mapel.jam_selesai, currentTime)) {
+    if (!isOnTime(mapel.jam_mulai, mapel.jam_selesai, currentTime)) {
       toast.error('Kelas belum dimulai!')
       return
     }
+    setInternalNav(mapel.mapel.id)
     navigate({ 
-      to: `/siswa/${mapel.mapel.id}`, 
+      to: `/siswa/generate`,
       from: "/siswa",
       state: true
     })
