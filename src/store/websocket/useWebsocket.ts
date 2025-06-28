@@ -57,7 +57,7 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
 
   return {
     loading: false,
-    serverUrl: `ws://localhost:8080/ws/user-${randomId}`,
+    serverUrl: `ws://localhost:8080/ws/user-99`,
     isConnected: false,
     messageListeners: [],
     connectWebSocket: start,

@@ -61,7 +61,8 @@ function RouteComponent() {
       toast.error('Kelas belum dimulai!')
       return
     }
-    setInternalNav(jadwalajar.mapel.id)
+    // setInternalNav(jadwalajar.mapel.id)
+    setInternalNav({jadwal: jadwalajar.mapel.name, ruangan: jadwalajar.ruangan.name})
     navigate({ 
       to: `/siswa/generate`,
       from: "/siswa",

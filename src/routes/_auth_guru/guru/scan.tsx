@@ -86,7 +86,7 @@ function RouteComponent() {
     };
   }, []);
 
-  const handleSendMessages = (kelasId: string, mapel: string, pengajar: string, isActive: boolean) => {
+  const handleSendMessages = (kelasId: string, mapel: string, ruangan: string, pengajar: string, isActive: boolean) => {
     const payload = {
       type: "update-kelas",
       payload: {
@@ -94,7 +94,7 @@ function RouteComponent() {
         is_active: isActive,
         mapel: mapel,
         pengajar: pengajar,
-        ruangan: "Lab Komputer",
+        ruangan: ruangan,
       },
     };
 
@@ -147,9 +147,9 @@ function RouteComponent() {
       return
     }
 
-    const { kelas_id, mapel_id } = payload;
+    const { kelas_id, mapel_id, ruangan_id } = payload;
 
-    handleSendMessages(kelas_id, mapel_id, userData.name, true);
+    handleSendMessages(kelas_id, mapel_id, ruangan_id, userData.name, true);
     toast.success("Check-in berhasil");
     navigate({ to: '/guru', from: '/guru/scan' });
 

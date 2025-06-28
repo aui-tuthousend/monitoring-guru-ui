@@ -18,6 +18,7 @@ interface QrValue {
   time: string
   date: string
   kelas_id: string
+  ruangan_id: string
 }
 
 function RouteComponent() {
@@ -25,7 +26,7 @@ function RouteComponent() {
   const [cookies] = useCookies(['userData'])
 
   const userData = cookies.userData
-  const {internalNav: mapelid}= useJadwalajarStore()
+  const {internalNav}= useJadwalajarStore()
   const [qrCode, setQrCode] = useState<React.ReactNode>("")
 
 
@@ -35,7 +36,7 @@ function RouteComponent() {
   }>({ date: "", time: "" })
 
   useEffect(() => {
-    if (!mapelid) {
+    if (!internalNav) {
       toast.error("Manual Routing tidak diizinkan!")
       navigate({ to: '/siswa' })
       return
@@ -65,15 +66,16 @@ function RouteComponent() {
   }, [])
 
   useEffect(() => {
-    if (!mapelid) return
+    if (!internalNav) return
     const now = new Date()
 
     const payload: QrValue = {
       type: "clock-in",
-      mapel_id: mapelid,
+      mapel_id: internalNav.jadwal,
       time: now.toTimeString().slice(0, 5),
       date: now.toISOString().slice(0, 10),
       kelas_id: userData.kelas_id,
+      ruangan_id: internalNav.ruangan,
     }
     
     const signature = HashString(JSON.stringify(payload))
