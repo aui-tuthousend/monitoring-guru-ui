@@ -87,8 +87,9 @@ function RouteComponent() {
   }, []);
 
   const handleSendMessages = (data: any) => {
-    const payload = {
-      type: "update-kelas",
+    const payload = data.type === 'clock-in'
+    ? {
+      type: data.type,
       payload: {
         id: data.kelas_id,
         jadwalajar_id: data.jadwalajar_id,
@@ -96,7 +97,16 @@ function RouteComponent() {
         mapel: data.mapel_id,
         pengajar: userData.id,
         ruangan: data.ruangan_id,
-      },
+      }
+    }
+    : {
+      type: data.type,
+      payload: {
+        id: data.kelas_id,
+        is_active: false,
+        // jadwalajar_id: data.jadwalajar_id,
+        absen_masuk_id: data.absen_masuk_id,
+      }
     };
 
 
@@ -127,12 +137,7 @@ function RouteComponent() {
       return;
     }
 
-    if (
-      typeof payload !== 'object' ||
-      payload.type !== 'clock-in' ||
-      !payload.kelas_id ||
-      !payload.mapel_id
-    ) {
+    if (typeof payload !== 'object') {
       toast.error("QR Code tidak dikenali");
       return;
     }
@@ -143,7 +148,7 @@ function RouteComponent() {
 
     const diffMinutes = (now.getTime() - parsedDateTime.getTime()) / 1000 / 60
 
-    if (diffMinutes > 1) {
+    if (diffMinutes > 2) {
       toast.error("QR Code sudah kadaluarsa")
       return
     }

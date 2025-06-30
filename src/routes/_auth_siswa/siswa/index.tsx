@@ -32,7 +32,7 @@ function RouteComponent() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date())
-    }, 1000)
+    }, 60000)
 
     return () => clearInterval(interval)
   }, [])
@@ -43,8 +43,7 @@ function RouteComponent() {
     queryFn: () => GetListJadwalajarKelas(token, { id: userData.kelas_id, hari: "senin" }),
     enabled: !!userData.kelas_id && !!token,
   })
-
-  // console.log(data)
+  
 
   if (error){
     toast.error('Gagal mengambil data jadwal kelas!')
@@ -62,7 +61,7 @@ function RouteComponent() {
       return
     }
     // setInternalNav({mapel: jadwalajar.mapel.name, jadwalajar: jadwalajar.id, ruangan: jadwalajar.ruangan.name})
-    setInternalNav({mapel: jadwalajar.mapel.id, jadwalajar: jadwalajar.id, ruangan: jadwalajar.ruangan.id})
+    setInternalNav(jadwalajar)
     navigate({ 
       to: `/siswa/generate`,
       from: "/siswa",

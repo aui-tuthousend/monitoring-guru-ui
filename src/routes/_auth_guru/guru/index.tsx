@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import {
   BookOpen, Clock, Users,
-  QrCode, CheckCircle, CalendarArrowUp,
+  CheckCircle, CalendarArrowUp,
 } from "lucide-react"
 
 import { useJadwalajarStore } from "@/store/jadwalAjar/useJadwalAjar"
@@ -48,6 +48,8 @@ function RouteComponent() {
     queryFn: () => GetListJadwalajarGuru(token, { id: userData.id, hari: "senin" }),
     enabled: !!userData.id && !!token,
   })
+
+
 
   useEffect(() => {
     const now = new Date()
@@ -166,7 +168,8 @@ function RouteComponent() {
                             {status}
                           </div>
                         </Badge>
-                        {jadwal.absen_masuk.id && <Badge className="bg-green-500 text-white">{jadwal.absen_masuk.jam_masuk}</Badge>}
+                        {jadwal.absen_masuk.id && <Badge className="text-white">{jadwal.absen_masuk.jam_masuk}</Badge>}
+                        {jadwal.absen_keluar.id && <Badge variant="destructive" className="text-white">{jadwal.absen_keluar.jam_keluar}</Badge>}
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
                         <div className="flex items-center gap-1">
@@ -187,14 +190,14 @@ function RouteComponent() {
                     <div className="flex gap-2">
                       <Dialog>
                         <DialogTrigger asChild>
-                          <Button>Izin Matkul</Button>
+                          <Button disabled={jadwal.absen_masuk.id}>Izin Matkul</Button>
                         </DialogTrigger>
                         <DialogContent>
                           <DialogHeader>
                             <DialogTitle>Formulir Pengajuan Izin</DialogTitle>
                           </DialogHeader>
                           <form onSubmit={handleSubmit}>
-                            <div className="grid gap-4">
+                            <div className="grid gap-4 py-6">
                               <div className="grid gap-3">
                                 <Label>Alasan Izin</Label>
                                 <Input
