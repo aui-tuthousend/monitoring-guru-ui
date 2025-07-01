@@ -53,55 +53,20 @@ export default function Notifications() {
     };
   }, []);
 
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: "1",
-      title: "New Message",
-      message: "You have received a new message from John Doe",
-      time: "2 min ago",
-      read: false,
-      type: "info",
-    },
-    {
-      id: "2",
-      title: "Payment Successful",
-      message: "Your subscription payment has been processed successfully",
-      time: "1 hour ago",
-      read: false,
-      type: "success",
-    },
-    {
-      id: "3",
-      title: "System Update",
-      message: "System maintenance scheduled for tonight at 2 AM",
-      time: "3 hours ago",
-      read: true,
-      type: "warning",
-    },
-    {
-      id: "4",
-      title: "Welcome!",
-      message: "Welcome to our platform! Get started by exploring the features",
-      time: "1 day ago",
-      read: false,
-      type: "info",
-    },
-  ])
-
-  const unreadCount = data.filter((n) => !n.read).length
+  const unreadCount = data?.filter((n) => !n.read).length
 
   const markAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((notification) => (notification.id === id ? { ...notification, read: true } : notification)),
-    )
+    // setNotifications((prev) =>
+    //   prev.map((notification) => (notification.id === id ? { ...notification, read: true } : notification)),
+    // )
   }
 
   const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((notification) => ({ ...notification, read: true })))
+    // setNotifications((prev) => prev.map((notification) => ({ ...notification, read: true })))
   }
 
   const removeNotification = (id: string) => {
-    setNotifications((prev) => prev.filter((notification) => notification.id !== id))
+    // setNotifications((prev) => prev.filter((notification) => notification.id !== id))
   }
 
   const getTypeColor = (type: Notification["type"]) => {
@@ -153,13 +118,13 @@ export default function Notifications() {
           </CardHeader>
           <CardContent className="p-0">
             <div className="max-h-96 overflow-y-auto">
-              {data.length === 0 ? (
+              {data?.length === 0 ? (
                 <div className="p-6 text-center text-muted-foreground">
                   <Bell className="w-8 h-8 mx-auto mb-2 opacity-50" />
                   <p>No notifications yet</p>
                 </div>
               ) : (
-                data.map((notification) => (
+                data?.map((notification) => (
                   <div
                     key={notification.id}
                     className={`p-4 border-b last:border-b-0 hover:bg-gray-50 transition-colors ${!notification.read ? "bg-blue-50/50" : ""
