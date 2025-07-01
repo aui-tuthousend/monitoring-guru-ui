@@ -7,6 +7,7 @@ import { Bell, LogOut, GraduationCap } from "lucide-react"
 import Kawai from '/IMG_3661.jpeg';
 import { useAuth } from '@/auth'
 import { useCookies } from 'react-cookie'
+import { useWebsocket } from '@/store/websocket/useWebsocket'
 
 export const Route = createFileRoute('/_auth_siswa/siswa')({
   component: RouteComponent,
@@ -21,6 +22,7 @@ export const Route = createFileRoute('/_auth_siswa/siswa')({
 //   gpa: number
 //   avatar: string
 // }
+
 
 function RouteComponent() {
   const auth = useAuth()
@@ -48,6 +50,21 @@ function RouteComponent() {
     nisn: "Loading...",
     // attendanceMarked: false,
   });
+
+  const {
+    setRole,
+    connectWebSocket,
+    closeConnection,
+  } = useWebsocket();
+
+  useEffect(() => {
+    setRole('siswa');
+    connectWebSocket();
+
+    return () => {
+      closeConnection();
+    };
+  }, []);
 
   const [currentTime, setCurrentTime] = useState<{
     date: string

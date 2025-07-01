@@ -8,6 +8,7 @@ import { HashString } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useJadwalajarStore } from '@/store/jadwalAjar/useJadwalAjar';
 import { Button } from '@/components/ui/button';
+import { useWebsocket } from '@/store/websocket/useWebsocket';
 
 export const Route = createFileRoute('/_auth_siswa/siswa/generate')({
   component: RouteComponent,
@@ -42,6 +43,30 @@ export default function RouteComponent() {
 
   const [qrCode, setQrCode] = useState<React.ReactNode>("")
   const [currentTime, setCurrentTime] = useState({ date: "", time: "" })
+
+  const {
+    loading,
+    addMessageListener,
+    removeMessageListener,
+    isConnected,
+  } = useWebsocket();
+
+
+  useEffect(() => {
+    const handleMessage = (data: string) => {
+      const payload = JSON.parse(data);
+      if (payload) {
+        toast.success("Absen berhasil!")
+        navigate({ to: "/siswa" })
+      }
+    }
+
+    addMessageListener(handleMessage);
+
+    return () => {
+      removeMessageListener(handleMessage);
+    };
+  }, [])
 
   // Blokir manual routing
   useEffect(() => {
