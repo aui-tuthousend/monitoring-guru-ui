@@ -7,7 +7,7 @@ import { Bell, Check, X } from "lucide-react"
 import { useWebsocket } from "@/store/websocket/useWebsocket"
 import { toast } from "sonner"
 import { useIzinStore } from "@/store/izin/useIzin"
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { useCookies } from "react-cookie"
 
 interface Notification {
@@ -21,9 +21,11 @@ interface Notification {
 
 export default function Notifications() {
 
+  const queryClient = useQueryClient()
   const [cookies] = useCookies(['authToken'])
   const token = cookies.authToken
   const {GetAllIzin} = useIzinStore();
+
   const {data} = useSuspenseQuery({
     queryKey: ["get-izin"],
     queryFn: () => GetAllIzin(token),
@@ -42,7 +44,10 @@ export default function Notifications() {
       const { type, payload } = JSON.parse(data);
 
       if (type === 'create-izin') {
-        toast("izin baru masuk");
+        toast.info("izin baru masuk oleh Guru " + payload.guru);
+        queryClient.invalidateQueries({
+          queryKey: ['get-izin']
+        })
       }
     };
 

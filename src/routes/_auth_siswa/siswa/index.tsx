@@ -56,7 +56,7 @@ function RouteComponent() {
   }
 
   const handleNavigate = (jadwalajar: any) => {
-    if (isOnTime(jadwalajar.jam_mulai, jadwalajar.jam_selesai, currentTime)) {
+    if (!isOnTime(jadwalajar.jam_mulai, jadwalajar.jam_selesai, currentTime)) {
       toast.error('Kelas belum dimulai!')
       return
     }

@@ -1,5 +1,6 @@
 interface Izin {
     id?: string
+    jadwalajar_id?: string
     judul: string
     pesan: string
     tanggal_izin: string

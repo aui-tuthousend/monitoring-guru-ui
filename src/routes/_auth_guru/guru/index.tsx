@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useCookies } from "react-cookie"
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
 
 import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
@@ -12,10 +12,12 @@ import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import {
   BookOpen, Clock, Users,
-  CheckCircle, CalendarArrowUp,
+  CheckCircle,
 } from "lucide-react"
 
 import { useJadwalajarStore } from "@/store/jadwalAjar/useJadwalAjar"
+import { useIzinStore } from "@/store/izin/useIzin"
+import { useWebsocket } from "@/store/websocket/useWebsocket"
 
 export const Route = createFileRoute('/_auth_guru/guru/')({
   component: RouteComponent,
@@ -23,20 +25,12 @@ export const Route = createFileRoute('/_auth_guru/guru/')({
 
 function RouteComponent() {
   const now = new Date()
-
-  const navigate = useNavigate()
   const [cookies] = useCookies(['userData', 'authToken'])
   const userData = cookies.userData
   const token = cookies.authToken
 
   const { GetListJadwalajarGuru } = useJadwalajarStore()
-  const [izinForm, setIzinForm] = useState({
-    alasan: '',
-    nama: '',
-    npm: '',
-  })
-
-  const [timestamp, setTimestamp] = useState<{ date: string, time: string } | null>(null)
+  const { model, setModel } = useIzinStore()
 
   const stats = {
     totalStudents: 109,
@@ -51,22 +45,32 @@ function RouteComponent() {
     enabled: !!userData.id && !!token,
   })
 
+  const {
+    sendMessage,
+    isConnected,
+  } = useWebsocket();
 
 
-  useEffect(() => {
-    setTimestamp({
-      date: now.toLocaleDateString("id-ID", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      }),
-      time: now.toLocaleTimeString("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit"
-      }),
-    })
-  }, [])
+  const handleSubmit = (jadwal_id: string) => {
+    if (!model.judul || !model.pesan) {
+      toast.error("Semua field wajib diisi.");
+      return;
+    }
+    const payload = {
+      type: 'create-izin',
+      payload: {
+        jadwalajar_id: jadwal_id,
+        judul: model.judul,
+        pesan: model.pesan,
+      }
+    }
+
+    setModel()
+    if (isConnected) {
+      console.log(payload)
+      sendMessage(JSON.stringify(payload));
+    }
+  };
 
   if (error) toast.error('Gagal mengambil data jadwal guru!')
 
@@ -83,7 +87,13 @@ function RouteComponent() {
     if (now < start) return (
       <Badge variant="outline" className="bg-yellow-500 text-black">Akan datang</Badge>
     )
+    if (now >= start && now <= end) return (
+      <Badge variant="default" className="bg-green-500 text-black">Segera Absen</Badge>
+    )
     if (now >= start && now <= end && jadwal.absen_masuk.id) return (
+      <Badge variant="default" className="bg-green-500 text-black">Sedang berlangsung</Badge>
+    )
+    if (now >= start && now <= end && jadwal.absen_masuk.id && jadwal.absen_keluar.id) return (
       <Badge variant="default" className="bg-green-500 text-black">Sedang berlangsung</Badge>
     )
     if (now > end && !jadwal.absen_masuk.id) return (
@@ -94,31 +104,6 @@ function RouteComponent() {
     )
   }
 
-  // const getStatusIcon = (status: string) => {
-  //   switch (status) {
-  //     case "completed": return <CheckCircle className="h-4 w-4" />
-  //     case "ongoing": return <Clock className="h-4 w-4" />
-  //     case "upcoming": return <CalendarArrowUp className="h-4 w-4" />
-  //     default: return null
-  //   }
-  // }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!izinForm.alasan || !izinForm.nama || !izinForm.npm) {
-      toast.error("Semua field wajib diisi.");
-      return;
-    }
-
-    toast.success(`Izin diajukan oleh ${izinForm.nama}`);
-    setIzinForm({ alasan: '', nama: '', npm: '' });
-
-    // Programmatically close the dialog
-    document.querySelector('[data-radix-dialog-content]')?.dispatchEvent(
-      new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape' })
-    );
-  };
 
   return (
     <>
@@ -190,40 +175,38 @@ function RouteComponent() {
                           <DialogHeader>
                             <DialogTitle>Formulir Pengajuan Izin</DialogTitle>
                           </DialogHeader>
-                          <form onSubmit={handleSubmit}>
-                            <div className="grid gap-4 py-6">
-                              <div className="grid gap-3">
-                                <Label>Alasan Izin</Label>
-                                <Input
-                                  name="alasan"
-                                  value={izinForm.alasan}
-                                  onChange={(e) => setIzinForm({ ...izinForm, alasan: e.target.value })}
-                                />
-                              </div>
-                              <div className="grid gap-3">
-                                <Label>Nama Guru Pengganti</Label>
-                                <Input
-                                  name="nama"
-                                  value={izinForm.nama}
-                                  onChange={(e) => setIzinForm({ ...izinForm, nama: e.target.value })}
-                                />
-                              </div>
-                              <div className="grid gap-3">
-                                <Label>NPM Guru Pengganti</Label>
-                                <Input
-                                  name="npm"
-                                  value={izinForm.npm}
-                                  onChange={(e) => setIzinForm({ ...izinForm, npm: e.target.value })}
-                                />
-                              </div>
+                          <div className="grid gap-4 py-6">
+                            <div className="grid gap-3">
+                              <Label>Alasan Izin</Label>
+                              <Input
+                                name="judul"
+                                value={model.judul}
+                                onChange={(e) => setModel({ ...model, judul: e.target.value })}
+                              />
                             </div>
-                            <DialogFooter>
-                              <DialogClose asChild>
-                                <Button type="button" variant="outline">Cancel</Button>
-                              </DialogClose>
-                              <Button type="submit">Submit</Button>
-                            </DialogFooter>
-                          </form>
+                            <div className="grid gap-3">
+                              <Label>Deskripsi</Label>
+                              <Input
+                                name="deskripsi"
+                                value={model.pesan}
+                                onChange={(e) => setModel({ ...model, pesan: e.target.value })}
+                              />
+                            </div>
+                            <div className="grid gap-3">
+                              <Label>NPM Guru Pengganti</Label>
+                              <Input
+                                name="npm"
+                              // value={izinForm.npm}
+                              // onChange={(e) => setIzinForm({ ...izinForm, npm: e.target.value })}
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <DialogClose asChild>
+                              <Button type="button" variant="outline">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit" onClick={()=> handleSubmit(jadwal.id)}>Submit</Button>
+                          </DialogFooter>
                         </DialogContent>
                       </Dialog>
                     </div>
