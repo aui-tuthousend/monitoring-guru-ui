@@ -17,7 +17,7 @@ export const Route = createFileRoute('/_auth_guru/admin/')({
 
 function RouteComponent() {
   const { GetAllClassStatus } = useKelasStore();
-  
+
   const [cookies] = useCookies(['authToken']);
   const token = cookies.authToken;
 
@@ -25,34 +25,28 @@ function RouteComponent() {
 
   const {
     loading,
-    connectWebSocket,
-    closeConnection,
     sendMessage,
     addMessageListener,
     removeMessageListener,
     isConnected,
   } = useWebsocket();
-  
+
   useEffect(() => {
-    connectWebSocket();
 
     const handleMessage = (data: string) => {
       const { type, payload } = JSON.parse(data);
-  
-      if (type === 'notification') {
-        toast(payload.message);
-      }
+
       if (type === 'update-kelas') {
         setClassStatus((prev) =>
           prev.map((kls) =>
             kls.kelas.id === payload.id
               ? {
-                  ...kls,
-                  is_active: payload.is_active,
-                  mapel: payload.mapel,
-                  pengajar: payload.pengajar,
-                  ruangan: payload.ruangan,
-                }
+                ...kls,
+                is_active: payload.is_active,
+                mapel: payload.mapel,
+                pengajar: payload.pengajar,
+                ruangan: payload.ruangan,
+              }
               : kls
           )
         );
@@ -63,7 +57,6 @@ function RouteComponent() {
 
     return () => {
       removeMessageListener(handleMessage);
-      closeConnection();
     };
   }, []);
 
@@ -75,14 +68,14 @@ function RouteComponent() {
         is_active: isActive,
       },
     };
-  
+
     if (isConnected && sendMessage) {
       sendMessage(JSON.stringify(payload));
     }
   };
 
   useEffect(() => {
-    if(isConnected){
+    if (isConnected) {
       GetAllClassStatus(token).then(setClassStatus);
       toast.success("Connected to WebSocket");
     }
@@ -112,11 +105,11 @@ function RouteComponent() {
       <div className="flex flex-col gap-2 max-w-7xl mx-auto">
         {isConnected ? (
           <div className="flex items-center gap-2">
-            <Cable className="w-5 h-5"/> connected
+            <Cable className="w-5 h-5" /> connected
           </div>
-        ):(
+        ) : (
           <div className="flex items-center gap-2">
-            <Unplug className="w-5 h-5"/> disconnected
+            <Unplug className="w-5 h-5" /> disconnected
           </div>
         )}
 
@@ -142,24 +135,24 @@ function RouteComponent() {
 
         {loading && (
           <div className="flex items-center gap-2">
-            <Loader className="w-5 h-5 animate-spin"/> Fetching data...
+            <Loader className="w-5 h-5 animate-spin" /> Fetching data...
           </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sortedClasses.map((classData, index) => (
-              <div key={index} onClick={() => handleSendMessages(classData.kelas.id, !classData.is_active)}>
-                <ClassCard
-                  className={classData.kelas.name}
-                  grade={classData.kelas.grade}
-                  isActive={classData.is_active}
-                  teacher={classData.pengajar}
-                  major={classData.kelas.jurusan}
-                  subject={classData.mapel}
-                  room={classData.ruangan}
-                />
-              </div>
-            ))}
+          {sortedClasses.map((classData, index) => (
+            <div key={index} onClick={() => handleSendMessages(classData.kelas.id, !classData.is_active)}>
+              <ClassCard
+                className={classData.kelas.name}
+                grade={classData.kelas.grade}
+                isActive={classData.is_active}
+                teacher={classData.pengajar}
+                major={classData.kelas.jurusan}
+                subject={classData.mapel}
+                room={classData.ruangan}
+              />
+            </div>
+          ))}
         </div>
       </div>
 

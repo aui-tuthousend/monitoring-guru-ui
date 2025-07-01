@@ -4,6 +4,8 @@ import { create } from 'zustand';
 interface WebsocketState {
   loading: boolean;
   serverUrl: string;
+  role: string;
+  setRole: (role: string) => void;
   isConnected: boolean;
   messageListeners: ((data: string) => void)[];
   connectWebSocket: () => void;
@@ -57,7 +59,12 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
 
   return {
     loading: false,
-    serverUrl: `ws://localhost:8080/ws/user-${randomId}`,
+    role: 'user',
+    serverUrl: '',
+    setRole: (role: string) => {
+      const url = `ws://localhost:8080/ws/${role}/user-${randomId}`;
+      set({ role, serverUrl: url });
+    },
     isConnected: false,
     messageListeners: [],
     connectWebSocket: start,

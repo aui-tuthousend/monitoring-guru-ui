@@ -70,21 +70,9 @@ function RouteComponent() {
   };
 
   const {
-    connectWebSocket,
-    closeConnection,
     sendMessage,
-    addMessageListener,
-    removeMessageListener,
     isConnected,
   } = useWebsocket();
-
-  useEffect(() => {
-    connectWebSocket();
-
-    return () => {
-      closeConnection();
-    };
-  }, []);
 
   const handleSendMessages = (data: any) => {
     const payload = data.type === 'clock-in'
@@ -154,7 +142,7 @@ function RouteComponent() {
     }
 
     handleSendMessages(payload);
-    toast.success("Check-in berhasil");
+    toast.success(payload.type === 'check-in' ? 'Check-in berhasil' : 'Check-out berhasil');
     navigate({ to: '/guru', from: '/guru/scan' });
 
   }

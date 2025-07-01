@@ -22,6 +22,8 @@ export const Route = createFileRoute('/_auth_guru/guru/')({
 });
 
 function RouteComponent() {
+  const now = new Date()
+
   const navigate = useNavigate()
   const [cookies] = useCookies(['userData', 'authToken'])
   const userData = cookies.userData
@@ -52,7 +54,6 @@ function RouteComponent() {
 
 
   useEffect(() => {
-    const now = new Date()
     setTimestamp({
       date: now.toLocaleDateString("id-ID", {
         weekday: "long",
@@ -76,31 +77,31 @@ function RouteComponent() {
     return date
   }
 
-  const getStatus = (jam_mulai: string, jam_selesai: string, now: Date): string => {
-    const start = timeStringToDate(jam_mulai)
-    const end = timeStringToDate(jam_selesai)
-    if (now < start) return "upcoming"
-    if (now >= start && now <= end) return "ongoing"
-    return "completed"
+  const getStatus = (jadwal: any) => {
+    const start = timeStringToDate(jadwal.jam_mulai)
+    const end = timeStringToDate(jadwal.jam_selesai)
+    if (now < start) return (
+      <Badge variant="outline" className="bg-yellow-500 text-black">Akan datang</Badge>
+    )
+    if (now >= start && now <= end && jadwal.absen_masuk.id) return (
+      <Badge variant="default" className="bg-green-500 text-black">Sedang berlangsung</Badge>
+    )
+    if (now > end && !jadwal.absen_masuk.id) return (
+      <Badge variant="outline" className="bg-red-500 text-white">Absen</Badge>
+    )
+    if (now > end && jadwal.absen_masuk.id) return (
+      <Badge variant="outline" className="bg-green-500 text-black">Selesai</Badge>
+    )
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed": return "bg-green-100 text-green-800"
-      case "ongoing": return "bg-blue-100 text-blue-800"
-      case "upcoming": return "bg-yellow-100 text-yellow-800"
-      default: return "bg-gray-100 text-gray-800"
-    }
-  }
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "completed": return <CheckCircle className="h-4 w-4" />
-      case "ongoing": return <Clock className="h-4 w-4" />
-      case "upcoming": return <CalendarArrowUp className="h-4 w-4" />
-      default: return null
-    }
-  }
+  // const getStatusIcon = (status: string) => {
+  //   switch (status) {
+  //     case "completed": return <CheckCircle className="h-4 w-4" />
+  //     case "ongoing": return <Clock className="h-4 w-4" />
+  //     case "upcoming": return <CalendarArrowUp className="h-4 w-4" />
+  //     default: return null
+  //   }
+  // }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,7 +129,7 @@ function RouteComponent() {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 overflow-y-auto">
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-green-50 p-4 rounded-lg">
@@ -153,21 +154,14 @@ function RouteComponent() {
           <h3 className="text-lg font-semibold mb-4">Today's Classes</h3>
           <div className="space-y-3">
             {data?.map((jadwal: any, index: number) => {
-              const now = new Date()
-              const status = getStatus(jadwal.jam_mulai, jadwal.jam_selesai, now)
 
               return (
                 <div key={index} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between overflow-x-hidden flex-wrap gap-5">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <h4 className="font-medium text-lg">{jadwal.mapel.name}</h4>
-                        <Badge className={getStatusColor(status)}>
-                          <div className="flex items-center gap-1">
-                            {getStatusIcon(status)}
-                            {status}
-                          </div>
-                        </Badge>
+                        {getStatus(jadwal)}
                         {jadwal.absen_masuk.id && <Badge className="text-white">{jadwal.absen_masuk.jam_masuk}</Badge>}
                         {jadwal.absen_keluar.id && <Badge variant="destructive" className="text-white">{jadwal.absen_keluar.jam_keluar}</Badge>}
                       </div>
@@ -178,7 +172,7 @@ function RouteComponent() {
                         </div>
                         <div className="flex items-center gap-1">
                           <BookOpen className="h-4 w-4" />
-                          Room {jadwal.ruangan?.name || 'N/A'}
+                          {jadwal.ruangan?.name || 'N/A'}
                         </div>
                         <div className="flex items-center gap-1">
                           <Users className="h-4 w-4" />
@@ -187,7 +181,7 @@ function RouteComponent() {
                       </div>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="">
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button disabled={jadwal.absen_masuk.id}>Izin Matkul</Button>

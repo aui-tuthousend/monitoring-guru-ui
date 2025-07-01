@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/auth';
 import { useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
+import { useWebsocket } from '@/store/websocket/useWebsocket';
 
 // untuk masuk ke scan qr code guru tergantung jam, jadi nanti kalau jamnya sesuai bakalan bisa di klik
 
@@ -46,6 +47,21 @@ function RouteComponent() {
     time: string
   }>({ date: "", time: "" })
 
+  const {
+    setRole,
+    connectWebSocket,
+    closeConnection,
+  } = useWebsocket();
+
+  useEffect(() => {
+    setRole('guru');
+    connectWebSocket();
+
+    return () => {
+      closeConnection();
+    };
+  }, []);
+
   useEffect(() => {
     if (cookies.userData) {
       try {
@@ -54,7 +70,7 @@ function RouteComponent() {
           name: guruData.name,
           jabatan: guruData.jabatan,
           npsn: guruData.npsn,
-          attendanceMarked: false, // add attendance logic if needed
+          attendanceMarked: false,
         });
       } catch (err) {
         console.error("Failed to parse userData cookie", err);
@@ -98,7 +114,7 @@ function RouteComponent() {
     }
   }
 
-  const handleScan = async() => {
+  const handleScan = async () => {
     navigate({ to: '/guru/scan', from: '/guru' });
     toast.success(`Membuka scanner`);
   }

@@ -5,6 +5,8 @@ import LogoutButton from '@/components/logout-button'
 import { ViewProfile } from '@/components/view-profile'
 import { useCookies } from 'react-cookie'
 import Notifications from '@/components/notifications'
+import { useWebsocket } from '@/store/websocket/useWebsocket'
+import { useEffect } from 'react'
 
 export const Route = createFileRoute('/_auth_guru/admin')({
   component: RouteComponent,
@@ -14,12 +16,27 @@ function RouteComponent() {
   const [cookies] = useCookies(['userData'])
   const userData = cookies.userData
 
+  const {
+    setRole,
+    connectWebSocket,
+    closeConnection,
+  } = useWebsocket();
+
   const profile = {
     name: userData.name,
     nip: userData.nip,
     jabatan: userData.jabatan,
     avatarUrl: "https://i.pravatar.cc/150?u=budi.santoso"
   }
+
+  useEffect(() => {
+    setRole('admin');
+    connectWebSocket();
+
+    return () => {
+      closeConnection();
+    };
+  }, []);
 
   return (
     <SidebarProvider>
