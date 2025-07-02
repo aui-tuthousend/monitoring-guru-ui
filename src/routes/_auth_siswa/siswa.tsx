@@ -58,7 +58,7 @@ function RouteComponent() {
   } = useWebsocket();
 
   useEffect(() => {
-    setRole('siswa');
+    setRole('siswa', cookies.userData.nisn);
     connectWebSocket();
 
     return () => {

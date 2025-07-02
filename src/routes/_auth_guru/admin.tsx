@@ -30,7 +30,7 @@ function RouteComponent() {
   }
 
   useEffect(() => {
-    setRole('admin');
+    setRole('admin', userData.nip);
     connectWebSocket();
 
     return () => {

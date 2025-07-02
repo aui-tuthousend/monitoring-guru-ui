@@ -5,7 +5,7 @@ interface WebsocketState {
   loading: boolean;
   serverUrl: string;
   role: string;
-  setRole: (role: string) => void;
+  setRole: (role: string, id: string) => void;
   isConnected: boolean;
   messageListeners: ((data: string) => void)[];
   connectWebSocket: () => void;
@@ -19,7 +19,6 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
   let ws: WebSocket | null = null;
   let reconnectOnClose = true;
   let isConnected = false;
-  let randomId = Math.floor(Math.random() * 1000);
 
   const start = () => {
     const { serverUrl } = get();
@@ -61,8 +60,8 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
     loading: false,
     role: 'user',
     serverUrl: '',
-    setRole: (role: string) => {
-      const url = `ws://localhost:8080/ws/${role}/user-${randomId}`;
+    setRole: (role: string, id: string) => {
+      const url = `ws://localhost:8080/ws/${role}/user-${id}`;
       set({ role, serverUrl: url });
     },
     isConnected: false,

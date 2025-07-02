@@ -54,7 +54,7 @@ function RouteComponent() {
   } = useWebsocket();
 
   useEffect(() => {
-    setRole('guru');
+    setRole('guru', cookies.userData.nip);
     connectWebSocket();
 
     return () => {

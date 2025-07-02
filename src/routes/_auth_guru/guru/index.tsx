@@ -28,6 +28,8 @@ function RouteComponent() {
   const [cookies] = useCookies(['userData', 'authToken'])
   const userData = cookies.userData
   const token = cookies.authToken
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
+
 
   const { GetListJadwalajarGuru } = useJadwalajarStore()
   const { model, setModel } = useIzinStore()
@@ -48,8 +50,24 @@ function RouteComponent() {
   const {
     sendMessage,
     isConnected,
+    addMessageListener,
+    removeMessageListener,
   } = useWebsocket();
 
+  useEffect(() => {
+      const handleMessage = (data: string) => {
+        const payload = JSON.parse(data);
+        if (payload) {
+          toast.info(payload.payload)
+        }
+      }
+  
+      addMessageListener(handleMessage);
+  
+      return () => {
+        removeMessageListener(handleMessage);
+      };
+    }, [])
 
   const handleSubmit = (jadwal_id: string) => {
     if (!model.judul || !model.pesan) {
@@ -69,7 +87,10 @@ function RouteComponent() {
     if (isConnected) {
       console.log(payload)
       sendMessage(JSON.stringify(payload));
+      setIsAddDialogOpen(false)
+      toast.success("Izin telah diajukan.")
     }
+
   };
 
   if (error) toast.error('Gagal mengambil data jadwal guru!')
@@ -167,7 +188,7 @@ function RouteComponent() {
                     </div>
 
                     <div className="">
-                      <Dialog>
+                      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                         <DialogTrigger asChild>
                           <Button disabled={jadwal.absen_masuk.id}>Izin Matkul</Button>
                         </DialogTrigger>

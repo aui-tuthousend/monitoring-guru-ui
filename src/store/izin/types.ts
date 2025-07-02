@@ -3,11 +3,14 @@ interface Izin {
     jadwalajar_id?: string
     judul: string
     pesan: string
+    guru: string
+    mapel: string
+    jam_mulai: string
+    jam_selesai: string
     tanggal_izin: string
     jam_izin: string
     read: boolean
     approval: boolean
-    type: "info" | "success" | "warning" | "error"
 }
 
 export interface IzinStore {

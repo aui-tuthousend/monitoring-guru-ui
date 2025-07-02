@@ -45,12 +45,9 @@ export default function RouteComponent() {
   const [currentTime, setCurrentTime] = useState({ date: "", time: "" })
 
   const {
-    loading,
     addMessageListener,
     removeMessageListener,
-    isConnected,
   } = useWebsocket();
-
 
   useEffect(() => {
     const handleMessage = (data: string) => {

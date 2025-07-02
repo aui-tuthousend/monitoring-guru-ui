@@ -7,7 +7,7 @@ import { Bell, Check, X } from "lucide-react"
 import { useWebsocket } from "@/store/websocket/useWebsocket"
 import { toast } from "sonner"
 import { useIzinStore } from "@/store/izin/useIzin"
-import { useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { useCookies } from "react-cookie"
 
 interface Notification {
@@ -20,17 +20,9 @@ interface Notification {
 }
 
 export default function Notifications() {
-
-  const queryClient = useQueryClient()
   const [cookies] = useCookies(['authToken'])
   const token = cookies.authToken
   const {GetAllIzin} = useIzinStore();
-
-  const {data} = useSuspenseQuery({
-    queryKey: ["get-izin"],
-    queryFn: () => GetAllIzin(token),
-  })
-
   const {
     loading,
     sendMessage,
@@ -39,15 +31,46 @@ export default function Notifications() {
     isConnected,
   } = useWebsocket();
 
+  const { data } = useSuspenseQuery({
+    queryKey: ["get-izin"],
+    queryFn: () => GetAllIzin(token),
+  })
+  
+  const [izinList, setIzinList] = useState(data || [])
+  
+  const unreadCount = izinList.filter((izin) => !izin.read).length
+  
+  useEffect(() => {
+    setIzinList(data)
+  }, [data])
+  
+  const handlePermission = (id: string, status: boolean) => {
+    setIzinList((prevList) =>
+      prevList.map((izin) =>
+        izin.id === id ? { ...izin, read: true } : izin
+      )
+    )
+    const payload = {
+      type: 'handle-izin',
+      payload: {
+        id: id,
+        status: status,
+      }
+    }
+    if (isConnected) {
+      // console.log(payload)
+      sendMessage(JSON.stringify(payload));
+      setIzinList((prev) => prev.filter((notification) => notification.id !== id))
+    }
+  }
+
   useEffect(() => {
     const handleMessage = (data: string) => {
       const { type, payload } = JSON.parse(data);
 
-      if (type === 'create-izin') {
+      if (type === 'izin-masuk') {
         toast.info("izin baru masuk oleh Guru " + payload.guru);
-        queryClient.invalidateQueries({
-          queryKey: ['get-izin']
-        })
+        setIzinList((prev) => [...prev, payload])
       }
     };
 
@@ -58,33 +81,8 @@ export default function Notifications() {
     };
   }, []);
 
-  const unreadCount = data?.filter((n) => !n.read).length
-
-  const markAsRead = (id: string) => {
-    // setNotifications((prev) =>
-    //   prev.map((notification) => (notification.id === id ? { ...notification, read: true } : notification)),
-    // )
-  }
-
   const markAllAsRead = () => {
     // setNotifications((prev) => prev.map((notification) => ({ ...notification, read: true })))
-  }
-
-  const removeNotification = (id: string) => {
-    // setNotifications((prev) => prev.filter((notification) => notification.id !== id))
-  }
-
-  const getTypeColor = (type: Notification["type"]) => {
-    switch (type) {
-      case "success":
-        return "bg-green-500"
-      case "warning":
-        return "bg-yellow-500"
-      case "error":
-        return "bg-red-500"
-      default:
-        return "bg-blue-500"
-    }
   }
 
   return (
@@ -123,13 +121,13 @@ export default function Notifications() {
           </CardHeader>
           <CardContent className="p-0">
             <div className="max-h-96 overflow-y-auto">
-              {data?.length === 0 ? (
+              {izinList?.length === 0 ? (
                 <div className="p-6 text-center text-muted-foreground">
                   <Bell className="w-8 h-8 mx-auto mb-2 opacity-50" />
                   <p>No notifications yet</p>
                 </div>
               ) : (
-                data?.map((notification) => (
+                izinList?.map((notification) => (
                   <div
                     key={notification.id}
                     className={`p-4 border-b last:border-b-0 hover:bg-gray-50 transition-colors ${!notification.read ? "bg-blue-50/50" : ""
@@ -137,27 +135,36 @@ export default function Notifications() {
                   >
                     <div className="flex items-start gap-3">
                       <div
-                        className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${notification.read ? "bg-gray-300" : getTypeColor(notification.type)
+                        className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${notification.read ? "bg-gray-300" : "bg-blue-500"
                           }`}
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex-1">
-                            <p
-                              className={`text-sm font-medium ${!notification.read ? "text-gray-900" : "text-gray-600"
+                            <div className="flex justify-between">
+                              <p
+                                className={`text-sm font-medium ${!notification.read ? "text-gray-900" : "text-gray-600"
                                 }`}
-                            >
-                              {notification.judul}
-                            </p>
+                                >
+                                {notification.guru}
+                              </p>
+                              <Badge variant="default">{notification.jam_izin}</Badge>
+                              {/* <p
+                                className={`text-sm font-medium ${!notification.read ? "text-gray-900" : "text-gray-600"
+                                }`}
+                                >
+                                {notification.jam_izin}
+                              </p> */}
+                            </div>
                             <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{notification.pesan}</p>
-                            <p className="text-xs text-muted-foreground mt-2">{notification.jam_izin}</p>
+                            <p className="text-xs text-muted-foreground mt-2">{notification.mapel} | {notification.jam_mulai} - {notification.jam_selesai}</p>
                           </div>
                           <div className="flex gap-1">
                             {!notification.read && (
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => markAsRead(notification?.id!)}
+                                onClick={() => handlePermission(notification?.id!, true)}
                                 className="h-6 w-6 p-0"
                               >
                                 <Check className="w-3 h-3" />
@@ -166,7 +173,7 @@ export default function Notifications() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => removeNotification(notification?.id!)}
+                              onClick={() => handlePermission(notification?.id!, false)}
                               className="h-6 w-6 p-0 text-muted-foreground hover:text-red-600"
                             >
                               <X className="w-3 h-3" />
