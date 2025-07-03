@@ -11,6 +11,9 @@ import { useAuth } from '@/auth';
 import { useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { useWebsocket } from '@/store/websocket/useWebsocket';
+import NotifUser from '@/components/notif-user';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useIzinStore } from '@/store/izin/useIzin';
 
 // untuk masuk ke scan qr code guru tergantung jam, jadi nanti kalau jamnya sesuai bakalan bisa di klik
 
@@ -31,7 +34,10 @@ function RouteComponent() {
   const auth = useAuth()
   const navigate = useNavigate()
 
-  const [cookies] = useCookies(['userData']);
+  const [cookies] = useCookies(['userData', 'authToken'])
+  const userData = cookies.userData
+  const token = cookies.authToken
+
   const [teacherProfile, setTeacherProfile] = useState<{
     name: string;
     jabatan: string;
@@ -46,19 +52,42 @@ function RouteComponent() {
     date: string
     time: string
   }>({ date: "", time: "" })
+  
+  const {GetAllIzinGuru} = useIzinStore();
+  const { data } = useSuspenseQuery({
+      queryKey: ["get-izin-guru"],
+      queryFn: () => GetAllIzinGuru(token, userData.nip),
+    })
 
+  const [izinList, setIzinList] = useState(data || [])
+  
   const {
     setRole,
     connectWebSocket,
     closeConnection,
+    addMessageListener,
+    removeMessageListener
   } = useWebsocket();
 
   useEffect(() => {
     setRole('guru', cookies.userData.nip);
     connectWebSocket();
 
+    const handleMessage = (data: string) => {
+      const { type, payload } = JSON.parse(data);
+
+      if (type === 'izin-masuk-guru') {
+        toast.info("update terbaru izin" + payload.guru);
+        setIzinList((prev) => [...prev, payload])
+      }
+    };
+
+    addMessageListener(handleMessage);
+    
+
     return () => {
       closeConnection();
+      removeMessageListener(handleMessage)
     };
   }, []);
 
@@ -133,9 +162,7 @@ function RouteComponent() {
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">{currentTime.time}</span>
-              <Button variant="ghost" size="sm">
-                <Bell className="h-4 w-4" />
-              </Button>
+              <NotifUser data={izinList}/>
               <Button onClick={handleLogout} variant="ghost" size="sm">
                 <LogOut className="h-4 w-4" />
               </Button>

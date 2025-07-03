@@ -4,7 +4,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import LogoutButton from '@/components/logout-button'
 import { ViewProfile } from '@/components/view-profile'
 import { useCookies } from 'react-cookie'
-import Notifications from '@/components/notifications'
+import Notifications from '@/components/notif-admin'
 import { useWebsocket } from '@/store/websocket/useWebsocket'
 import { useEffect } from 'react'
 

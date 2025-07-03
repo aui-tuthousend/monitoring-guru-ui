@@ -9,82 +9,15 @@ import { toast } from "sonner"
 import { useIzinStore } from "@/store/izin/useIzin"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useCookies } from "react-cookie"
+import type { Izin } from "@/store/izin/types"
 
-interface Notification {
-  id: string
-  title: string
-  message: string
-  time: string
-  read: boolean
-  type: "info" | "success" | "warning" | "error"
-}
-
-export default function Notifications() {
+export default function NotifUser({data}: {data: Izin[]}) {
   const [cookies] = useCookies(['authToken'])
   const token = cookies.authToken
   const {GetAllIzin} = useIzinStore();
-  const {
-    loading,
-    sendMessage,
-    addMessageListener,
-    removeMessageListener,
-    isConnected,
-  } = useWebsocket();
-
-  const { data } = useSuspenseQuery({
-    queryKey: ["get-izin"],
-    queryFn: () => GetAllIzin(token),
-  })
+    
+  const unreadCount = data.filter((izin) => !izin.read).length
   
-  const [izinList, setIzinList] = useState(data || [])
-  
-  const unreadCount = izinList.filter((izin) => !izin.read).length
-  
-  useEffect(() => {
-    setIzinList(data)
-  }, [data])
-  
-  const handlePermission = (id: string, status: boolean) => {
-    setIzinList((prevList) =>
-      prevList.map((izin) =>
-        izin.id === id ? { ...izin, read: true } : izin
-      )
-    )
-    const payload = {
-      type: 'handle-izin',
-      payload: {
-        id: id,
-        status: status,
-      }
-    }
-    if (isConnected) {
-      // console.log(payload)
-      sendMessage(JSON.stringify(payload));
-      setIzinList((prev) => prev.filter((notification) => notification.id !== id))
-    }
-  }
-
-  useEffect(() => {
-    const handleMessage = (data: string) => {
-      const { type, payload } = JSON.parse(data);
-
-      if (type === 'izin-masuk') {
-        toast.info("izin baru masuk oleh Guru " + payload.guru);
-        setIzinList((prev) => [...prev, payload])
-      }
-    };
-
-    addMessageListener(handleMessage);
-
-    return () => {
-      removeMessageListener(handleMessage);
-    };
-  }, []);
-
-  const markAllAsRead = () => {
-    // setNotifications((prev) => prev.map((notification) => ({ ...notification, read: true })))
-  }
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -107,37 +40,35 @@ export default function Notifications() {
               <div>
                 <CardTitle className="text-lg">Notifications</CardTitle>
                 <CardDescription>
-                  {unreadCount > 0
-                    ? `You have ${unreadCount} unread notification${unreadCount > 1 ? "s" : ""}`
-                    : "All caught up!"}
+                  Notifikasi Izin
                 </CardDescription>
               </div>
-              {unreadCount > 0 && (
-                <Button variant="ghost" size="sm" onClick={markAllAsRead} className="text-xs">
-                  Mark all read
-                </Button>
-              )}
             </div>
           </CardHeader>
           <CardContent className="p-0">
             <div className="max-h-96 overflow-y-auto">
-              {izinList?.length === 0 ? (
+              {data?.length === 0 ? (
                 <div className="p-6 text-center text-muted-foreground">
                   <Bell className="w-8 h-8 mx-auto mb-2 opacity-50" />
                   <p>No notifications yet</p>
                 </div>
               ) : (
-                izinList?.map((notification) => (
+                data?.map((notification) => (
                   <div
                     key={notification.id}
                     className={`p-4 border-b last:border-b-0 hover:bg-gray-50 transition-colors ${!notification.read ? "bg-blue-50/50" : ""
                       }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div
-                        className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${notification.read ? "bg-gray-300" : "bg-blue-500"
-                          }`}
-                      />
+                      {notification.approval ? (
+                        <Badge variant="default">
+                          <Check className="w-4 h-4 text-white" />
+                        </Badge>
+                      ) : (
+                        <Badge variant="destructive">
+                          <X className="w-4 h-4 text-white" />
+                        </Badge>
+                      )}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex-1">
@@ -146,9 +77,9 @@ export default function Notifications() {
                                 className={`text-sm font-medium ${!notification.read ? "text-gray-900" : "text-gray-600"
                                 }`}
                                 >
-                                {notification.guru}
+                                {notification.judul}
                               </p>
-                              <Badge variant="default">{notification.jam_izin}</Badge>
+                              <Badge variant="outline">{notification.jam_izin}</Badge>
                               {/* <p
                                 className={`text-sm font-medium ${!notification.read ? "text-gray-900" : "text-gray-600"
                                 }`}
@@ -158,26 +89,6 @@ export default function Notifications() {
                             </div>
                             <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{notification.pesan}</p>
                             <p className="text-xs text-muted-foreground mt-2">{notification.mapel} | {notification.jam_mulai} - {notification.jam_selesai}</p>
-                          </div>
-                          <div className="flex gap-1">
-                            {!notification.read && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handlePermission(notification?.id!, true)}
-                                className="h-6 w-6 p-0"
-                              >
-                                <Check className="w-3 h-3" />
-                              </Button>
-                            )}
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handlePermission(notification?.id!, false)}
-                              className="h-6 w-6 p-0 text-muted-foreground hover:text-red-600"
-                            >
-                              <X className="w-3 h-3" />
-                            </Button>
                           </div>
                         </div>
                       </div>

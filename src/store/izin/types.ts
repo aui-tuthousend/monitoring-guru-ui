@@ -1,4 +1,4 @@
-interface Izin {
+export interface Izin {
     id?: string
     jadwalajar_id?: string
     judul: string
@@ -13,12 +13,19 @@ interface Izin {
     approval: boolean
 }
 
+interface IzinForm {
+    judul: string
+    pesan: string
+}
+
 export interface IzinStore {
     loading: boolean;
     list: Izin[];
-    model: Izin;
-    default: Izin;
+    model: IzinForm;
+    default: IzinForm;
     setModel: (model?: any) => void;
     // SubmitIzin: (token: string, payload: Izin) => Promise<void>;
     GetAllIzin: (token: string) => Promise<Izin[]>;
+    GetAllIzinKelas: (token: string, kelas_id: string) => Promise<Izin[]>;
+    GetAllIzinGuru: (token: string, nip: string) => Promise<Izin[]>;
 }

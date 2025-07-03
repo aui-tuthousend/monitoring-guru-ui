@@ -8,6 +8,10 @@ import Kawai from '/IMG_3661.jpeg';
 import { useAuth } from '@/auth'
 import { useCookies } from 'react-cookie'
 import { useWebsocket } from '@/store/websocket/useWebsocket'
+import { useIzinStore } from '@/store/izin/useIzin'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import NotifUser from '@/components/notif-user'
 
 export const Route = createFileRoute('/_auth_siswa/siswa')({
   component: RouteComponent,
@@ -27,7 +31,9 @@ export const Route = createFileRoute('/_auth_siswa/siswa')({
 function RouteComponent() {
   const auth = useAuth()
   const navigate = useNavigate()
-  const [cookies] = useCookies(['userData']);
+  const [cookies] = useCookies(['userData', 'authToken'])
+  const userData = cookies.userData
+  const token = cookies.authToken
 
   // const [studentProfile] = useState<StudentProfile>({
   //   id: "student-001",
@@ -51,18 +57,41 @@ function RouteComponent() {
     // attendanceMarked: false,
   });
 
+  const {GetAllIzinKelas} = useIzinStore();
+    const { data } = useSuspenseQuery({
+        queryKey: ["get-izin-kelas"],
+        queryFn: () => GetAllIzinKelas(token, userData.kelas_id),
+      })
+  
+    const [izinList, setIzinList] = useState(data || [])
+
   const {
     setRole,
     connectWebSocket,
     closeConnection,
+    addMessageListener,
+    removeMessageListener
   } = useWebsocket();
 
   useEffect(() => {
     setRole('siswa', cookies.userData.nisn);
     connectWebSocket();
 
+    const handleMessage = (data: string) => {
+      const { type, payload } = JSON.parse(data);
+
+      if (type === 'izin-masuk-guru') {
+        toast.info("update terbaru izin" + payload.guru);
+        setIzinList((prev) => [...prev, payload])
+      }
+    };
+
+    addMessageListener(handleMessage);
+    
+
     return () => {
       closeConnection();
+      removeMessageListener(handleMessage)
     };
   }, []);
 
@@ -138,9 +167,7 @@ function RouteComponent() {
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">{currentTime.time}</span>
-              <Button variant="ghost" size="sm">
-                <Bell className="h-4 w-4" />
-              </Button>
+              <NotifUser data={izinList}/>
               <Button onClick={handleLogout} variant="ghost" size="sm">
                 <LogOut className="h-4 w-4" />
               </Button>
