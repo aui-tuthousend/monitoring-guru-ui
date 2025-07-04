@@ -155,7 +155,7 @@ function RouteComponent() {
             {isPending && <p>Loading...</p>}
             {data?.map((item: any, index: number) => (
               <div key={index} onClick={() => handleNavigate(item)} className="cursor-pointer">
-                <div className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                <div className={`border ${item.izin ? "border-yellow-500" : ""} rounded-lg p-4 hover:bg-gray-50 transition-colors`}>
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <h4 className="font-medium">{item.mapel.name}</h4>

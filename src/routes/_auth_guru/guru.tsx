@@ -76,8 +76,8 @@ function RouteComponent() {
     const handleMessage = (data: string) => {
       const { type, payload } = JSON.parse(data);
 
-      if (type === 'izin-masuk-guru') {
-        toast.info("update terbaru izin" + payload.guru);
+      if (type === 'handle-izin') {
+        toast.info(`izin telah ${payload.approval ? 'disetujui' : 'ditolak'}`);
         setIzinList((prev) => [...prev, payload])
       }
     };

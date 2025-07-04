@@ -50,24 +50,8 @@ function RouteComponent() {
   const {
     sendMessage,
     isConnected,
-    addMessageListener,
-    removeMessageListener,
   } = useWebsocket();
 
-  useEffect(() => {
-      const handleMessage = (data: string) => {
-        const payload = JSON.parse(data);
-        if (payload) {
-          toast.info(payload.payload)
-        }
-      }
-  
-      addMessageListener(handleMessage);
-  
-      return () => {
-        removeMessageListener(handleMessage);
-      };
-    }, [])
 
   const handleSubmit = (jadwal_id: string) => {
     if (!model.judul || !model.pesan) {
@@ -105,6 +89,9 @@ function RouteComponent() {
   const getStatus = (jadwal: any) => {
     const start = timeStringToDate(jadwal.jam_mulai)
     const end = timeStringToDate(jadwal.jam_selesai)
+    if (jadwal.izin) return (
+      <Badge variant="outline" className="bg-yellow-500 text-black">Izin</Badge>
+    )
     if (now < start) return (
       <Badge variant="outline" className="bg-yellow-500 text-black">Akan datang</Badge>
     )
@@ -190,7 +177,7 @@ function RouteComponent() {
                     <div className="">
                       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                         <DialogTrigger asChild>
-                          <Button disabled={jadwal.absen_masuk.id}>Izin Matkul</Button>
+                          <Button disabled={jadwal.absen_masuk.id || jadwal.izin}>Ajukan Izin</Button>
                         </DialogTrigger>
                         <DialogContent>
                           <DialogHeader>
@@ -213,14 +200,14 @@ function RouteComponent() {
                                 onChange={(e) => setModel({ ...model, pesan: e.target.value })}
                               />
                             </div>
-                            <div className="grid gap-3">
+                            {/* <div className="grid gap-3">
                               <Label>NPM Guru Pengganti</Label>
                               <Input
                                 name="npm"
                               // value={izinForm.npm}
                               // onChange={(e) => setIzinForm({ ...izinForm, npm: e.target.value })}
                               />
-                            </div>
+                            </div> */}
                           </div>
                           <DialogFooter>
                             <DialogClose asChild>
