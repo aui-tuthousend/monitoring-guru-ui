@@ -79,6 +79,8 @@ function RouteComponent() {
       if (type === 'handle-izin') {
         toast.info(`izin telah ${payload.approval ? 'disetujui' : 'ditolak'}`);
         setIzinList((prev) => [...prev, payload])
+      } else {
+        toast.error(data)
       }
     };
 

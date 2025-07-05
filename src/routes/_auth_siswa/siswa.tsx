@@ -74,14 +74,14 @@ function RouteComponent() {
   } = useWebsocket();
 
   useEffect(() => {
-    setRole('siswa', cookies.userData.nisn);
+    setRole('siswa', cookies.userData.kelas_id);
     connectWebSocket();
 
     const handleMessage = (data: string) => {
       const { type, payload } = JSON.parse(data);
 
-      if (type === 'izin-masuk-guru') {
-        toast.info("update terbaru izin" + payload.guru);
+      if (type === 'handle-izin') {
+        toast.info("izin masuk dari kelas " + payload.mapel);
         setIzinList((prev) => [...prev, payload])
       }
     };

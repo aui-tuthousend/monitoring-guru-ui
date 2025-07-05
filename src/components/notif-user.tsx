@@ -4,17 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Badge } from "@/components/ui/badge"
 import { Bell, Check, X } from "lucide-react"
-import { useWebsocket } from "@/store/websocket/useWebsocket"
-import { toast } from "sonner"
-import { useIzinStore } from "@/store/izin/useIzin"
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { useCookies } from "react-cookie"
+
 import type { Izin } from "@/store/izin/types"
 
 export default function NotifUser({data}: {data: Izin[]}) {
-  const [cookies] = useCookies(['authToken'])
-  const token = cookies.authToken
-  const {GetAllIzin} = useIzinStore();
       
   return (
     <Popover>

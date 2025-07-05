@@ -29,7 +29,7 @@ function RouteComponent() {
   const userData = cookies.userData
   const token = cookies.authToken
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false)
-
+  const [activeJadwal, setActiveJadwal] = useState<any | null>(null)
 
   const { GetListJadwalajarGuru } = useJadwalajarStore()
   const { model, setModel } = useIzinStore()
@@ -53,15 +53,17 @@ function RouteComponent() {
   } = useWebsocket();
 
 
-  const handleSubmit = (jadwal_id: string) => {
+  const handleSubmit = () => {
     if (!model.judul || !model.pesan) {
       toast.error("Semua field wajib diisi.");
       return;
     }
+
+    // console.log(activeJadwal)
     const payload = {
       type: 'create-izin',
       payload: {
-        jadwalajar_id: jadwal_id,
+        jadwalajar_id: activeJadwal.id,
         judul: model.judul,
         pesan: model.pesan,
       }
@@ -69,9 +71,10 @@ function RouteComponent() {
 
     setModel()
     if (isConnected) {
-      console.log(payload)
+      // console.log(payload)
       sendMessage(JSON.stringify(payload));
       setIsAddDialogOpen(false)
+      setActiveJadwal(null)
       toast.success("Izin telah diajukan.")
     }
 
@@ -89,7 +92,7 @@ function RouteComponent() {
   const getStatus = (jadwal: any) => {
     const start = timeStringToDate(jadwal.jam_mulai)
     const end = timeStringToDate(jadwal.jam_selesai)
-    if (jadwal.izin) return (
+    if (jadwal.izin.approval) return (
       <Badge variant="outline" className="bg-yellow-500 text-black">Izin</Badge>
     )
     if (now < start) return (
@@ -109,6 +112,30 @@ function RouteComponent() {
     )
     if (now > end && jadwal.absen_masuk.id) return (
       <Badge variant="outline" className="bg-green-500 text-black">Selesai</Badge>
+    )
+  }
+
+  const getIzinStatus =(izin: any) => {
+    if (izin.approval) return (
+      <p>Izin disetujui</p>
+    )
+    if (izin.id) return (
+      <p>Izin diajukan</p>
+    )
+    if (!izin.approval) return (
+      <p>Ajukan izin</p>
+    )
+  }
+
+  const getIzinStatusButton =(izin: any) => {
+    if (izin.approval) return (
+      true
+    )
+    if (izin.id && !izin.approval) return (
+      true
+    )
+    if (!izin.id) return (
+      false
     )
   }
 
@@ -177,7 +204,15 @@ function RouteComponent() {
                     <div className="">
                       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                         <DialogTrigger asChild>
-                          <Button disabled={jadwal.absen_masuk.id || jadwal.izin}>Ajukan Izin</Button>
+                        <Button
+                          disabled={getIzinStatusButton(jadwal.izin)}
+                          onClick={() => {
+                            setActiveJadwal(jadwal)
+                            setIsAddDialogOpen(true)
+                          }}
+                        >
+                          {getIzinStatus(jadwal.izin)}
+                        </Button>
                         </DialogTrigger>
                         <DialogContent>
                           <DialogHeader>
@@ -213,7 +248,7 @@ function RouteComponent() {
                             <DialogClose asChild>
                               <Button type="button" variant="outline">Cancel</Button>
                             </DialogClose>
-                            <Button type="submit" onClick={()=> handleSubmit(jadwal.id)}>Submit</Button>
+                            <Button type="submit" onClick={handleSubmit}>Submit</Button>
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>
