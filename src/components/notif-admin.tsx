@@ -61,7 +61,7 @@ export default function Notifications() {
 
       if (type === 'izin-masuk') {
         toast.info("izin baru masuk oleh Guru " + payload.guru);
-        setIzinList((prev) => [...prev, payload])
+        setIzinList((prev) => [payload, ...prev])
       }
     };
 

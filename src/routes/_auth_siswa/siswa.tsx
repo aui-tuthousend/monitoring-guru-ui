@@ -82,7 +82,7 @@ function RouteComponent() {
 
       if (type === 'handle-izin') {
         toast.info("izin masuk dari kelas " + payload.mapel);
-        setIzinList((prev) => [...prev, payload])
+        setIzinList((prev) => [payload, ...prev])
       }
     };
 

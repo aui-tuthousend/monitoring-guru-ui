@@ -8,6 +8,27 @@ import { Bell, Check, X } from "lucide-react"
 import type { Izin } from "@/store/izin/types"
 
 export default function NotifUser({data}: {data: Izin[]}) {
+    
+  const isRead = (izin: any) => {
+    if (izin?.read) {
+      return izin.approval ? (
+        <Badge variant="default">
+          <Check className="w-4 h-4 text-white" />
+        </Badge>
+      ) : (
+        <Badge variant="destructive">
+          <X className="w-4 h-4 text-white" />
+        </Badge>
+      );
+    } else {
+      return (
+        <Badge>
+          <p>.</p>
+        </Badge>
+      );
+    }
+  };
+  
       
   return (
     <Popover>
@@ -51,15 +72,7 @@ export default function NotifUser({data}: {data: Izin[]}) {
                       }`}
                   >
                     <div className="flex items-start gap-3">
-                      {notification.approval ? (
-                        <Badge variant="default">
-                          <Check className="w-4 h-4 text-white" />
-                        </Badge>
-                      ) : (
-                        <Badge variant="destructive">
-                          <X className="w-4 h-4 text-white" />
-                        </Badge>
-                      )}
+                      {isRead(notification)}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex-1">
