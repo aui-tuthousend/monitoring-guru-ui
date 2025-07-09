@@ -19,6 +19,9 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
   let ws: WebSocket | null = null;
   let reconnectOnClose = true;
   let isConnected = false;
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const parsedURL = new URL(API_BASE_URL);
+  const host = parsedURL.host;
 
   const start = () => {
     const { serverUrl } = get();
@@ -61,7 +64,7 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
     role: 'user',
     serverUrl: '',
     setRole: (role: string, id: string) => {
-      const url = `ws://localhost:8080/ws/${role}/user-${id}`;
+      const url = `ws://${host}/ws/${role}/user-${id}`;
       set({ role, serverUrl: url });
     },
     isConnected: false,
