@@ -20,6 +20,7 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
   let reconnectOnClose = true;
   let isConnected = false;
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const ENV = import.meta.env.VITE_ENV;
   const parsedURL = new URL(API_BASE_URL);
   const host = parsedURL.host;
 
@@ -64,7 +65,7 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
     role: 'user',
     serverUrl: '',
     setRole: (role: string, id: string) => {
-      const url = `ws://${host}/ws/${role}/user-${id}`;
+      const url = ENV === 'PRODUCTION' ? `wss://${host}/ws/${role}/user-${id}` : `ws://${host}/ws/${role}/user-${id}`;
       set({ role, serverUrl: url });
     },
     isConnected: isConnected,
