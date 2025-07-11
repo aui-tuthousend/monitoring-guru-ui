@@ -25,7 +25,6 @@ function RouteComponent() {
 
   const {
     loading,
-    sendMessage,
     addMessageListener,
     removeMessageListener,
     isConnected,
