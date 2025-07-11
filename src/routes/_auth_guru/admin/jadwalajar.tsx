@@ -158,7 +158,7 @@ function RouteComponent() {
                       <div className="flex flex-col items-start gap-1 overflow-x-hidden">
                         <Label>Guru</Label>
                         <AutoComplete
-                          data={store.guruStore.list}
+                          data={store.guruStore?.list!}
                           value={guruValue}
                           placeholder="Cari Guru..."
                           onChange={(item) => {
@@ -174,7 +174,7 @@ function RouteComponent() {
                       <div className="flex flex-col items-start gap-1 overflow-x-hidden">
                         <Label>Mata Pelajaran</Label>
                         <AutoComplete
-                          data={store.mapelStore.list}
+                          data={store.mapelStore?.list!}
                           value={mapelValue}
                           placeholder="Cari Mapel..."
                           onChange={(item) => {
@@ -189,7 +189,7 @@ function RouteComponent() {
                       <div className="flex flex-col items-start gap-1 overflow-x-hidden">
                         <Label>Kelas</Label>
                         <AutoComplete
-                          data={store.kelasStore.list}
+                          data={store.kelasStore?.list!}
                           value={kelasValue}
                           placeholder="Cari Kelas..."
                           onChange={(item) => {
@@ -204,7 +204,7 @@ function RouteComponent() {
                       <div className="flex flex-col items-start gap-1 overflow-x-hidden">
                         <Label>Ruangan</Label>
                         <AutoComplete
-                          data={store.ruanganStore.list}
+                          data={store.ruanganStore?.list!}
                           value={ruanganValue}
                           placeholder="Cari Ruangan..."
                           onChange={(item) => {
@@ -291,7 +291,7 @@ function RouteComponent() {
 
           <DataTable 
             columns={jadwalajarColumns} 
-            data={store.jadwalajarStore.list} 
+            data={store.jadwalajarStore?.list!} 
             searchKey='Mapel' 
             searchPlaceholder='Cari nama mata pelajaran' 
             onUpdate={handleUpdate}

@@ -148,7 +148,7 @@ function RouteComponent() {
                 <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
                   <Label>Ketua Kelas</Label>
                   <AutoComplete
-                    data={ketuaStore.unsignedList}
+                    data={ketuaStore?.unsignedList!}
                     value={value}
                     placeholder="Cari Ketua Kelas..."
                     onChange={(item) => {
@@ -171,13 +171,13 @@ function RouteComponent() {
                       <SelectValue placeholder="Pilih Jurusan" />
                     </SelectTrigger>
                     <SelectContent>
-                    {jurusanStore.list.length == 0 && (
+                    {jurusanStore?.list?.length == 0 && (
                         <SelectItem disabled value="null">
                           {/* <Loader2 className="mr-2 h-4 w-4 animate-spin" /> */}
                           No data
                         </SelectItem>
                       )}
-                      {jurusanStore.list.map(j => (
+                      {jurusanStore?.list?.map(j => (
                         <SelectItem key={j.id} value={j.id!}>
                           {j.name}
                         </SelectItem>

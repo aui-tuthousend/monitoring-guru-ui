@@ -132,13 +132,13 @@ function RouteComponent() {
                       <SelectValue placeholder="Pilih Jurusan" />
                     </SelectTrigger>
                     <SelectContent>
-                      {jurusanStore.list.length == 0 && (
+                      {jurusanStore?.list?.length == 0 && (
                         <SelectItem disabled value="null">
                           {/* <Loader2 className="mr-2 h-4 w-4 animate-spin" /> */}
                           No data
                         </SelectItem>
                       )}
-                      {jurusanStore.list.map(j => (
+                      {jurusanStore?.list?.map(j => (
                         <SelectItem key={j.id} value={j.id!}>
                           {j.name}
                         </SelectItem>
