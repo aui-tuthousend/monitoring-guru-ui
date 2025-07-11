@@ -187,7 +187,7 @@ function RouteComponent() {
         {/* DataTable */}
         <DataTable
           columns={columns}
-          data={mapelStore.list}
+          data={mapelStore?.list!}
           searchKey="Nama Mapel"
           searchPlaceholder="Cari nama mapel"
           onUpdate={handleUpdate}

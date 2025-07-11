@@ -179,7 +179,7 @@ function RouteComponent() {
 
           <DataTable 
             columns={guruColumns} 
-            data={store.list} 
+            data={store?.list!} 
             searchKey='Nama Guru' 
             searchPlaceholder='Cari nama guru' 
             onUpdate={handleUpdate}
