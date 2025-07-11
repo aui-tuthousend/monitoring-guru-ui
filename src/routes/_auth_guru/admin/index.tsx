@@ -60,20 +60,6 @@ function RouteComponent() {
     };
   }, []);
 
-  const handleSendMessages = (kelasId: string, isActive: boolean) => {
-    const payload = {
-      type: "update-kelas",
-      payload: {
-        id: kelasId,
-        is_active: isActive,
-      },
-    };
-
-    if (isConnected && sendMessage) {
-      sendMessage(JSON.stringify(payload));
-    }
-  };
-
   useEffect(() => {
     if (isConnected) {
       GetAllClassStatus(token).then(setClassStatus);
@@ -141,7 +127,7 @@ function RouteComponent() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortedClasses.map((classData, index) => (
-            <div key={index} onClick={() => handleSendMessages(classData.kelas.id, !classData.is_active)}>
+            <div key={index}>
               <ClassCard
                 className={classData.kelas.name}
                 grade={classData.kelas.grade}

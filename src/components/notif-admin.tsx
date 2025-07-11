@@ -15,7 +15,6 @@ export default function Notifications() {
   const token = cookies.authToken
   const {GetAllIzin} = useIzinStore();
   const {
-    loading,
     sendMessage,
     addMessageListener,
     removeMessageListener,

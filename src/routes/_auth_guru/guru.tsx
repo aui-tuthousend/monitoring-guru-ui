@@ -1,10 +1,10 @@
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link, Outlet } from '@tanstack/react-router';
 import { createFileRoute } from '@tanstack/react-router';
 import { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import KawaiGura from '/IMG_3167.jpeg';
-import { Bell, LogOut, ScanQrCodeIcon, User } from 'lucide-react';
+import { LogOut, ScanQrCodeIcon, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/auth';
@@ -14,17 +14,6 @@ import { useWebsocket } from '@/store/websocket/useWebsocket';
 import NotifUser from '@/components/notif-user';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useIzinStore } from '@/store/izin/useIzin';
-
-// untuk masuk ke scan qr code guru tergantung jam, jadi nanti kalau jamnya sesuai bakalan bisa di klik
-
-const navigationData = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/admin",
-      // icon: <CircleGauge />
-    },]
-}
 
 export const Route = createFileRoute('/_auth_guru/guru')({
   component: RouteComponent,
@@ -78,7 +67,19 @@ function RouteComponent() {
 
       if (type === 'handle-izin') {
         toast.info(`izin telah ${payload.approval ? 'disetujui' : 'ditolak'}`);
-        setIzinList((prev) => [payload, ...prev])
+        // setIzinList((prev) => [payload, ...prev])
+        setIzinList((prev) =>
+          prev.map((izin) =>
+            izin.id === payload.id
+              ? {
+                ...izin,
+                read: payload.read,
+                approval: payload.approval
+              }
+              : izin
+          )
+        );
+
       } else if (type === 'izin-masuk'){
         toast.info(`pengajuan izin terkirim`);
         setIzinList((prev) => [payload, ...prev])

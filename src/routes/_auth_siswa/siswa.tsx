@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useState, useEffect } from "react"
-import { Bell, LogOut, GraduationCap } from "lucide-react"
+import { LogOut } from "lucide-react"
 import Kawai from '/IMG_3661.jpeg';
 import { useAuth } from '@/auth'
 import { useCookies } from 'react-cookie'

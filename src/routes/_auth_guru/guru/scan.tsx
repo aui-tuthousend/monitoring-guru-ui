@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { CardHeader, CardContent } from '@/components/ui/card';
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import QRScanner from "@/components/QrScan";
 import { useWebsocket } from '@/store/websocket/useWebsocket';
@@ -36,38 +36,10 @@ function RouteComponent() {
   // console.log(userData)
 
   const { date, time } = Route.useLoaderData();
-  const [result, setResult] = useState<string | null>(null);
+  // const [result, setResult] = useState<string | null>(null);
   const [torchOn, setTorchOn] = useState(false);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-
-  const handleDone = async () => {
-    if (!result) {
-      toast.warning("Please scan a QR code first");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      // Simulate API call for check-in submission
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Only proceed if component is still mounted
-      toast.success("Check-in Complete");
-      // navigate("/guru", {
-      //   replace: true,  // Prevent going back to scan page
-      //   state: { checkInTime: new Date().toISOString() }  // Optional: pass data
-      // });
-      navigate({ to: '/guru', from: '/guru/scan' })
-    } catch (error) {
-      toast.error("Check-in failed. Please try again.");
-      console.error("Check-in error:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const {
     sendMessage,
@@ -174,17 +146,10 @@ function RouteComponent() {
             variant="secondary"
             onClick={() => setTorchOn(!torchOn)}
             className="px-4 py-2"
-            disabled={isSubmitting}
           >
             {torchOn ? 'Turn Flash Off' : 'Turn Flash On'}
           </Button>
         </div>
-
-        {result && (
-          <div className="mb-6 p-4 bg-muted rounded-lg w-full max-w-md">
-            <p className="text-center break-words">{result}</p>
-          </div>
-        )}
 
         <div className="flex flex-row gap-6 items-center justify-center mb-6">
           {['Clock In', 'Clock Out', 'Total Hours'].map((label, index) => (
@@ -195,14 +160,6 @@ function RouteComponent() {
           ))}
         </div>
 
-        <Button
-          size="lg"
-          onClick={handleDone}
-          disabled={isSubmitting || !result}
-          className="bg-blue-600 hover:bg-blue-700 mt-4 w-full max-w-xs"
-        >
-          {isSubmitting ? "Processing..." : "DONE"}
-        </Button>
       </CardContent>
     </div>
   );

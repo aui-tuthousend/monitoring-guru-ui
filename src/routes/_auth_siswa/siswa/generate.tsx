@@ -7,7 +7,6 @@ import QRCode from "react-qr-code";
 import { HashString } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useJadwalajarStore } from '@/store/jadwalAjar/useJadwalAjar';
-import { Button } from '@/components/ui/button';
 import { useWebsocket } from '@/store/websocket/useWebsocket';
 
 export const Route = createFileRoute('/_auth_siswa/siswa/generate')({

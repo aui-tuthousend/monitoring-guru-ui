@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useCookies } from "react-cookie"
 import { createFileRoute } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
@@ -34,6 +34,8 @@ function RouteComponent() {
   const { GetListJadwalajarGuru } = useJadwalajarStore()
   const { model, setModel } = useIzinStore()
 
+  const hari = now.toLocaleDateString("id-ID", { weekday: "long" })
+  // console.log(hari)
   const stats = {
     totalStudents: 109,
     classesCompleted: 1,
@@ -41,9 +43,9 @@ function RouteComponent() {
     attendanceRate: 94,
   }
 
-  const { data, isPending, error } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ["jadwal-guru", userData.id],
-    queryFn: () => GetListJadwalajarGuru(token, { id: userData.id, hari: "senin" }),
+    queryFn: () => GetListJadwalajarGuru(token, { id: userData.id, hari: hari }),
     enabled: !!userData.id && !!token,
   })
 
@@ -95,16 +97,10 @@ function RouteComponent() {
     if (jadwal.izin.approval) return (
       <Badge variant="outline" className="bg-yellow-500 text-black">Izin</Badge>
     )
-    if (now < start) return (
-      <Badge variant="outline" className="bg-yellow-500 text-black">Akan datang</Badge>
-    )
-    if (now >= start && now <= end) return (
-      <Badge variant="default" className="bg-green-500 text-black">Segera Absen</Badge>
+    if (now >= start && now <= end && jadwal.absen_masuk.id && jadwal.absen_keluar.id) return (
+      <Badge variant="default" className="bg-green-500 text-black">Selesai</Badge>
     )
     if (now >= start && now <= end && jadwal.absen_masuk.id) return (
-      <Badge variant="default" className="bg-green-500 text-black">Sedang berlangsung</Badge>
-    )
-    if (now >= start && now <= end && jadwal.absen_masuk.id && jadwal.absen_keluar.id) return (
       <Badge variant="default" className="bg-green-500 text-black">Sedang berlangsung</Badge>
     )
     if (now > end && !jadwal.absen_masuk.id) return (
@@ -112,6 +108,12 @@ function RouteComponent() {
     )
     if (now > end && jadwal.absen_masuk.id) return (
       <Badge variant="outline" className="bg-green-500 text-black">Selesai</Badge>
+    )
+    if (now < start) return (
+      <Badge variant="outline" className="bg-yellow-500 text-black">Akan datang</Badge>
+    )
+    if (now >= start && now <= end) return (
+      <Badge variant="default" className="bg-green-500 text-black">Segera Absen</Badge>
     )
   }
 

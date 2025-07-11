@@ -116,7 +116,7 @@ function RouteComponent() {
 
   const handleUpdate = async (data: any) => {
     setIsAddDialogOpen(true)
-    // store.setModel(data)
+    store.jadwalajarStore.setModel(data)
   }
 
   return (

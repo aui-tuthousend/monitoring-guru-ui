@@ -67,7 +67,7 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
       const url = `ws://${host}/ws/${role}/user-${id}`;
       set({ role, serverUrl: url });
     },
-    isConnected: false,
+    isConnected: isConnected,
     messageListeners: [],
     connectWebSocket: start,
     closeConnection: () => {

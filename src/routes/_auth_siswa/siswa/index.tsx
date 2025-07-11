@@ -38,9 +38,14 @@ function RouteComponent() {
   }, [])
 
 
+  const now = new Date()
+
+  const hari = now.toLocaleDateString("id-ID", { weekday: "long" })
+  // console.log(hari)
+
   const {data, isPending, error} = useQuery({
     queryKey: ["jadwal-kelas", userData.kelas_id],
-    queryFn: () => GetListJadwalajarKelas(token, { id: userData.kelas_id, hari: "senin" }),
+    queryFn: () => GetListJadwalajarKelas(token, { id: userData.kelas_id, hari: hari }),
     enabled: !!userData.kelas_id && !!token,
   })
   
@@ -56,6 +61,11 @@ function RouteComponent() {
   }
 
   const handleNavigate = (jadwalajar: any) => {
+    if(jadwalajar.absen_keluar.id){
+      toast.info('Kelas telah dilaksanakan!')
+      return
+    }
+
     if (!isOnTime(jadwalajar.jam_mulai, jadwalajar.jam_selesai, currentTime)) {
       toast.error('Kelas belum dimulai!')
       return
