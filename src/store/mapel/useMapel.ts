@@ -55,9 +55,9 @@ export const useMapelStore = create<MapelStore>((set, get) => ({
             });
 
             const data = await response.data;
-            set({ list: data.data });
+            set({ list: data?.data! || [] });
 
-            return data;
+            return data?.data! || [];
         } catch (error) {
             console.error('Error getting list of mapel:', error);
             return error;

@@ -52,9 +52,9 @@ export const useJurusanStore = create<JurusanStore>((set, get) => ({
             });
 
             const data = await response.data;
-            set({ list: data.data });
+            set({list: data?.data! || []})
 
-            return data;
+            return data?.data! || [];
         } catch (error) {
             console.error('Error getting list of jurusan:', error);
             return error;

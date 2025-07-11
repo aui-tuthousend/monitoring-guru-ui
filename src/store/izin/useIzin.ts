@@ -25,7 +25,7 @@ export const useIzinStore = create<IzinStore>((set, get) => ({
             const data = await response.data;
             // set({ list: data.data });
 
-            return data.data;
+            return data?.data! || [];
         } catch (error) {
             console.error('Error getting list of users:', error);
             return error;
@@ -43,7 +43,7 @@ export const useIzinStore = create<IzinStore>((set, get) => ({
             const data = await response.data;
             // set({ list: data.data });
 
-            return data.data;
+            return data?.data! || [];
         } catch (error) {
             console.error('Error getting list of users:', error);
             return error;
@@ -61,7 +61,7 @@ export const useIzinStore = create<IzinStore>((set, get) => ({
             const data = await response.data;
             // set({ list: data.data });
 
-            return data.data;
+            return data?.data! || [];
         } catch (error) {
             console.error('Error getting list of users:', error);
             return error;

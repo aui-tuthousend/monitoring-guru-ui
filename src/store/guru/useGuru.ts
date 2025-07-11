@@ -58,7 +58,7 @@ export const useGuruStore = create<GuruStore>((set, get) => ({
             const data = await response.data;
             console.log(data)
 
-            set({list: data.data})
+            set({list: data?.data! || []})
             // return data;
         } catch (error) {
             console.error('Error getting list of users:', error);

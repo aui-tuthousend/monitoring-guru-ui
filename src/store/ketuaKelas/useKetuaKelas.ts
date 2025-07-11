@@ -55,9 +55,9 @@ export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
             });
 
             const data = await response.data;
-            set({ unsignedList: data.data });
+            set({ unsignedList: data?.data! || [] });
 
-            return data;
+            return data?.data! || [];
         } catch (error) {
             console.error('Error getting list of ketua kelas:', error);
             return error;
@@ -74,9 +74,9 @@ export const useKetuaKelasStore = create<KetuaKelasStore>((set, get) => ({
             });
 
             const data = await response.data;
-            set({ list: data.data });
+            set({ list: data?.data! || [] });
 
-            return data;
+            return data?.data! || [];
         } catch (error) {
             console.error('Error getting list of ketua kelas:', error);
             return error;

@@ -80,9 +80,10 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
             });
 
             const data = await response.data;
-            set({ list: data.data });
 
-            return data;
+            set({list: data?.data! || []})
+
+            return data?.data! || [];
         } catch (error) {
             console.error('Error getting list of jadwalajar:', error);
             return error;
@@ -99,9 +100,9 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
             });
 
             const data = await response.data;
-            set({ list: data.data });
+            set({ list: data?.data! || [] });
 
-            return data.data;
+            return data?.data! || [];
         } catch (error) {
             console.error('Error getting jadwal guru:', error);
             set({ list: [] }); // fallback to empty list
@@ -117,9 +118,9 @@ export const useJadwalajarStore = create<JadwalajarStore>((set, get) => ({
             });
 
             const data = await response.data;
-            // set({ list: data.data });
+            set({ list: data?.data! || [] });
 
-            return data.data;
+            return data?.data! || [];
         } catch (error) {
             console.error('Error getting list of users:', error);
             return error;

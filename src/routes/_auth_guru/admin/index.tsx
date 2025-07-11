@@ -9,6 +9,7 @@ import { useCookies } from 'react-cookie';
 import { useKelasStore } from '@/store/kelas/useKelas';
 import type { StatusKelas } from '@/store/kelas/types';
 import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
 
 export const Route = createFileRoute('/_auth_guru/admin/')({
   component: RouteComponent,
@@ -29,6 +30,18 @@ function RouteComponent() {
     removeMessageListener,
     isConnected,
   } = useWebsocket();
+
+  const { data } = useQuery({
+    queryKey: ["class-status"],
+    queryFn: () => GetAllClassStatus(token),
+    enabled: !!isConnected && !!token,
+  })
+
+  useEffect(() => {
+    if (data) {
+      setClassStatus(data)
+    }
+  }, [data])
 
   useEffect(() => {
 
@@ -61,7 +74,6 @@ function RouteComponent() {
 
   useEffect(() => {
     if (isConnected) {
-      GetAllClassStatus(token).then(setClassStatus);
       toast.success("Connected to WebSocket");
     }
   }, [isConnected]);
