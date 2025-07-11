@@ -10,13 +10,15 @@ export const useKelasStore = create<KelasStore>((set, get) => ({
         name: "",
         ketua_kelas_id: "",
         jurusan_id: "",
-        is_active: false,
+        grade: "",
+        index: 0,
     },
     model: {
         name: "",
         ketua_kelas_id: "",
         jurusan_id: "",
-        is_active: false,
+        grade: "",
+        index: 0,
     },
     loading: false,
 
@@ -32,10 +34,6 @@ export const useKelasStore = create<KelasStore>((set, get) => ({
         {
             accessorKey: "jurusan.name",
             header: "Jurusan",
-        },
-        {
-            accessorKey: "is_active",
-            header: "Aktif?",
         },
     ],
 

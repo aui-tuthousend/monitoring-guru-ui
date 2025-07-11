@@ -47,6 +47,11 @@ function RouteComponent() {
   const [value, setValue] = useState<string>("")
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const columns = DefineColumns(kelasStore.tableAttributes)
+  const grade = [
+    {value: "X", label: "X"},
+    {value: "XI", label: "XI"},
+    {value: "XII", label: "XII"}
+  ]
 
   // fetch awal
   useEffect(() => {
@@ -68,8 +73,8 @@ function RouteComponent() {
 
   const validate = () => {
     const m = kelasStore.model
-    if (!m.name || !m.ketua_kelas_id || !m.jurusan_id) {
-      toast.error('Nama, Ketua, dan Jurusan wajib diisi')
+    if (!m.ketua_kelas_id || !m.jurusan_id || !m.grade || !m.index) {
+      toast.error('Ketua, Jurusan, Grade, dan Index wajib diisi')
       return false
     }
     return true
@@ -102,6 +107,14 @@ function RouteComponent() {
     })
   }
 
+  const handlechangeIndex = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value.replace(/\D/g, "") // hanya angka
+    kelasStore.setModel({
+      ...kelasStore.model,
+      index: inputValue === "" ? "" : Number(inputValue), // kosongkan jika kosong, atau ubah ke number
+    })
+  }
+  
 
   return (
     <main className="flex-1 overflow-y-auto p-6">
@@ -133,31 +146,6 @@ function RouteComponent() {
                 <DialogDescription>Isi data Kelas baru</DialogDescription> */}
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                {/* Nama */}
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label>Nama Kelas</Label>
-                  <Input
-                    value={kelasStore.model.name}
-                    onChange={e =>
-                      kelasStore.setModel({ ...kelasStore.model, name: e.target.value })
-                    }
-                    className="col-span-3 border-primary/20 focus:border-primary"
-                  />
-                </div>
-                {/* Ketua */}
-                <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
-                  <Label>Ketua Kelas</Label>
-                  <AutoComplete
-                    data={ketuaStore?.unsignedList!}
-                    value={value}
-                    placeholder="Cari Ketua Kelas..."
-                    onChange={(item) => {
-                      setValue(item?.name || "")
-                      kelasStore.setModel({ ...kelasStore.model, ketua_kelas_id: item?.id || "" })
-                    }}
-                  />
-                </div>
-                {/* Jurusan */}
                 <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
                   <Label>Jurusan</Label>
                   <Select
@@ -185,6 +173,54 @@ function RouteComponent() {
                     </SelectContent>
                   </Select>
                 </div>
+
+                <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
+                  <Label>Grade</Label>
+                  <Select
+                    disabled={kelasStore.loading}
+                    value={kelasStore.model.grade}
+                    onValueChange={value =>
+                      kelasStore.setModel({ ...kelasStore.model, grade: value })
+                    }
+                  >
+                    <SelectTrigger className="w-[16rem]">
+                      <SelectValue placeholder="Pilih Grade" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {grade?.map(j => (
+                        <SelectItem key={j.value} value={j.value}>
+                          {j.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label>Index</Label>
+                  <Input
+                    type="text"
+                    value={kelasStore.model.index}
+                    onChange={handlechangeIndex}
+                    maxLength={2}
+                    className="col-span-3 border-primary/20 focus:border-primary w-[20%]"
+                  />
+                </div>
+
+                {/* Ketua */}
+                <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
+                  <Label>Ketua Kelas</Label>
+                  <AutoComplete
+                    data={ketuaStore?.unsignedList!}
+                    value={value}
+                    placeholder="Cari Ketua Kelas..."
+                    onChange={(item) => {
+                      setValue(item?.name || "")
+                      kelasStore.setModel({ ...kelasStore.model, ketua_kelas_id: item?.id || "" })
+                    }}
+                  />
+                </div>
+                
               </div>
               <DialogFooter>
                 <Button

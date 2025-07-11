@@ -23,6 +23,8 @@ export interface Kelas {
     name: string;
     ketua_kelas_id: string;
     jurusan_id: string;
+    grade: string;
+    index: number;
     // is_active: boolean;
 }
 
