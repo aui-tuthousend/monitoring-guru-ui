@@ -76,9 +76,11 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
       ws?.close();
     },
     sendMessage: (data) => {
-      if (ws?.readyState === WebSocket.OPEN) {
-        ws.send(data);
-      }
+      // if (ws?.readyState === WebSocket.OPEN) {
+        ws?.send(data);
+      // } else {
+      //   console.log("WebSocket is not open. Message not sent.");
+      // }
     },
     addMessageListener: (cb) => {
       set((state) => ({
