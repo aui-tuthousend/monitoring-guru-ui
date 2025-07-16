@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import { create } from 'zustand';
 
 
@@ -76,11 +77,11 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
       ws?.close();
     },
     sendMessage: (data) => {
-      // if (ws?.readyState === WebSocket.OPEN) {
-        ws?.send(data);
-      // } else {
-      //   console.log("WebSocket is not open. Message not sent.");
-      // }
+      if (ws?.readyState === WebSocket.OPEN) {
+        ws.send(data);
+      } else {
+        toast("WebSocket is not open. Message not sent.");
+      }
     },
     addMessageListener: (cb) => {
       set((state) => ({
