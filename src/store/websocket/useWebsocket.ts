@@ -66,7 +66,7 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
     role: 'user',
     serverUrl: '',
     setRole: (role: string, id: string) => {
-      const url = ENV === 'PRODUCTION' ? `wss://${host}/wss/${role}/user-${id}` : `ws://${host}/ws/${role}/user-${id}`;
+      const url = ENV === 'PRODUCTION' ? `wss://${host}/ws/${role}/user-${id}` : `ws://${host}/ws/${role}/user-${id}`;
       set({ role, serverUrl: url });
     },
     isConnected: isConnected,
