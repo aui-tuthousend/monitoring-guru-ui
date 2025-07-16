@@ -43,7 +43,7 @@ export const useWebsocket = create<WebsocketState>((set, get) => {
       isConnected = false;
       set({ isConnected: false, loading: true });
       
-      if (!reconnectOnClose) {
+      if (reconnectOnClose) {
         console.log('WebSocket closed, attempting reconnect...');
         setTimeout(start, 1000);
       } else {
