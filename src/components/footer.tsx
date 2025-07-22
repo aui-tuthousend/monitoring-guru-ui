@@ -5,7 +5,7 @@ export default function Footer() {
     <Separator>
     <footer className="w-full border-t">
       <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
-        © 2025 KKN Teknik Informatika Institut Teknologi Adhi Tama Surabaya. All rights reserved.
+        © 2025 Program Studi Teknik Informatika ITATS. All rights reserved.
       </div>
     </footer>
     </Separator>

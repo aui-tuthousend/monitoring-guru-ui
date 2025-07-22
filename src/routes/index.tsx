@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import NerdGirl from '/IMG_9570.jpeg'
+import Logo from '/smkn2sby.webp'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -78,8 +78,8 @@ function App() {
           <div className="lg:w-1/2 flex justify-center">
             <img
               className="w-full max-w-lg rounded-lg shadow-xl"
-              src={NerdGirl}
-              alt="Nerd girl using Monitor Guru"
+              src={Logo}
+              alt="SMKN2 Surabaya Logo"
             />
           </div>
         </div>

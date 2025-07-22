@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 // import { useAuthStore } from '@/store/auth/useAuth'
 import { useAuth } from '@/auth'
+import Logo from '/smkn2sby.webp'
 
 export const Route = createFileRoute('/login-siswa')({
   component: LoginPage,
@@ -108,8 +109,8 @@ function LoginPage() {
         <CardHeader className="space-y-4">
           <div className="flex justify-center">
             <img
-              src="/IMG_9570.jpeg"
-              alt="School Logo"
+              src={Logo}
+              alt="SMKN2 Surabaya Logo"
               className="h-16 w-auto rounded-lg"
               onError={(e) => {
                 const target = e.target as HTMLImageElement
