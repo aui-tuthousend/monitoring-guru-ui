@@ -26,9 +26,11 @@ import { Route as Auth_guruGuruScanRouteImport } from './routes/_auth_guru/guru/
 import { Route as Auth_guruGuruJadwalRouteImport } from './routes/_auth_guru/guru/jadwal'
 import { Route as Auth_guruAdminRuanganRouteImport } from './routes/_auth_guru/admin/ruangan'
 import { Route as Auth_guruAdminMapelRouteImport } from './routes/_auth_guru/admin/mapel'
+import { Route as Auth_guruAdminKompetensiRouteImport } from './routes/_auth_guru/admin/kompetensi'
 import { Route as Auth_guruAdminKetuaKelasRouteImport } from './routes/_auth_guru/admin/ketua-kelas'
 import { Route as Auth_guruAdminKelasRouteImport } from './routes/_auth_guru/admin/kelas'
 import { Route as Auth_guruAdminJadwalajarRouteImport } from './routes/_auth_guru/admin/jadwalajar'
+import { Route as Auth_guruAdminIzinRouteImport } from './routes/_auth_guru/admin/izin'
 import { Route as Auth_guruAdminGuruRouteImport } from './routes/_auth_guru/admin/guru'
 
 const LoginSiswaRoute = LoginSiswaRouteImport.update({
@@ -114,6 +116,12 @@ const Auth_guruAdminMapelRoute = Auth_guruAdminMapelRouteImport.update({
   path: '/mapel',
   getParentRoute: () => Auth_guruAdminRoute,
 } as any)
+const Auth_guruAdminKompetensiRoute =
+  Auth_guruAdminKompetensiRouteImport.update({
+    id: '/kompetensi',
+    path: '/kompetensi',
+    getParentRoute: () => Auth_guruAdminRoute,
+  } as any)
 const Auth_guruAdminKetuaKelasRoute =
   Auth_guruAdminKetuaKelasRouteImport.update({
     id: '/ketua-kelas',
@@ -131,6 +139,11 @@ const Auth_guruAdminJadwalajarRoute =
     path: '/jadwalajar',
     getParentRoute: () => Auth_guruAdminRoute,
   } as any)
+const Auth_guruAdminIzinRoute = Auth_guruAdminIzinRouteImport.update({
+  id: '/izin',
+  path: '/izin',
+  getParentRoute: () => Auth_guruAdminRoute,
+} as any)
 const Auth_guruAdminGuruRoute = Auth_guruAdminGuruRouteImport.update({
   id: '/guru',
   path: '/guru',
@@ -146,9 +159,11 @@ export interface FileRoutesByFullPath {
   '/guru': typeof Auth_guruGuruRouteWithChildren
   '/siswa': typeof Auth_siswaSiswaRouteWithChildren
   '/admin/guru': typeof Auth_guruAdminGuruRoute
+  '/admin/izin': typeof Auth_guruAdminIzinRoute
   '/admin/jadwalajar': typeof Auth_guruAdminJadwalajarRoute
   '/admin/kelas': typeof Auth_guruAdminKelasRoute
   '/admin/ketua-kelas': typeof Auth_guruAdminKetuaKelasRoute
+  '/admin/kompetensi': typeof Auth_guruAdminKompetensiRoute
   '/admin/mapel': typeof Auth_guruAdminMapelRoute
   '/admin/ruangan': typeof Auth_guruAdminRuanganRoute
   '/guru/jadwal': typeof Auth_guruGuruJadwalRoute
@@ -164,9 +179,11 @@ export interface FileRoutesByTo {
   '/login-guru': typeof LoginGuruRoute
   '/login-siswa': typeof LoginSiswaRoute
   '/admin/guru': typeof Auth_guruAdminGuruRoute
+  '/admin/izin': typeof Auth_guruAdminIzinRoute
   '/admin/jadwalajar': typeof Auth_guruAdminJadwalajarRoute
   '/admin/kelas': typeof Auth_guruAdminKelasRoute
   '/admin/ketua-kelas': typeof Auth_guruAdminKetuaKelasRoute
+  '/admin/kompetensi': typeof Auth_guruAdminKompetensiRoute
   '/admin/mapel': typeof Auth_guruAdminMapelRoute
   '/admin/ruangan': typeof Auth_guruAdminRuanganRoute
   '/guru/jadwal': typeof Auth_guruGuruJadwalRoute
@@ -188,9 +205,11 @@ export interface FileRoutesById {
   '/_auth_guru/guru': typeof Auth_guruGuruRouteWithChildren
   '/_auth_siswa/siswa': typeof Auth_siswaSiswaRouteWithChildren
   '/_auth_guru/admin/guru': typeof Auth_guruAdminGuruRoute
+  '/_auth_guru/admin/izin': typeof Auth_guruAdminIzinRoute
   '/_auth_guru/admin/jadwalajar': typeof Auth_guruAdminJadwalajarRoute
   '/_auth_guru/admin/kelas': typeof Auth_guruAdminKelasRoute
   '/_auth_guru/admin/ketua-kelas': typeof Auth_guruAdminKetuaKelasRoute
+  '/_auth_guru/admin/kompetensi': typeof Auth_guruAdminKompetensiRoute
   '/_auth_guru/admin/mapel': typeof Auth_guruAdminMapelRoute
   '/_auth_guru/admin/ruangan': typeof Auth_guruAdminRuanganRoute
   '/_auth_guru/guru/jadwal': typeof Auth_guruGuruJadwalRoute
@@ -211,9 +230,11 @@ export interface FileRouteTypes {
     | '/guru'
     | '/siswa'
     | '/admin/guru'
+    | '/admin/izin'
     | '/admin/jadwalajar'
     | '/admin/kelas'
     | '/admin/ketua-kelas'
+    | '/admin/kompetensi'
     | '/admin/mapel'
     | '/admin/ruangan'
     | '/guru/jadwal'
@@ -229,9 +250,11 @@ export interface FileRouteTypes {
     | '/login-guru'
     | '/login-siswa'
     | '/admin/guru'
+    | '/admin/izin'
     | '/admin/jadwalajar'
     | '/admin/kelas'
     | '/admin/ketua-kelas'
+    | '/admin/kompetensi'
     | '/admin/mapel'
     | '/admin/ruangan'
     | '/guru/jadwal'
@@ -252,9 +275,11 @@ export interface FileRouteTypes {
     | '/_auth_guru/guru'
     | '/_auth_siswa/siswa'
     | '/_auth_guru/admin/guru'
+    | '/_auth_guru/admin/izin'
     | '/_auth_guru/admin/jadwalajar'
     | '/_auth_guru/admin/kelas'
     | '/_auth_guru/admin/ketua-kelas'
+    | '/_auth_guru/admin/kompetensi'
     | '/_auth_guru/admin/mapel'
     | '/_auth_guru/admin/ruangan'
     | '/_auth_guru/guru/jadwal'
@@ -395,6 +420,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Auth_guruAdminMapelRouteImport
       parentRoute: typeof Auth_guruAdminRoute
     }
+    '/_auth_guru/admin/kompetensi': {
+      id: '/_auth_guru/admin/kompetensi'
+      path: '/kompetensi'
+      fullPath: '/admin/kompetensi'
+      preLoaderRoute: typeof Auth_guruAdminKompetensiRouteImport
+      parentRoute: typeof Auth_guruAdminRoute
+    }
     '/_auth_guru/admin/ketua-kelas': {
       id: '/_auth_guru/admin/ketua-kelas'
       path: '/ketua-kelas'
@@ -416,6 +448,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Auth_guruAdminJadwalajarRouteImport
       parentRoute: typeof Auth_guruAdminRoute
     }
+    '/_auth_guru/admin/izin': {
+      id: '/_auth_guru/admin/izin'
+      path: '/izin'
+      fullPath: '/admin/izin'
+      preLoaderRoute: typeof Auth_guruAdminIzinRouteImport
+      parentRoute: typeof Auth_guruAdminRoute
+    }
     '/_auth_guru/admin/guru': {
       id: '/_auth_guru/admin/guru'
       path: '/guru'
@@ -428,9 +467,11 @@ declare module '@tanstack/react-router' {
 
 interface Auth_guruAdminRouteChildren {
   Auth_guruAdminGuruRoute: typeof Auth_guruAdminGuruRoute
+  Auth_guruAdminIzinRoute: typeof Auth_guruAdminIzinRoute
   Auth_guruAdminJadwalajarRoute: typeof Auth_guruAdminJadwalajarRoute
   Auth_guruAdminKelasRoute: typeof Auth_guruAdminKelasRoute
   Auth_guruAdminKetuaKelasRoute: typeof Auth_guruAdminKetuaKelasRoute
+  Auth_guruAdminKompetensiRoute: typeof Auth_guruAdminKompetensiRoute
   Auth_guruAdminMapelRoute: typeof Auth_guruAdminMapelRoute
   Auth_guruAdminRuanganRoute: typeof Auth_guruAdminRuanganRoute
   Auth_guruAdminIndexRoute: typeof Auth_guruAdminIndexRoute
@@ -438,9 +479,11 @@ interface Auth_guruAdminRouteChildren {
 
 const Auth_guruAdminRouteChildren: Auth_guruAdminRouteChildren = {
   Auth_guruAdminGuruRoute: Auth_guruAdminGuruRoute,
+  Auth_guruAdminIzinRoute: Auth_guruAdminIzinRoute,
   Auth_guruAdminJadwalajarRoute: Auth_guruAdminJadwalajarRoute,
   Auth_guruAdminKelasRoute: Auth_guruAdminKelasRoute,
   Auth_guruAdminKetuaKelasRoute: Auth_guruAdminKetuaKelasRoute,
+  Auth_guruAdminKompetensiRoute: Auth_guruAdminKompetensiRoute,
   Auth_guruAdminMapelRoute: Auth_guruAdminMapelRoute,
   Auth_guruAdminRuanganRoute: Auth_guruAdminRuanganRoute,
   Auth_guruAdminIndexRoute: Auth_guruAdminIndexRoute,

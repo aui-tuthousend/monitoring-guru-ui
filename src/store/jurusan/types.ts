@@ -3,6 +3,7 @@ import type { DataTableAttributes } from "@/components/data-table/columns";
 export interface Jurusan {
     id?: string,
     name: string
+    kode_jurusan: string
 }
 
 export interface JurusanStore {
@@ -12,6 +13,6 @@ export interface JurusanStore {
     model: Jurusan;
     loading: boolean;
     setModel: (model?: any) => void;
-    RegisterJurusan: (token: string, payload: Jurusan) => Promise<void>;
-    GetAllJurusan: (token: string) => Promise<void>;
+    RegisterJurusan: (token: string, payload: Jurusan) => Promise<any>;
+    GetAllJurusan: (token: string) => Promise<any>;
 }

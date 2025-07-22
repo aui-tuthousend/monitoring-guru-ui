@@ -12,7 +12,7 @@ export const useMapelStore = create<MapelStore>((set, get) => ({
     tableAttributes: [
         {
             accessorKey: "jurusan.name",
-            header: "Jurusan",
+            header: "Kompetensi",
         },
         {
             accessorKey: "name",

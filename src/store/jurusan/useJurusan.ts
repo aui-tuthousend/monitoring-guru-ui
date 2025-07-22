@@ -5,14 +5,18 @@ import type { JurusanStore } from "./types";
 
 export const useJurusanStore = create<JurusanStore>((set, get) => ({
     list: [],
-    default: { name: "" },
-    model: { name: "" },
+    default: { name: "", kode_jurusan: "" },
+    model: { name: "", kode_jurusan: "" },
     loading: false,
 
     tableAttributes: [
         {
             accessorKey: "name",
-            header: "Nama Jurusan",
+            header: "Nama Kompetensi",
+        },
+        {
+            accessorKey: "kode_jurusan",
+            header: "Kode Kompetensi",
         }
     ],
 
@@ -29,13 +33,10 @@ export const useJurusanStore = create<JurusanStore>((set, get) => ({
         try {
             const response = await fetchServer(token, urlBuilder('/jurusan'), {
                 method: payload.id ? 'PUT' : 'POST',
-                body: JSON.stringify(payload),
+                body: payload,
             });
 
-            const data = await response.data.json();
-            console.log(data);
-
-            return data;
+            return response;
         } catch (error) {
             console.error('Error registering jurusan:', error);
             return error;

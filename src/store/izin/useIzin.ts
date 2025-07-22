@@ -5,6 +5,32 @@ import type { IzinStore } from "./types";
 
 export const useIzinStore = create<IzinStore>((set, get) => ({
     loading: false,
+    tableAttributes: [
+        {
+            accessorKey: "guru",
+            header: "Guru",
+        },
+        {
+            accessorKey: "judul",
+            header: "Judul",
+        },
+        {
+            accessorKey: "pesan",
+            header: "Pesan",
+        },
+        {
+            accessorKey: "tanggal_izin",
+            header: "Tanggal Izin",
+        },
+        {
+            accessorKey: "jam_izin",
+            header: "Jam Izin",
+        },
+        {
+            accessorKey: "approval",
+            header: "Approval",
+        }
+    ],
     list: [],
     model: {judul: "", pesan: "" },
     default: {judul: "", pesan: "" },
@@ -27,7 +53,25 @@ export const useIzinStore = create<IzinStore>((set, get) => ({
 
             return data?.data! || [];
         } catch (error) {
-            console.error('Error getting list of users:', error);
+            console.error('Error getting list of izins:', error);
+            return error;
+        } finally {
+            set({ loading: false });
+        }
+    },
+    GetAllIzinWeekly: async (token) => {
+        try {
+            set({ loading: true });
+            const response = await fetchServer(token, urlBuilder('/izin/weekly'), {
+                method: 'GET',
+            });
+
+            const data = await response.data;
+            set({ list: data.data });
+
+            return data?.data! || [];
+        } catch (error) {
+            console.error('Error getting list of izins:', error);
             return error;
         } finally {
             set({ loading: false });
@@ -45,7 +89,7 @@ export const useIzinStore = create<IzinStore>((set, get) => ({
 
             return data?.data! || [];
         } catch (error) {
-            console.error('Error getting list of users:', error);
+            console.error('Error getting list of izins:', error);
             return error;
         } finally {
             set({ loading: false });
@@ -63,7 +107,7 @@ export const useIzinStore = create<IzinStore>((set, get) => ({
 
             return data?.data! || [];
         } catch (error) {
-            console.error('Error getting list of users:', error);
+            console.error('Error getting list of izins:', error);
             return error;
         } finally {
             set({ loading: false });

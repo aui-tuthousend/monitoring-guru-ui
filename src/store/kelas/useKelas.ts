@@ -33,7 +33,7 @@ export const useKelasStore = create<KelasStore>((set, get) => ({
         },
         {
             accessorKey: "jurusan.name",
-            header: "Jurusan",
+            header: "Kompetensi",
         },
     ],
 

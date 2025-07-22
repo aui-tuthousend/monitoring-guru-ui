@@ -1,3 +1,5 @@
+import type { DataTableAttributes } from "@/components/data-table/columns"
+
 export interface Izin {
     id?: string
     jadwalajar_id?: string
@@ -23,9 +25,10 @@ export interface IzinStore {
     list: Izin[];
     model: IzinForm;
     default: IzinForm;
+    tableAttributes: DataTableAttributes[];
     setModel: (model?: any) => void;
-    // SubmitIzin: (token: string, payload: Izin) => Promise<void>;
     GetAllIzin: (token: string) => Promise<Izin[]>;
+    GetAllIzinWeekly: (token: string) => Promise<Izin[]>;
     GetAllIzinKelas: (token: string, kelas_id: string) => Promise<Izin[]>;
     GetAllIzinGuru: (token: string, nip: string) => Promise<Izin[]>;
 }

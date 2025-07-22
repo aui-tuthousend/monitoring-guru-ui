@@ -1,5 +1,5 @@
 "use client"
-import { CalendarClock, CircleGauge, LifeBuoy, NotebookPen, School, Settings, User, UserLock, Warehouse } from "lucide-react"
+import { CalendarClock, CircleGauge, GraduationCap, LifeBuoy, NotebookPen, School, Settings, User, UserLock, Warehouse } from "lucide-react"
 
 import {
     Sidebar,
@@ -24,6 +24,11 @@ const navigationData = {
             title: "Dashboard",
             url: "/admin",
             icon: <CircleGauge />
+        },
+        {
+            title: "Kompetensi",
+            url: "/admin/kompetensi",
+            icon: <GraduationCap />
         },
         {
             title: "Guru",
@@ -54,6 +59,11 @@ const navigationData = {
             title: "Ruangan",
             url: "/admin/ruangan",
             icon: <Warehouse />
+        },
+        {
+            title: "Izin",
+            url: "/admin/izin",
+            icon: <LifeBuoy />
         },
     ],
 }

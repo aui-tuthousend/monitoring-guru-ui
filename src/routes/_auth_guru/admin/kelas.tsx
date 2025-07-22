@@ -74,7 +74,7 @@ function RouteComponent() {
   const validate = () => {
     const m = kelasStore.model
     if (!m.ketua_kelas_id || !m.jurusan_id || !m.grade || !m.index) {
-      toast.error('Ketua, Jurusan, Grade, dan Index wajib diisi')
+      toast.error('Ketua, Kompetensi, Grade, dan Index wajib diisi')
       return false
     }
     return true
@@ -108,10 +108,10 @@ function RouteComponent() {
   }
 
   const handlechangeIndex = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value.replace(/\D/g, "") // hanya angka
+    const inputValue = e.target.value.replace(/\D/g, "")
     kelasStore.setModel({
       ...kelasStore.model,
-      index: inputValue === "" ? "" : Number(inputValue), // kosongkan jika kosong, atau ubah ke number
+      index: inputValue === "" ? "" : Number(inputValue),
     })
   }
   
@@ -147,7 +147,7 @@ function RouteComponent() {
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
-                  <Label>Jurusan</Label>
+                  <Label>Kompetensi</Label>
                   <Select
                     disabled={kelasStore.loading}
                     value={kelasStore.model.jurusan_id}
@@ -156,7 +156,7 @@ function RouteComponent() {
                     }
                   >
                     <SelectTrigger className="w-[16rem]">
-                      <SelectValue placeholder="Pilih Jurusan" />
+                      <SelectValue placeholder="Pilih Kompetensi" />
                     </SelectTrigger>
                     <SelectContent>
                     {jurusanStore?.list?.length == 0 && (

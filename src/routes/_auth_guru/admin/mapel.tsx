@@ -62,7 +62,7 @@ function RouteComponent() {
   const validate = () => {
     const m = mapelStore.model
     if (!m.name || !m.jurusan_id) {
-      toast.error('Nama Mapel dan Jurusan wajib diisi')
+      toast.error('Nama Mapel dan Kompetensi wajib diisi')
       return false
     }
     return true
@@ -121,7 +121,7 @@ function RouteComponent() {
                 
                 {/* Jurusan */}
                 <div className="grid grid-cols-4 items-center gap-4 overflow-x-hidden">
-                  <Label>Jurusan</Label>
+                  <Label>Kompetensi</Label>
                   <Select
                     value={mapelStore.model.jurusan_id}
                     onValueChange={value =>
@@ -129,7 +129,7 @@ function RouteComponent() {
                     }
                   >
                     <SelectTrigger className="w-[16rem]">
-                      <SelectValue placeholder="Pilih Jurusan" />
+                      <SelectValue placeholder="Pilih Kompetensi" />
                     </SelectTrigger>
                     <SelectContent>
                       {jurusanStore?.list?.length == 0 && (

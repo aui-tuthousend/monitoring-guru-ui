@@ -34,7 +34,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   searchKey?: string
   searchPlaceholder?: string
-  onUpdate: (data: TData) => void
+  onUpdate?: (data: TData) => void
 }
 
 export function DataTable<TData, TValue>({
