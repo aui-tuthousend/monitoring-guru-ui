@@ -1,4 +1,5 @@
 import type { AuthContext } from '@/auth'
+import Footer from '@/components/footer'
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { Toaster } from 'sonner'
@@ -18,6 +19,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         <Outlet />
       {/* </CookiesProvider> */}
       <TanStackRouterDevtools />
+      <Footer />
     </>
   ),
 })
