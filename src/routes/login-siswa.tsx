@@ -172,15 +172,15 @@ function LoginPage() {
             </Button>
           </form>
 
-          <div className="mt-4 text-center text-sm text-gray-600">
+          {/* <div className="mt-4 text-center text-sm text-gray-600">
             Don't have an account?{' '}
-            {/* <Link 
+            <Link 
               to="/contact-admin" 
               className="font-medium text-blue-600 hover:underline"
             >
               Contact administrator
-            </Link> */}
-          </div>
+            </Link>
+          </div> */}
         </CardContent>
       </Card>
     </div>
