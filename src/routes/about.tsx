@@ -1,6 +1,6 @@
 import { createFileRoute, Link} from '@tanstack/react-router'
 import { Card, CardContent } from "@/components/ui/card"
-import { useRef, useState, useEffect } from "react"
+import { useRef } from "react"
 import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/about')({
@@ -16,21 +16,7 @@ function RouteComponent() {
     "/dokumentasi5.webp",
   ]
 
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(true)
-
-  useEffect(() => {
-    const el = containerRef.current
-    const handleScroll = () => {
-      if (!el) return
-      setCanScrollLeft(el.scrollLeft > 0)
-      setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth)
-    }
-    el?.addEventListener("scroll", handleScroll)
-    return () => el?.removeEventListener("scroll", handleScroll)
-  }, [])
-
+  const containerRef = useRef<HTMLDivElement>(null) 
   const scroll = (offset: number) => {
     containerRef.current?.scrollBy({ left: offset, behavior: 'smooth' })
   }

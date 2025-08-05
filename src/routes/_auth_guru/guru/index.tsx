@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie"
 import { createFileRoute } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
 
-import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
+import { CardContent } from "@/components/ui/card"
 import { Dialog, DialogTrigger, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogClose, } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"

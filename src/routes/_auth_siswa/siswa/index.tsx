@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
+import { CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { BookOpen } from "lucide-react"
 import { useJadwalajarStore } from '@/store/jadwalAjar/useJadwalAjar'
