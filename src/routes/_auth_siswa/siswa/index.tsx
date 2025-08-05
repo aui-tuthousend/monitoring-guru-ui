@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { CardHeader, CardContent, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { BookOpen, Clock, CheckCircle, TrendingUp } from "lucide-react"
+import { BookOpen } from "lucide-react"
 import { useJadwalajarStore } from '@/store/jadwalAjar/useJadwalAjar'
 import { useCookies } from 'react-cookie'
 import { timeStringToDate } from '@/lib/utils'
@@ -20,13 +20,6 @@ function RouteComponent() {
   const {GetListJadwalajarKelas, setInternalNav} = useJadwalajarStore()
   const navigate = useNavigate()
 
-  const stats = {
-    completedAssignments: 12,
-    pendingAssignments: 3,
-    averageGrade: 87,
-    attendanceRate: 96,
-  }
-
   const [currentTime, setCurrentTime] = useState(new Date())
 
   useEffect(() => {
@@ -41,7 +34,6 @@ function RouteComponent() {
   const now = new Date()
 
   const hari = now.toLocaleDateString("id-ID", { weekday: "long" })
-  // console.log(hari)
 
   const {data, isPending, error} = useQuery({
     queryKey: ["jadwal-kelas", userData.kelas_id],
@@ -81,17 +73,17 @@ function RouteComponent() {
 
   return (
     <>
-      <CardHeader>
+      {/* <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <BookOpen className="h-5 w-5" />
           Student Dashboard
         </CardTitle>
-      </CardHeader>
+      </CardHeader> */}
 
       <CardContent className="space-y-6">
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
+          {/* <div className="bg-blue-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-blue-600" />
               <span className="text-sm font-medium text-blue-600">Completed</span>
@@ -113,14 +105,14 @@ function RouteComponent() {
               <span className="text-sm font-medium text-green-600">Avg Grade</span>
             </div>
             <p className="text-2xl font-bold text-green-900">{stats.averageGrade}%</p>
-          </div>
+          </div> */}
 
           <div className="bg-purple-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
               <BookOpen className="h-5 w-5 text-purple-600" />
-              <span className="text-sm font-medium text-purple-600">Attendance</span>
+              <span className="text-sm font-medium text-purple-600">Total Classes</span>
             </div>
-            <p className="text-2xl font-bold text-purple-900">{stats.attendanceRate}%</p>
+            <p className="text-2xl font-bold text-purple-900">{data?.length! || 0}</p>
           </div>
         </div>
 

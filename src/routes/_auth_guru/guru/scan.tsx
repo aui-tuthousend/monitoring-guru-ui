@@ -88,7 +88,7 @@ function RouteComponent() {
       return
     }
 
-    console.log(parsed)
+    // console.log(parsed)
     const { payload, signature } = parsed;
     const expectedSignature = HashString(JSON.stringify(payload)) 
 
@@ -102,16 +102,18 @@ function RouteComponent() {
       return;
     }
 
+    const now = new Date()
     const { date, time } = payload
     const parsedDateTime = new Date(`${date}T${time}:00`)
-    const now = new Date()
-
-    const diffMinutes = (now.getTime() - parsedDateTime.getTime()) / 1000 / 60
-
-    if (diffMinutes > 2) {
+    
+    const diffMinutes = Math.floor((now.getTime() - parsedDateTime.getTime()) / 1000 / 60)
+    
+    console.log(diffMinutes)
+    
+    if (diffMinutes > 3) {
       toast.error("QR Code sudah kadaluarsa")
       return
-    }
+    }    
 
     handleSendMessages(payload);
     toast.success(payload.type === 'check-in' ? 'Check-in berhasil' : 'Check-out berhasil');

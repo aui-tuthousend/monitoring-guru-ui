@@ -11,8 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import {
-  BookOpen, Clock, Users,
-  CheckCircle,
+  BookOpen, Clock
 } from "lucide-react"
 
 import { useJadwalajarStore } from "@/store/jadwalAjar/useJadwalAjar"
@@ -35,13 +34,6 @@ function RouteComponent() {
   const { model, setModel } = useIzinStore()
 
   const hari = now.toLocaleDateString("id-ID", { weekday: "long" })
-  // console.log(hari)
-  const stats = {
-    totalStudents: 109,
-    classesCompleted: 1,
-    classesRemaining: 3,
-    attendanceRate: 94,
-  }
 
   const { data, error } = useQuery({
     queryKey: ["jadwal-guru", userData.id],
@@ -73,7 +65,7 @@ function RouteComponent() {
 
     setModel()
     if (isConnected) {
-      // console.log(payload)
+      console.log(payload)
       sendMessage(JSON.stringify(payload));
       setIsAddDialogOpen(false)
       setActiveJadwal(null)
@@ -121,19 +113,25 @@ function RouteComponent() {
     if (izin.approval) return (
       <p>Izin disetujui</p>
     )
-    if (izin.id) return (
+    if (izin.id && !izin.approval && !izin.read) return (
       <p>Izin diajukan</p>
     )
-    if (!izin.approval) return (
+    if (izin.id && !izin.approval && izin.read) return (
+      <p>Izin ditolak</p>
+    )
+    if (!izin.id) return (
       <p>Ajukan izin</p>
     )
   }
 
   const getIzinStatusButton =(izin: any) => {
-    if (izin.approval) return (
+    if (izin.id && !izin.approval && izin.read) return (
+      false
+    )
+    if (izin.id && !izin.approval && !izin.read) return (
       true
     )
-    if (izin.id && !izin.approval) return (
+    if (izin.id && izin.approval && izin.read) return (
       true
     )
     if (!izin.id) return (
@@ -144,30 +142,30 @@ function RouteComponent() {
 
   return (
     <>
-      <CardHeader>
+      {/* <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <BookOpen className="h-5 w-5" />
           Today's Dashboard
         </CardTitle>
-      </CardHeader>
+      </CardHeader> */}
 
       <CardContent className="space-y-6 overflow-y-auto">
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-green-50 p-4 rounded-lg">
+          {/* <div className="bg-green-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-600" />
               <span className="text-sm font-medium text-green-600">Completed</span>
             </div>
             <p className="text-2xl font-bold text-green-900">{stats.classesCompleted}</p>
-          </div>
+          </div> */}
 
-          <div className="bg-yellow-50 p-4 rounded-lg">
+          <div className="bg-purple-50 p-4 rounded-lg">
             <div className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-yellow-600" />
-              <span className="text-sm font-medium text-yellow-600">Remaining</span>
+              <BookOpen className="h-5 w-5 text-purple-600" />
+              <span className="text-sm font-medium text-purple-600">Total Classes</span>
             </div>
-            <p className="text-2xl font-bold text-yellow-900">{stats.classesRemaining}</p>
+            <p className="text-2xl font-bold text-purple-900">{data?.length! || 0}</p>
           </div>
         </div>
 
@@ -177,17 +175,21 @@ function RouteComponent() {
           <div className="space-y-3">
             {data?.map((jadwal: any, index: number) => {
 
-              return (
+              return (                     
                 <div key={index} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex items-center justify-between overflow-x-hidden flex-wrap gap-5">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
+                    <div className="flex flex-col w-full">
+                      <div className="flex flex-col items-start gap-1 mb-2 flex-wrap">
+                        <div className="flex items-center gap-1">
+                          {getStatus(jadwal)}
+                          {jadwal.absen_masuk.id && <Badge className="text-white">{jadwal.absen_masuk.jam_masuk}</Badge>}
+                          {jadwal.absen_keluar.id && <Badge variant="destructive" className="text-white">{jadwal.absen_keluar.jam_keluar}</Badge>}
+                        </div>
                         <h4 className="font-medium text-lg">{jadwal.mapel.name}</h4>
-                        {getStatus(jadwal)}
-                        {jadwal.absen_masuk.id && <Badge className="text-white">{jadwal.absen_masuk.jam_masuk}</Badge>}
-                        {jadwal.absen_keluar.id && <Badge variant="destructive" className="text-white">{jadwal.absen_keluar.jam_keluar}</Badge>}
                       </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
+
+
+                      <div className="flex items-center gap-4 text-sm text-gray-600">
                         <div className="flex items-center gap-1">
                           <Clock className="h-4 w-4" />
                           {jadwal.jam_mulai} - {jadwal.jam_selesai}
@@ -196,64 +198,62 @@ function RouteComponent() {
                           <BookOpen className="h-4 w-4" />
                           {jadwal.ruangan?.name || 'N/A'}
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="h-4 w-4" />
-                          {jadwal.hari}
-                        </div>
                       </div>
-                    </div>
 
-                    <div className="">
-                      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                        <DialogTrigger asChild>
-                        <Button
-                          disabled={getIzinStatusButton(jadwal.izin)}
-                          onClick={() => {
-                            setActiveJadwal(jadwal)
-                            setIsAddDialogOpen(true)
-                          }}
-                        >
-                          {getIzinStatus(jadwal.izin)}
-                        </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>Formulir Pengajuan Izin</DialogTitle>
-                          </DialogHeader>
-                          <div className="grid gap-4 py-6">
-                            <div className="grid gap-3">
-                              <Label>Alasan Izin</Label>
-                              <Input
-                                name="judul"
-                                value={model.judul}
-                                onChange={(e) => setModel({ ...model, judul: e.target.value })}
-                              />
+
+                      <div className="flex w-full justify-end mt-5">
+                        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                          <DialogTrigger asChild>
+                          <Button
+                            size="sm"
+                            disabled={getIzinStatusButton(jadwal.izin)}
+                            onClick={() => {
+                              setActiveJadwal(jadwal)
+                              setIsAddDialogOpen(true)
+                            }}
+                          >
+                            {getIzinStatus(jadwal.izin)}
+                          </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Formulir Pengajuan Izin</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-6">
+                              <div className="grid gap-3">
+                                <Label>Alasan Izin</Label>
+                                <Input
+                                  name="judul"
+                                  value={model.judul}
+                                  onChange={(e) => setModel({ ...model, judul: e.target.value })}
+                                />
+                              </div>
+                              <div className="grid gap-3">
+                                <Label>Deskripsi</Label>
+                                <Input
+                                  name="deskripsi"
+                                  value={model.pesan}
+                                  onChange={(e) => setModel({ ...model, pesan: e.target.value })}
+                                />
+                              </div>
+                              {/* <div className="grid gap-3">
+                                <Label>NPM Guru Pengganti</Label>
+                                <Input
+                                  name="npm"
+                                // value={izinForm.npm}
+                                // onChange={(e) => setIzinForm({ ...izinForm, npm: e.target.value })}
+                                />
+                              </div> */}
                             </div>
-                            <div className="grid gap-3">
-                              <Label>Deskripsi</Label>
-                              <Input
-                                name="deskripsi"
-                                value={model.pesan}
-                                onChange={(e) => setModel({ ...model, pesan: e.target.value })}
-                              />
-                            </div>
-                            {/* <div className="grid gap-3">
-                              <Label>NPM Guru Pengganti</Label>
-                              <Input
-                                name="npm"
-                              // value={izinForm.npm}
-                              // onChange={(e) => setIzinForm({ ...izinForm, npm: e.target.value })}
-                              />
-                            </div> */}
-                          </div>
-                          <DialogFooter>
-                            <DialogClose asChild>
-                              <Button type="button" variant="outline">Cancel</Button>
-                            </DialogClose>
-                            <Button type="submit" onClick={handleSubmit}>Submit</Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
+                            <DialogFooter>
+                              <DialogClose asChild>
+                                <Button type="button" variant="outline">Cancel</Button>
+                              </DialogClose>
+                              <Button type="submit" onClick={handleSubmit}>Submit</Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -105,7 +105,7 @@ export default function RouteComponent() {
     if (!internalNav) return
 
     const now = new Date()
-    const isoDate = now.toISOString().slice(0, 10)
+    const isoDate = now.toLocaleDateString('sv-SE')
     const shortTime = now.toTimeString().slice(0, 5)
 
     const payload: QrValueIn | QrValueOut = internalNav.absen_masuk?.id
@@ -137,7 +137,7 @@ export default function RouteComponent() {
     setQrCode(
       <QRCode
         size={1000}
-        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+        style={{ maxWidth: "20rem", height: "15rem", width: "15rem" }}
         value={JSON.stringify(value)}
         viewBox="0 0 1000 1000"
       />
@@ -154,7 +154,7 @@ export default function RouteComponent() {
         </h1>
         {/* {currentTime.date} */}
         don't refresh
-        <div style={{ height: "auto", margin: "0 auto", maxWidth: "50%", width: "50%" }}>
+        <div style={{ height: "15rem", margin: "0 auto", maxWidth: "20rem", width: "15rem" }}>
           {qrCode}
         </div>
         <Separator />

@@ -2,9 +2,9 @@ import { Link, Outlet, createFileRoute, useNavigate } from '@tanstack/react-rout
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import Batik2 from '/batik2.webp';
 import { useState, useEffect } from "react"
 import { LogOut } from "lucide-react"
-import Kawai from '/IMG_3661.jpeg';
 import { useAuth } from '@/auth'
 import { useCookies } from 'react-cookie'
 import { useWebsocket } from '@/store/websocket/useWebsocket'
@@ -182,7 +182,7 @@ function RouteComponent() {
           <CardHeader className="flex flex-row items-center space-x-4 space-y-0">
             <div className="relative">
               <img
-                src={Kawai}
+                src={Batik2}
                 alt="Student Profile"
                 className="h-20 w-20 rounded-full object-cover border-4 border-white/20"
               />
@@ -201,30 +201,6 @@ function RouteComponent() {
             </div>
           </CardHeader>
         </Card>
-
-        {/* Navigation */}
-        {/* <div className="flex gap-2 mb-6">
-          <Link to="/student">
-            <Button variant="outline" size="sm">
-              Dashboard
-            </Button>
-          </Link>
-          <Link to="/student/assignments">
-            <Button variant="outline" size="sm">
-              Assignments
-            </Button>
-          </Link>
-          <Link to="/student/grades">
-            <Button variant="outline" size="sm">
-              Grades
-            </Button>
-          </Link>
-          <Link to="/student/schedule">
-            <Button variant="outline" size="sm">
-              Schedule
-            </Button>
-          </Link>
-        </div> */}
 
         {/* Content Area */}
         <Card className="shadow-md">
